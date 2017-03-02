@@ -1,0 +1,1 @@
+Entra a esta épica aventura como un niño para convertirte en un verdadero SAMURAI. De momento solo está hecha la parte de la aldea, pero puedes explorar todo el mapa si deseas. La aldea se encuentra en las casillas 70,71,72,80,81,82,90,91 y 92.
