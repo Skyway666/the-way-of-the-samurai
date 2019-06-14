@@ -34,43 +34,41 @@ struct samurai
 	int mana;
 	int max_vid;
 	int max_man;
-	//modificadores de stats
+	//Modificadores de stats
 	int katana; 
 	int kimono;
 	int bandana;
-	//modificadores de stats
-	//consumables
-	int sushis;
-	int sakes;
-	int llaves;
-	//consumables
+	//Consumables
+	int sushis = 0;
+	int sakes = 0;
+	int llaves = 0;
+
 	//Objetos de la historia
-	int foto_viejo_loco;
-	int llave_casa_viejo_loco;
-	int saber_usar_mana;
-	int bola_pinchos;
-	int pincel;
-	int romper_madera_mano;
-	int huevo_gallina;
-	int perro;
-	int hacha;
-	int cabezas_panda;
-	int vela;
-	//Objetos de la historia
+	bool foto_viejo_loco = false;
+	bool llave_casa_viejo_loco = false;
+	bool saber_usar_mana = false;
+	bool bola_pinchos = false;
+	bool pincel = false;
+	bool romper_madera_mano = false;
+	bool huevo_gallina = false;
+	bool perro = false;
+	bool hacha = false;
+	int cabezas_panda = 0;
+	bool vela = false;
 	//Momentos de la historia
-	int first_61;
-	int first_72;
-	int first_82;
-	int first_92;
-	int first_80;
-	int first_81;
-	int first_43;
-	int hablar_viejo;
-	int katana_kimono;
-	int enseñar_foto;
-	//Momentos de historia
-	//Estados del juegp
-	int mirar_inventario;
+	bool first_61 = false;
+	bool first_72 = false;
+	bool first_82 = false;
+	bool first_92 = false;
+	bool first_80 = false;
+	bool first_81 = false;
+	bool first_43 = false;
+	bool hablar_viejo = false;
+	bool katana_kimono = false;
+	bool enseñar_foto = false;
+
+	//Estados del juego
+	bool mirar_inventario = false;
 	
 
 

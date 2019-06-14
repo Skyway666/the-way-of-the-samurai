@@ -167,10 +167,10 @@ void position_92_first(struct samurai* samurai)
 	{
 		printf("\n\nEntiendo que sea duro, pero deberias haberla cogido... ");
 	}
-	if (samurai->katana >= 1 && samurai->kimono >= 1 && samurai->katana_kimono == 0)
+	if (samurai->katana >= 1 && samurai->kimono >= 1 && !samurai->katana_kimono)
 	{
 		printf("\n\n\nApunte para el jugador : Que hayas adquirido el kimono significa que tienes vida maxima.Si ademas tienes la katana, ya puedes combatir.Coger mejores kimonos aunmentara tu vida maxima y coger mejores katanas aumentara tu daño de combate.Puedes ver tu vida accediendo a 'inventario' puedes curarte en cualquier momento escribiendo 'sushi'.Si tu vida esta al maximo, el sushi se gastara pero no tendra ningun efecto.");
-		samurai->katana_kimono = 1;
+		samurai->katana_kimono = true;
 	}
 	printf("\n\n\n Escribe tu orden:");
 }
@@ -205,7 +205,7 @@ void position_92(struct samurai* samurai)
 void position_90(struct samurai* samurai)
 {
 	printf("\n\nTe encuentras frente a la casa del viejo loco de la aldea. En la puerta hay una nota:\n\n 'Si encuentras esto ven a verme. Para encontrarme debes dar 5 pasos arriba y 3 a la derecha'");
-	if (samurai->llave_casa_viejo_loco == 0)
+	if (!samurai->llave_casa_viejo_loco)
 	{
 		printf("\n\nNecesitas la llave de la casa del viejo loco para entrar. \n\n\n Escribe tu orden:");
 	}
@@ -217,8 +217,8 @@ void position_90(struct samurai* samurai)
 		if (string_comparator(orden, "1") == 1)
 		{
 			printf("\n\nEntras a la casa del viejo loco. Todo esta desordenado y el hedor a excrementos y comida podrida es insoportable. Te adentras en la casa, abriendote paso entre ratas muertas y manchas pegajosas de a saber que substancia encuentras la habitacion de la que el viejo loco te ha hablado. Delante de la cama, en un pedestal, se encuentra el retrato de su familia junto a una bandana. Un rayo de luz ilumina los dos objetos, que dentro del desorden y el mal olor, parecen puros y casi divinos. El viejo loco solo te pidio la foto, pero no puedes dejar esa preciosa bandana blanca allí, y decides cogerla. Sales de la casa, y te colocas la bandana en la frente.\n\n\n Escribe tu orden:");
-			samurai->foto_viejo_loco = 1;
-			samurai->bandana = 1;
+			samurai->foto_viejo_loco = true;
+			samurai->bandana = true;
 		}
 		if (string_comparator(orden, "2") == 1)
 		{
@@ -241,10 +241,10 @@ void position_80_first(struct samurai* samurai)
 	{
 		printf("\n\nSe que es duro, pero deberias haberlo cogido...");
 	}
-	if (samurai->katana >= 1 && samurai->kimono >= 1 && samurai->katana_kimono == 0)
+	if (samurai->katana >= 1 && samurai->kimono >= 1 && !samurai->katana_kimono)
 	{
 		printf("\n\n\nApunte para el jugador : Que hayas adquirido el kimono significa que tienes vida maxima.Si ademas tienes la katana, ya puedes combatir.Coger mejores kimonos aunmentara tu vida maxima y coger mejores katanas aumentara tu daño de combate.Puedes ver tu vida accediendo a 'inventario' puedes curarte en cualquier momento escribiendo 'sushi'.Si tu vida esta al maximo, el sushi se gastara pero no tendra ningun efecto.");
-		samurai->katana_kimono = 1;
+		samurai->katana_kimono = true;
 	}
 	printf("\n\n\n Escribe tu orden: ");
 }
@@ -268,10 +268,10 @@ void position_80(struct samurai* samurai)
 		{
 			printf("Se que es duro, pero deberias haberlo cogido...");
 		}
-		if (samurai->katana >= 1 && samurai->kimono >= 1 && samurai->katana_kimono == 0)
+		if (samurai->katana >= 1 && samurai->kimono >= 1 && !samurai->katana_kimono)
 		{
 			printf("\n\n\nApunte para el jugador : Que hayas adquirido el kimono significa que tienes vida maxima.Si ademas tienes la katana, ya puedes combatir.Coger mejores kimonos aunmentara tu vida maxima y coger mejores katanas aumentara tu daño de combate.Puedes ver tu vida accediendo a 'inventario' puedes curarte en cualquier momento escribiendo 'sushi'.Si tu vida esta al maximo, el sushi se gastara pero no tendra ningun efecto.");
-			samurai->katana_kimono = 1;
+			samurai->katana_kimono = true;
 		}
 		printf("\n\n\n Escribe tu orden: ");
 	}
@@ -302,7 +302,7 @@ void position_43_first(struct samurai *samurai)
 
 	
 		printf("'Hola %s. Parece que has visto el mensaje en mi puerta o me has encontrado por casualidad. Si el caso es el segundo, deberias explorar la aldea, algo terrible ha pasado. Todo el mundo siempre ha pensado que estoy loco, pero es que simplemente no me gusta la gente, ademas ahora están todos muertos y yo estoy aqui... QUIEN ES EL LOCO AHORA EH!!! QUIEN ES EL LOCO AQUI??!\n ...\n...\n Perdón %s, quizás la soledad si queme ha trastocado un poco. Yo solía tener una família, una mujer y un hijo preciosos. Desgraciadamente, mis ansias de poder hicieron que ambos me abandonasen en uno de mis viajes. Ahora soy poseedor de un gran poder, pero me siento miserable sin mi familia... Me gustaría haber podido ver a mi hijo usar el mana un dia de estos, pero ya es tarde para eso, hace demasiado que los perdi. Aqui tengo una foto... Mierda. MIERDA LA PUTA FOTO, DONDE ESTA LA JODIDA FOTO!!! AH MALDITA SEA ME LA HE DEJADO, SIEMPRE CON PRISA, SIEMPRE CON PRISA. Y SI HAN QUEMADO LA CASA?? HIJOS DE PUTA, TENIAN QUE VENIR A MI MALDITA ALDEA... \n...\n... Me he vuelto a alterar verdad? Perdoname. No te vayas aun! Hagamos un trato: Yo quiero esa foto, y tu quieres ser fuerte. Traemela, y te instruire en el arte del uso del mana. Toma las llaves de mi casa. Para el entrenamieno necesitarás tambien una katana y un kimono.' \n\n\n Escribe tu orden:",samurai->name);
-		samurai->llave_casa_viejo_loco = 1;
+		samurai->llave_casa_viejo_loco = true;
 
 		
 }
@@ -310,29 +310,28 @@ void position_43(struct samurai *samurai)
 {
 	printf("\n\n A lo lejos ves al viejo loco del pueblo. Esta sentado encima de una roca meditando. Te hacercas a hablar con él:\n\n");
 
-	if (!(samurai->bandana == 1 && samurai->foto_viejo_loco == 1))
+	if (!samurai->foto_viejo_loco)
 	{
 		printf("'Ve a por la foto o dejame meditar en paz'. \n\n\n Escribe tu orden:");
 	}
-	
-	if (samurai->bandana == 1 && samurai->foto_viejo_loco == 1)
-    {
-		if ( samurai->enseñar_foto == 0)
+	else
+	{
+		if (!samurai->enseñar_foto)
 		{ 
 		printf("\n\n'Vaya %s, parece que has recogido la foto... Es una mujer preciosa, verdad? Y ese chico... Bueno, supongo que nu hubiese podido ser un buen padre de todas formas.", samurai->name);
-		samurai->enseñar_foto = 1;
+		samurai->enseñar_foto = true;
 		} 
 		else
 		{
 			printf("\n\n'Has vuelto! Aun no me canso de mirar esa foto'");
 		}
-		if (!(samurai->katana == 1 && samurai->kimono == 1))
+		if (!(samurai->katana >= 1 && samurai->kimono >= 1))
 		{
 			printf("\n\nParece que te faltan la katana o el kimono, vuelve cuando los tengas. \n\n\n Escribe tu orden:");
 		}
-		if (samurai->katana == 1 && samurai->kimono == 1)
-		  { 
-		printf("\n\nEstá bien, quieres que te ensenye a usar el mana ? \n\n Escribe '1' para aprender a usar mana \n Escribe '2' para rechazar la oferta.\n\n\n Escribe tu orden : '");
+		else
+		{ 
+			printf("\n\nEstá bien, quieres que te ensenye a usar el mana ? \n\n Escribe '1' para aprender a usar mana \n Escribe '2' para rechazar la oferta.\n\n\n Escribe tu orden : '");
 			char orden[100] = "trololo";
 			comprovador_binario(orden);
 			if (string_comparator(orden, "1") == 1)
@@ -349,7 +348,6 @@ void position_43(struct samurai *samurai)
 			}
 			
 		  }
-		
      }
 }
 void position_62()
@@ -404,7 +402,7 @@ void inventario(struct samurai* samurai)
 		printf("Tienes el kimono ensangrentado de tu padre");
 	}
 
-	if (samurai->bandana != 0 && samurai->hablar_viejo != 0)
+	if (samurai->bandana && samurai->hablar_viejo)
 	{
 		  printf("Tienes %i mana de tu %i maná maximo\n", samurai->mana, samurai->max_man);
     }
@@ -423,39 +421,39 @@ void inventario(struct samurai* samurai)
 	{
 		printf("Tienes %i llaves\n");
 	}
-	if (samurai->foto_viejo_loco != 0)
+	if (samurai->foto_viejo_loco)
 	{
 		printf("Tienes la foto del viejo loco\n");
 	}
-	if (samurai->bola_pinchos != 0)
+	if (samurai->bola_pinchos)
 	{
 		printf("Tienes la bola de pinchos\n");
 	}
-	if (samurai->pincel != 0)
+	if (samurai->pincel)
 	{
 		printf("Tienes el pincel\n");
 	}
-	if (samurai->romper_madera_mano != 0)
+	if (samurai->romper_madera_mano)
 	{
 		printf("Puedes romper madera con la mano\n");
 	}
-	if (samurai->huevo_gallina != 0)
+	if (samurai->huevo_gallina)
 	{
 		printf("Tienes el huevo de gallina\n");
 	}
-	if (samurai->perro != 0)
+	if (samurai->perro)
 	{
 		printf("Un perro te acompaña\n");
 	}
-	if (samurai->hacha != 0)
+	if (samurai->hacha)
 	{
 		printf("Tienes un hacha\n");
 	}
-	if (samurai->cabezas_panda)
+	if (samurai->cabezas_panda != 0)
 	{
 		printf("Tienes %i cabezas de panda\n", samurai->cabezas_panda);
 	}
-	if (samurai->vela != 0)
+	if (samurai->vela)
 	{
 		printf("Tienes una vela", samurai->vela);
 	}
