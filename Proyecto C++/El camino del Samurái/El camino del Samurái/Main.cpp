@@ -18,7 +18,8 @@ int game_over= 0;
 printf("El Camino del Samurai:  Juego desarrollado por Lucas Garcia Mateu (Skyway) \n\n\n\n Bienvenido al camino del samurai. En esta aventura textual con elementos de RPG, deberas escribir por tal de llevar a cabo acciones con tu personaje. Te moveras por un mapa encontrando botines, peleando contra maleantes, descubriendo la historia de tu pasado y escribiendo en cada momento tu presente y futuro.\n Hagamos un pequeño tutorial basico: \n \n ");
 char orden[100] = "trololol";
 
-//tutorial(&position, orden, mapa);
+tutorial();
+
 struct samurai samurai;
 samurai.first_61 = 0;
 samurai.first_72 = 0;

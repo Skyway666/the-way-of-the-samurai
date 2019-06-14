@@ -83,62 +83,42 @@ void movement(struct position * position, char* orden)
 	}
 	
 }
-void tutorial(struct position* position, char* orden, int mapa[][10])
+void tutorial()
 {
-	int tutorial = 0;
-	while (tutorial != 3)
+	int tutorial_step = 0;
+	while (true)
 	{
-		printf("\nMuevete hacia arriba (escribe 'arriba' y presiona 'enter'. No apretes 'espacio' en ningun momento, pasaran cosas raras)\n\n");
-
+		char* movement_objective = "undefined";
+		char orden[100] = "none";
+		if (tutorial_step == 0) {
+			printf("\nMuevete hacia arriba (escribe 'arriba' y presiona 'enter'. No apretes 'espacio' en ningun momento, pasaran cosas raras)\n\n");
+			movement_objective = "arriba";
+		}
+		if (tutorial_step == 1) {
+			printf("\nMuy bien! Ahora abajo.");
+			movement_objective = "abajo";
+		}
+		if (tutorial_step == 2) {
+			printf("\nMuy bien! Ahora izquierda.");
+			movement_objective = "izquierda";
+		}
+		if (tutorial_step == 3) {
+			printf("\nMuy bien! Ahora derecha.");
+			movement_objective = "derecha";
+		}
+		if (tutorial_step == 4) {
+			printf("\nFelicidades! Has completado con exito el tutorial y puedes empezar tu aventura. Moverse no es la única mecanica del juego, pero ya se te explicaran conforme vayas avanzando. Ahora que vas a empezar, te recomiendo que hagas caso de los consejos del juego, ya que de no hacerlo, muy probablemente moriras, y la pena a pagar es volver a empezar el juego desde el principio.\n\n\n\n");
+			return;
+		}
 		
 		printf("\nEscribe tu orden:  ");
 		orden_com(orden);
-		movement(position, orden);
 
-		int position_num = mapa[position->x][position->y];
-
-		if (position_num == 51 && tutorial == 0)
-		{
-
-			printf("\nMuy bien! Ahora abajo.");
-			char orden[100] = "trololol";
-			printf("\nEscribe tu orden:  ");
-			orden_com(orden);
-			movement(position, orden);
-			++tutorial;
-			position_num = mapa[position->x][position->y];
-		}
-		if (position_num == 61 && tutorial == 1)
-		{
-			printf("\nMuy bien! Ahora izquierda.");
-			char orden[100] = "trololol";
-			printf("\nEscribe tu orden:  ");
-			orden_com(orden);
-			movement(position, orden);
-			++tutorial;
-			position_num = mapa[position->x][position->y];
-		}
-		if (position_num == 60 && tutorial == 2)
-		{
-
-			printf("\nMuy bien! Ahora derecha.");
-			char orden[100] = "trololol";
-			printf("\nEscribe tu orden:  ");
-			orden_com(orden);
-			movement(position, orden);
-			++tutorial;
-			position_num = mapa[position->x][position->y];
-		}
-		if (position_num == 61 && tutorial == 3)
-		{
-			printf("\nFelicidades! Has completado con exito el tutorial y puedes empezar tu aventura. Moverse no es la única mecanica del juego, pero ya se te explicaran conforme vayas avanzando. Ahora que vas a empezar, te recomiendo que hagas caso de los consejos del juego, ya que de no hacerlo, muy probablemente moriras, y la pena a pagar es volver a empezar el juego desde el principio.\n\n\n\n");
-		}
-		else
-		{
+		if (string_comparator(orden, movement_objective) == 1)
+			tutorial_step++;
+		else{
 			printf("Parece que has cometido un error! Vuelve a empezar el tutorial.");
-			tutorial = 0;
-			position->x = 6;
-			position->y = 1;
+			tutorial_step = 0;
 		}
 	}
 }
@@ -306,16 +286,15 @@ void position_81()
 }
 void orden_com(char *orden)
 {
+	bool valid_command = false;
+	while (!valid_command){
+		scanf_s("%s", orden, 100);
 
-while (string_comparator(orden, "arriba") == 0 && string_comparator(orden, "abajo") == 0 && string_comparator(orden, "derecha") == 0 & string_comparator(orden, "izquierda") == 0 && string_comparator(orden, "inventario")== 0)
-  {
-	scanf_s("%s", orden, 100);
-
-	if (string_comparator(orden, "arriba") == 0 && string_comparator(orden, "abajo") == 0 && string_comparator(orden, "derecha") == 0 && string_comparator(orden, "izquierda") == 0 && string_comparator(orden, "inventario")== 0)
-	{
-		printf("\nEse no es un comando valido\n");
+		if (string_comparator(orden, "arriba") == 0 && string_comparator(orden, "abajo") == 0 && string_comparator(orden, "derecha") == 0 && string_comparator(orden, "izquierda") == 0 && string_comparator(orden, "inventario") == 0)
+			printf("\nEse no es un comando valido\n");
+		else
+			valid_command = true;
 	}
-  }
 }
 void position_43_first(struct samurai *samurai)
 {

@@ -4,7 +4,7 @@
 void squared_map_creation(int*, int );
 int string_comparator(char*, char*);
 void movement(struct position*, char*);
-void tutorial(struct position*, char*, int [][10]);
+void tutorial();
 void orden_com(char*);
 void inventario(struct samurai*);
 void position_61_first();
