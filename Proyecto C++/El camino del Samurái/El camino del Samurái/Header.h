@@ -2,7 +2,7 @@
 #define __HEADER__
 
 void squared_map_creation(int*, int );
-int string_comparator(char*, char*);
+bool string_comparator(char*, char*);
 void movement(struct position*, char*);
 void tutorial();
 void orden_com(char*);
@@ -23,27 +23,27 @@ void position_81_first();
 void position_81();
 void position_43_first(struct samurai*);
 void position_43(struct samurai*);
-void comprovador_binario(char*);
+int input_number(int max_number);
 void position_62();
 struct samurai
 {
 	//Stats
 	char name[100];
-	int vida;
-	int ataque;
-	int mana;
-	int max_vid;
-	int max_man;
+	int vida = 10;
+	int ataque = 0;
+	int mana = 0;
+	int max_vid = 10;
+	int max_man = 0;
 	//Modificadores de stats
-	int katana; 
-	int kimono;
-	int bandana;
+	int katana = 0; 
+	int kimono = 0;
 	//Consumables
 	int sushis = 0;
 	int sakes = 0;
 	int llaves = 0;
 
 	//Objetos de la historia
+	bool bandana = false;
 	bool foto_viejo_loco = false;
 	bool llave_casa_viejo_loco = false;
 	bool saber_usar_mana = false;
@@ -75,8 +75,8 @@ struct samurai
 };
 struct position
 {
-	int x;
-	int y;
+	int x = 0;
+	int y = 0;
 };
 
 
