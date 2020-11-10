@@ -1,30 +1,6 @@
 #ifndef __HEADER__
 #define __HEADER__
 
-void squared_map_creation(int*, int );
-bool string_comparator(char*, char*);
-void movement(struct position*, char*);
-void tutorial();
-void orden_com(char*);
-void inventario(struct samurai*);
-void position_61_first();
-void bosque();
-void aldea_destruida();
-void position_72_first(struct samurai*);
-void position_72();
-void position_82_first(struct samurai*);
-void position_82();
-void position_92_first(struct samurai*);
-void position_92(struct samurai*);
-void position_90(struct samurai*);
-void position_80_first(struct samurai*);
-void position_80(struct samurai*);
-void position_81_first();
-void position_81();
-void position_43_first(struct samurai*);
-void position_43(struct samurai*);
-int input_number(int max_number);
-void position_62();
 struct samurai
 {
 	//Stats
@@ -35,7 +11,7 @@ struct samurai
 	int max_vid = 10;
 	int max_man = 0;
 	//Modificadores de stats
-	int katana = 0; 
+	int katana = 0;
 	int kimono = 0;
 	//Consumables
 	int sushis = 0;
@@ -69,9 +45,6 @@ struct samurai
 
 	//Estados del juego
 	bool mirar_inventario = false;
-	
-
-
 };
 struct position
 {
@@ -79,32 +52,30 @@ struct position
 	int y = 0;
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void squared_map_creation(int*, int );
+bool string_comparator(char*, char*);
+void movement(position*, char*);
+void tutorial();
+void orden_com(char*);
+void inventario(samurai*);
+void position_61_first();
+void bosque();
+void aldea_destruida();
+void position_72_first(samurai*);
+void position_72();
+void position_82_first(samurai*);
+void position_82();
+void position_92_first(samurai*);
+void position_92(samurai*);
+void position_90(samurai*);
+void position_80_first(samurai*);
+void position_80(samurai*);
+void position_81_first();
+void position_81();
+void position_43_first(samurai*);
+void position_43(samurai*);
+int input_number(int max_number);
+void position_62();
 
 
 #endif //__HEADER__

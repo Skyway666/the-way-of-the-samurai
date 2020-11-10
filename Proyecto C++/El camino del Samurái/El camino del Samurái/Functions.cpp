@@ -42,7 +42,7 @@ int input_number(int max_number)
 			return input_number;
 	}
 }
-void movement(struct position * position, char* orden) {
+void movement(position * position, char* orden) {
 	// Movement
 	if (string_comparator(orden, "arriba"))
 		position->x--;
@@ -121,7 +121,7 @@ void aldea_destruida()
 {
 	printf("\n\n\n La aldea esta arrasada. Alla donde miras hay casas quemadas y cadaveres.\n\n\n Escribe tu orden:");
 }
-void position_72_first(struct samurai* samurai)
+void position_72_first(samurai* samurai)
 {
 	printf("\n\n\n Te encuentras uno de los soldados encargados de defender la aldea. Se encuentra con una lanza que le atraviesa de lado a lado, ensartado en un arbol. Te acercas para ver si lleva algo de valor encima. Metes la mano en su bolsillo y de repente notas como se mueve. El soldado tose sangre en tu cara y tu retrocedes un paso asustado. Acto siguiente intentas sacarle la lanza del pecho, y el soldado pronuncia las siguientes palabras: \n\n 'Ni lo intentes joven %s. Yo ya estoy muerto, lo unico que conseguiras es prologar mi sufrimiento. Ademas, dudo que puedas sujetar esta lanza con esos bracitos de princesa, jajaj *cof**cof*... Maldita sea chico, eran como 100 mercenarios sedientos de sangre y mujeres contra 30 civiles y dos soldados. Malditos cobardes... Han matado a los hombres y niños, y se han llevado a todas las mujeres y niñas, excepto a las que han opuesto resistencia, a esas las han violado y matado... No habia visto una masacre asi en todos mis años de servicio, es terrible. Ese perro de Iruka Donov pagara algun dia por todos sus viles actos. Es un enfermo que se dedica a saquear aldeas indefensas, se lleva las riquezas y mujeres, y dios sabe que hace con ellas *cof**cof*. No sé como has sobrevivido chico, pero sera mejor que te largues y reagas tu vida, por donde pasa Iruka no vuelve a crecer la vida, y todo el norte ya esta reclamado como su imperio. Se que no dormiras tranquilo despues de lo que has visto, pero la vida es injusta y no tienes otra opcion... A mi ya me ha llegado la hora, nos vemos en el otro lado' \n\n Con un ultimo suspiro, el soldado muere silenciosamente. Donde estaran tus padres?\n\n\n Escribe una orden:", samurai->name);
 }
@@ -129,7 +129,7 @@ void position_72()
 {
 	printf("\n\n\n Hay un soldado ensartado en un arbol por una lanza. Esta muerto\n\n\n Escribe una orden:");
 }
-void position_82_first(struct samurai* samurai)
+void position_82_first(samurai* samurai)
 {
 	printf("\n\n\n Ahi esta el bar de la aldea. El unico amigo que tenias en la aldea murio hace tiempo por una pelea en ese bar, desde entonces nunca mas habias vuelto a esa zona. El bar esta completamente destrozado, pero te rugen las tripas, y quieres entrar a ver si queda algo que valga la pena. Entras y encuentras en la despensa del local una botella de sake y un sushi. \n\n\n Apunte para el jugador: Puedes acceder al inventario una vez hayan terminado los eventos del lugar en el que estas escribiendo 'inventario'. Puedes probarlo ahora mismo! \n\n\n Escribe una orden:");
 	samurai->sushis++;
@@ -139,7 +139,7 @@ void position_82()
 {
 	printf("\n\n\n Es un bar desolado sin nada de interes dentro. \n\n\n Escribe tu orden: ");
 }
-void position_92_first(struct samurai* samurai)
+void position_92_first(samurai* samurai)
 {
 	printf("\n\nA lo lejos ves una mujer tirada en el suelo. Esta completamente desnuda encima de un charco de sangre. Te acercas poco a poco y ves que es tu madre. Tiene marcas de golpes por todos lados, y el cuerpo cubierto de esperma. Ambos pechos han sido extirpados y tiene una katana metida en la vagina. Es duro, pero yo de tí cogeria esa katana, si vas a ir por ahí solo la vas a necesitar.\n\n\n Escribe '1' para coger la katana\n\n Escribe '2' para dejarla en el sitio\n\n\n Escribe tu orden:");
 	int input =  input_number(2);
@@ -158,7 +158,7 @@ void position_92_first(struct samurai* samurai)
 	}
 	printf("\n\n\n Escribe tu orden:");
 }
-void position_92(struct samurai* samurai)
+void position_92(samurai* samurai)
 {
 	if (samurai->katana == 1){
 		printf("\n\nAhi esta el cadaver de tu madre con los senos extirpados\n\n\n Escribe tu orden:");
@@ -181,7 +181,7 @@ void position_92(struct samurai* samurai)
 		printf("\n\n\n Escribe tu orden:");
 	}
 }
-void position_90(struct samurai* samurai)
+void position_90(samurai* samurai)
 {
 	printf("\n\nTe encuentras frente a la casa del viejo loco de la aldea. En la puerta hay una nota:\n\n 'Si encuentras esto ven a verme. Para encontrarme debes dar 5 pasos arriba y 3 a la derecha'");
 	if (!samurai->llave_casa_viejo_loco){
@@ -202,7 +202,7 @@ void position_90(struct samurai* samurai)
 		
 	}
 }
-void position_80_first(struct samurai* samurai)
+void position_80_first(samurai* samurai)
 {
 	printf("\n\n Caminas hacia lo que parece ser una persona ensartada en una pared por varias katanas. Cuando te acercas lo suficiente te das cuenta que es (o era) tu padre. Ambas extremidades superiores le han sido mutiladas y el cuerpo esta lleno de estocadas de katanas. La cara es casi irreconocible, con varios cortes y una espada que atraviesa el craneo de lado a lado y se clava en la pared. LLevaba su kimono de samurai... Parece que aun lo guardaba despues de tantos años de haberse jubilado. Murio luchando con honor. El kimono que lleva es de gran calidad. Aunque ensangrentado y con algunos ajugeros, te servira si has de pelear. \n\n Escribe '1' para coger el kimono \n\n Escribe '2' para irte \n\n Escribe tu orden:");
 
@@ -215,12 +215,12 @@ void position_80_first(struct samurai* samurai)
 		printf("\n\nSe que es duro, pero deberias haberlo cogido...");
 
 	if (samurai->katana >= 1 && samurai->kimono >= 1 && !samurai->katana_kimono){
-		printf("\n\n\nApunte para el jugador : Que hayas adquirido el kimono significa que tienes vida maxima.Si ademas tienes la katana, ya puedes combatir.Coger mejores kimonos aunmentara tu vida maxima y coger mejores katanas aumentara tu daño de combate.Puedes ver tu vida accediendo a 'inventario' puedes curarte en cualquier momento escribiendo 'sushi'.Si tu vida esta al maximo, el sushi se gastara pero no tendra ningun efecto.");
+		printf("\n\n\nApunte para el jugador : Que hayas adquirido el kimono significa que tienes vida maxima.Si ademas tienes la katana, ya puedes combatir. Coger mejores kimonos aunmentara tu vida maxima y coger mejores katanas aumentara tu daño de combate.Puedes ver tu vida accediendo a 'inventario' puedes curarte en cualquier momento escribiendo 'sushi'.Si tu vida esta al maximo, el sushi se gastara pero no tendra ningun efecto.");
 		samurai->katana_kimono = true;
 	}
 	printf("\n\n\n Escribe tu orden: ");
 }
-void position_80(struct samurai* samurai){
+void position_80(samurai* samurai){
 	if (samurai->kimono == 1){ 
 		printf("\n\nTirado en el suelo esta el cadaver de tu padre \n\n\n Escribe tu orden:");
 	}
@@ -259,13 +259,14 @@ void orden_com(char *orden){
 			valid_command = true;
 	}
 }
-void position_43_first(struct samurai *samurai){
+void position_43_first(samurai *samurai){
 	printf("\n\n A lo lejos ves al viejo loco del pueblo. Está sentado encima de una roca meditando. Te hacercas a hablar con él:\n\n");
 
-	printf("'Hola %s. Parece que has visto el mensaje en mi puerta o me has encontrado por casualidad. Si el caso es el segundo, deberias explorar la aldea, algo terrible ha pasado. Todo el mundo siempre ha pensado que estoy loco, pero es que simplemente no me gusta la gente, ademas ahora están todos muertos y yo estoy aqui... QUIEN ES EL LOCO AHORA EH!!! QUIEN ES EL LOCO AQUI??!\n ...\n...\n Perdón %s, quizás la soledad si queme ha trastocado un poco. Yo solía tener una família, una mujer y un hijo preciosos. Desgraciadamente, mis ansias de poder hicieron que ambos me abandonasen en uno de mis viajes. Ahora soy poseedor de un gran poder, pero me siento miserable sin mi familia... Me gustaría haber podido ver a mi hijo usar el mana un dia de estos, pero ya es tarde para eso, hace demasiado que los perdi. Aqui tengo una foto... Mierda. MIERDA LA PUTA FOTO, DONDE ESTA LA JODIDA FOTO!!! AH MALDITA SEA ME LA HE DEJADO, SIEMPRE CON PRISA, SIEMPRE CON PRISA. Y SI HAN QUEMADO LA CASA?? HIJOS DE PUTA, TENIAN QUE VENIR A MI MALDITA ALDEA... \n...\n... Me he vuelto a alterar verdad? Perdoname. No te vayas aun! Hagamos un trato: Yo quiero esa foto, y tu quieres ser fuerte. Traemela, y te instruire en el arte del uso del mana. Toma las llaves de mi casa. Para el entrenamieno necesitarás tambien una katana y un kimono.' \n\n\n Escribe tu orden:",samurai->name);
+	printf("Hola %s. Parece que has visto el mensaje en mi puerta o me has encontrado por casualidad. Si el caso es el segundo, deberias explorar la aldea, algo terrible ha pasado. Todo el mundo siempre ha pensado que estoy loco, pero es que simplemente no me gusta la gente, ademas ahora están todos muertos y yo estoy aqui... QUIEN ES EL LOCO AHORA EH!!! QUIEN ES EL LOCO AQUI??!\n ...\n...\n",samurai->name);
+	printf("Perdón %s, quizás la soledad si queme ha trastocado un poco. Yo solía tener una família, una mujer y un hijo preciosos. Desgraciadamente, mis ansias de poder hicieron que ambos me abandonasen en uno de mis viajes. Ahora soy poseedor de un gran poder, pero me siento miserable sin mi familia... Me gustaría haber podido ver a mi hijo usar el mana un dia de estos, pero ya es tarde para eso, hace demasiado que los perdi. Aqui tengo una foto... Mierda. MIERDA LA PUTA FOTO, DONDE ESTA LA JODIDA FOTO!!! AH MALDITA SEA ME LA HE DEJADO, SIEMPRE CON PRISA, SIEMPRE CON PRISA. Y SI HAN QUEMADO LA CASA?? HIJOS DE PUTA, TENIAN QUE VENIR A MI MALDITA ALDEA... \n...\n...\nMe he vuelto a alterar verdad? Perdoname. No te vayas aun! Hagamos un trato: Yo quiero esa foto, y tu quieres ser fuerte. Traemela, y te instruire en el arte del uso del mana. Toma las llaves de mi casa. Para el entrenamieno necesitarás tambien una katana y un kimono.' \n\n\n Escribe tu orden:");
 	samurai->llave_casa_viejo_loco = true;	
 }
-void position_43(struct samurai *samurai){
+void position_43(samurai *samurai){
 	printf("\n\n A lo lejos ves al viejo loco del pueblo. Esta sentado encima de una roca meditando. Te hacercas a hablar con él:\n\n");
 
 	if (!samurai->foto_viejo_loco)
@@ -285,7 +286,7 @@ void position_43(struct samurai *samurai){
 			int input = input_number(2);
 			if (input == 1){
 				printf("\n\n'Bien chaval, empecemos el entrenamiento. El mana es la energia vital de las personas, y se restaura bebiendo sake. Gracias al mana pudes realizar hechizos que te ayudarán en el combate. El primero hechizo que podrás usar será el de fuego. Hace daño a tu enemigo y le quemará.' \n\n Después de unos duros dias de entrenamiento, aprendes a usar el maná \n\n 'Bien chico, parece que ya sabes usar el mana. Repasemos lo que has aprendido.'");
-				// Insertar tutorial aquí
+				// TODO: Insertar tutorial
 				printf("\n\n\n Escribe tu orden:");
 				samurai->hablar_viejo = true;
 			}
@@ -327,7 +328,7 @@ void position_62()
 }
 
 
-void inventario(struct samurai* samurai)
+void inventario(samurai* samurai)
 {
 	printf("\n\n\n Estos son tus objetos: \n\n\n");
 	
