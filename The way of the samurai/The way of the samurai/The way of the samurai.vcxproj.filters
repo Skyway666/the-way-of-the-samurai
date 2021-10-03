@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Code">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Code\Application">
+      <UniqueIdentifier>{28222dae-db26-4f09-9eb1-a314ece26652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Third Party">
+      <UniqueIdentifier>{97170178-fcc6-477a-9745-06e3e7752a38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Application\Modules">
+      <UniqueIdentifier>{c99d01da-1fba-40af-a007-6a0a20e48f9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Application\Modules\GameImporter">
+      <UniqueIdentifier>{884acf46-b1eb-4c24-9628-45a3c34090fc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Third Party\parson.c">
+      <Filter>Code\Third Party</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Code\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Module.cpp">
+      <Filter>Code\Application\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleGameImporter.cpp">
+      <Filter>Code\Application\Modules\GameImporter</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Third Party\parson.h">
+      <Filter>Code\Third Party</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Code\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Module.h">
+      <Filter>Code\Application\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleGameImporter.h">
+      <Filter>Code\Application\Modules\GameImporter</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
