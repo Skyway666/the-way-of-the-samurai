@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "ModuleGameImporter.h"
+#include "ModuleInput.h"
 #include <vector>
 
 // Manages the application
@@ -39,6 +40,7 @@ public:
 
 	// Pointers to modules for global access
 	ModuleGameImporter* gameImporter = nullptr;
+	ModuleInput* input = nullptr;
 
 // Private attributes
 private:
@@ -47,8 +49,6 @@ private:
 
 	// Modules
 	std::vector<Module*> modules;
-
-
 };
 
 extern Application* app;

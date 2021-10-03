@@ -6,9 +6,11 @@ void Application::Init()
 {
 	// Create modules
 	gameImporter = new ModuleGameImporter();
+	input = new ModuleInput();
 
 	// Save in the app
 	modules.push_back((Module*)gameImporter);
+	modules.push_back((Module*)input);
 
 	// Initialize
 	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
@@ -49,7 +51,7 @@ void Application::Update()
 	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
 	{
 		// If a module fails the application quits
-		if (!(*it)->Start())
+		if (!(*it)->Update())
 		{
 			state = State::QUITTING;
 			return;
