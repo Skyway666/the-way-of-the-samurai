@@ -1,15 +1,13 @@
 #include "ModuleInput.h"
 #include "Application.h"
+#include <iostream>
+
 
 bool ModuleInput::Update()
 {
-	// Intruction to the user
-	app->log("Press 'e' + 'enter' to exit");
+	// Input throw window console
+	getline(cin, currentLoopInput);
 
-	// Exit if the user presses 'e'
-	bool ret = true;
-	if (getchar() == 'e')
-		ret = false;
-
-	return ret;
+	// I don't know what could go wrong receiving input
+	return true;
 }

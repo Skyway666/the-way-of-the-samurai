@@ -4,6 +4,7 @@
 class Module
 {
 public:
+	// Virtual methods
 	virtual bool Init() { return true; }
 	virtual bool Start() { return true; }
 	virtual bool Update() { return true; }

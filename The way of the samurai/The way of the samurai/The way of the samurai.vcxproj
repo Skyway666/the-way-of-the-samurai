@@ -143,6 +143,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Module.cpp" />
     <ClCompile Include="ModuleGameImporter.cpp" />
+    <ClCompile Include="ModuleGameLogic.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="Third Party\parson.c" />
   </ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleGameImporter.h" />
+    <ClInclude Include="ModuleGameLogic.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="Third Party\parson.h" />
   </ItemGroup>

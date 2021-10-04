@@ -1,16 +1,24 @@
 #include "Application.h"
+#include "ModuleGameImporter.h"
+#include "ModuleInput.h"
+#include "ModuleGameLogic.h"
 #include <stdio.h>
 
 // Initializes app by creating the Modules and calling "Init" on them
 void Application::Init()
 {
 	// Create modules
-	gameImporter = new ModuleGameImporter();
+	gameLogic = new ModuleGameLogic();
 	input = new ModuleInput();
+	gameImporter = new ModuleGameImporter();
+
 
 	// Save in the app
-	modules.push_back((Module*)gameImporter);
+	modules.push_back((Module*)gameLogic);
 	modules.push_back((Module*)input);
+	modules.push_back((Module*)gameImporter);
+
+
 
 	// Initialize
 	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
@@ -82,5 +90,7 @@ const Application::State Application::GetState()
 const void Application::log(const char* message)
 {
 	printf(message);
+
+	// Logs are allways separated by a newline for clarity
 	printf("\n");
 }

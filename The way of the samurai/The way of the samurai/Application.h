@@ -1,8 +1,12 @@
 #pragma once
 #include "Module.h"
-#include "ModuleGameImporter.h"
-#include "ModuleInput.h"
 #include <vector>
+
+// Forward declaration
+class ModuleGameLogic;
+class ModuleInput;
+class ModuleGameImporter;
+
 
 // Manages the application
 class Application
@@ -39,8 +43,10 @@ public:
 public:
 
 	// Pointers to modules for global access
-	ModuleGameImporter* gameImporter = nullptr;
+	ModuleGameLogic* gameLogic = nullptr;
 	ModuleInput* input = nullptr;
+	ModuleGameImporter* gameImporter = nullptr;
+
 
 // Private attributes
 private:

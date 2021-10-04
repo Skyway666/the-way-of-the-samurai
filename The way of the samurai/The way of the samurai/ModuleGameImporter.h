@@ -1,11 +1,12 @@
 #pragma once
 #include "Module.h"
-#include "Third Party/parson.h"
 #include <string>
 #include <vector>
 using namespace std;
 
 // Forward declaration
+typedef struct json_object_t JSON_Object;
+
 struct Event;
 struct MapEvent;
 struct SubEvent;
@@ -16,7 +17,7 @@ class ModuleGameImporter: public Module
 {
 // Public methods
 public:
-	// Module inherited method
+	// Module inherited methods
 	bool Init() override;
 
 // Public attributes
@@ -49,6 +50,7 @@ public:
 // Public attributes
 public:
 	int gridPosition;
+	bool navigable;
 };
 
 // Event that can happen within an event

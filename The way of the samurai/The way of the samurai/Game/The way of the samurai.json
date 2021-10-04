@@ -3,6 +3,11 @@
   "mapEvents": [
     {
       "gridPosition": 1,
+      "text":  "This is the initial grid position. Type 'increase' to go to the next one or 'decrease' to go back"
+    },
+    {
+      "gridPosition": 2,
+      "navigable": true,
       "text": "Initial grid position, do you go left or right?",
       "obtainedConditions": [
         "Sword",
@@ -27,7 +32,8 @@
       ]
     },
     {
-      "gridPosition": 2,
+      "gridPosition": 3,
+      "navigable": true,
       "text": "Second grid position, are you righteous or sinister?",
       "subEvents": [
         {

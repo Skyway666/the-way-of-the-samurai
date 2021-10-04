@@ -43,6 +43,9 @@ MapEvent::MapEvent(JSON_Object* s_mapEvent): Event(s_mapEvent)
 {
 	// Read grid position
 	gridPosition = json_object_get_number(s_mapEvent, "gridPosition");
+
+	// Read navigable flag
+	navigable = json_object_get_boolean(s_mapEvent, "navigable");
 }
 
 SubEvent::SubEvent(JSON_Object* s_subEvent): Event(s_subEvent)

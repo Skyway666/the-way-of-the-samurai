@@ -23,6 +23,9 @@
     <Filter Include="Code\Application\Modules\Input">
       <UniqueIdentifier>{e8622d74-8e9e-4818-a5f2-fb627721fc93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Application\Modules\GameLogic">
+      <UniqueIdentifier>{559b2b53-8b00-45ca-a1b3-a223bd94cd7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -43,6 +46,9 @@
     <ClCompile Include="ModuleInput.cpp">
       <Filter>Code\Application\Modules\Input</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleGameLogic.cpp">
+      <Filter>Code\Application\Modules\GameLogic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Third Party\parson.h">
@@ -59,6 +65,9 @@
     </ClInclude>
     <ClInclude Include="ModuleInput.h">
       <Filter>Code\Application\Modules\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleGameLogic.h">
+      <Filter>Code\Application\Modules\GameLogic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
