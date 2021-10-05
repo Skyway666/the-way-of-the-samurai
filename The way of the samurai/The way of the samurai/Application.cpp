@@ -82,12 +82,12 @@ void Application::CleanUp()
 	}
 }
 
-const Application::State Application::GetState()
+Application::State Application::GetState() const
 {
 	return state;
 }
 
-const void Application::log(const char* message)
+void Application::log(const char* message) const
 {
 	printf(message);
 

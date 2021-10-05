@@ -35,9 +35,9 @@ public:
 
 
 	// Check state of the app
-	const State GetState();
+	State GetState() const;
 	// Log messages to the console
-	const void log(const char* message);
+	void log(const char* message) const;
 
 // Public attributes
 public:

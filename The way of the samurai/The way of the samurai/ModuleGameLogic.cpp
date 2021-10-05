@@ -28,16 +28,14 @@ bool ModuleGameLogic::Start()
 
 bool ModuleGameLogic::Update()
 {
-	bool ret = true;
-
 	// Loads the next event by reading input
-	ret = LoadEvent();
+	LoadEventResult loadedEventResult = LoadEvent();
 
-	// Handle event
-	if(handlingEvent != nullptr)
+	// Handle event if it could be loaded
+	if (loadedEventResult == LoadEventResult::EVENT_LOADED)
 		HandleCurrentEvent();
 
-	return ret;
+	return loadedEventResult != LoadEventResult::FATAL_ERROR;
 }
 
 void ModuleGameLogic::HandleCurrentEvent()
@@ -46,39 +44,60 @@ void ModuleGameLogic::HandleCurrentEvent()
 	app->log(handlingEvent->text.c_str());
 
 	// Obtain conditions
-	for (vector<string>::iterator it = handlingEvent->obtainedConditions.begin(); 
-		it != handlingEvent->obtainedConditions.end(); 
-		it++) 
-			gameState.conditions.push_back((*it));
+	for (vector<string>::iterator it = handlingEvent->obtainedConditions.begin();
+		it != handlingEvent->obtainedConditions.end();
+		it++)
+		gameState.conditions.push_back((*it));
+
+	// TODO: Inform the user about the obtained conditions
 
 	// Obtain objects
-	for (vector<string>::iterator it = handlingEvent->obtainedObjects.begin(); 
-		it != handlingEvent->obtainedObjects.end(); 
+	for (vector<string>::iterator it = handlingEvent->obtainedObjects.begin();
+		it != handlingEvent->obtainedObjects.end();
 		it++)
-			gameState.objects.push_back((*it));
+		gameState.objects.push_back((*it));
+
+	// TODO: Indorm the user about the obtained objects
 
 	// If there are no events to handle, go back to navigating the map
 	if (handlingEvent->subEvents.empty())
-		logicState = LogicState::NavigatingMap;
-	else 
+		BackToMap();
+	// If there are events to handle
+	else
 	{
-		logicState = LogicState::InEvent;
+		// Set the logic state so a sub event is selected
+		logicState = LogicState::IN_EVENT;
 
-		// TODO: Display possible sub events
+		// Inform the user of the possible events to be picked
+		app->log("Pick one of the possible sub events:");
+		for (vector<SubEvent>::iterator it = handlingEvent->subEvents.begin();
+			it != handlingEvent->subEvents.end();
+			it++)
+		{
+			app->log(("    -" + (*it).option).c_str());
+		}
 	}
-
-
 }
 
-bool ModuleGameLogic::LoadEvent()
+ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 {
-	switch (logicState) 
+	LoadEventResult ret = LoadEventResult::FATAL_ERROR;
+
+	switch (logicState)
 	{
 		// If the map is being navigated, update position
-		case LogicState::NavigatingMap:
-			UpdateGridPosition();
+		case LogicState::NAVIGATING_MAP:
+		{
+			// If the moving command was invalid skip the logical frame
+			if (!UpdateGridPosition())
+			{
+				handlingEvent = nullptr;
+				ret = LoadEventResult::INVALID_INPUT;
+				break;
+			}
+		}
 		// If the map is being navigated OR we are in an initialization phase, load map event
-		case LogicState::Initialization:
+		case LogicState::INITIALIZATION:
 		{
 			// Get map event
 			handlingEvent = GetCurrentMapEvent();
@@ -88,24 +107,77 @@ bool ModuleGameLogic::LoadEvent()
 			{
 				// Something went terribly wring
 				app->log("FATAL ERROR: The grid position didn't had a matching map event");
-				return false;
+				ret = LoadEventResult::FATAL_ERROR;
 			}
+			// If there is a map event
+			else 
+				ret = LoadEventResult::EVENT_LOADED;
 			break;
 		}
 		// If there is an event to handle use the input to load a sub event
-		case LogicState::InEvent:
+		case LogicState::IN_EVENT:
 		{
-			/* TODO: Load sub event
-				- Check if the provided input leads to a sub event
-				- Check if the conditions for the sub event are met
-				- If they are, load the sub event
-				- If they aren't, load the rejection text and return to the move state.
-			*/
+			// Check if the provided input leads to a sub event
+			SubEvent* choosenOption = nullptr;
+			for (vector<SubEvent>::iterator it = handlingEvent->subEvents.begin();
+				it != handlingEvent->subEvents.end();
+				it++)
+			{
+				if ((*it).option == app->input->currentLoopInput)
+					choosenOption = &(*it);
+			}
+
+			// An option was choosen
+			if (choosenOption != nullptr)
+			{
+				// Check if the conditions for the sub event are met
+				bool conditionsMet = true;
+				for (vector<string>::iterator it = choosenOption->conditions.begin();
+					it != choosenOption->conditions.end();
+					it++) 
+				{
+					// If the condition of the choosenOption is not within the gameState conditions
+					if (find(gameState.conditions.begin(), gameState.conditions.end(), (*it)) 
+						== 
+						gameState.conditions.end()) 
+					{
+						// The conditions are not met
+						conditionsMet = false;
+						break;
+					}
+				}
+
+				// If the conditions have been met
+				if (conditionsMet)
+				{
+					// Load the sub event
+					handlingEvent = choosenOption;
+					ret = LoadEventResult::EVENT_LOADED;
+				}
+				// The conditions have not been met
+				else 
+				{
+					// Load the rejection text 
+					// TODO: Choose the rejection text based on the missing conditions
+					app->log("The conditions for picking this sub event are not met.");
+					handlingEvent = nullptr;
+
+					// Go back to navigate the map
+					ret = LoadEventResult::EVENT_ENDED;
+					BackToMap();
+				}
+			}
+			// The choosen option was not avaliable
+			else 
+			{
+				app->log("That is not an option");
+				ret = LoadEventResult::INVALID_INPUT;
+			}
 			break;
 		}
 	}
 
-	return true;
+	return ret;
 }
 
 MapEvent* ModuleGameLogic::GetCurrentMapEvent() const
@@ -123,16 +195,29 @@ MapEvent* ModuleGameLogic::GetCurrentMapEvent() const
 	return nullptr;
 }
 
-void ModuleGameLogic::UpdateGridPosition()
+bool ModuleGameLogic::UpdateGridPosition()
 {
 	// TODO: : Read input and update grid position (north, south, east, west)
 
+	bool ret = true;
 	if (app->input->currentLoopInput == "increase")
 		gameState.currentGridPosition++;
 	else if (app->input->currentLoopInput == "decrease")
 		gameState.currentGridPosition--;
-	else
+	else 
+	{
+		ret = false;
 		app->log("Invalid moving input, please introduce another command");
+	}
+
+	return ret;
+
+}
+
+void ModuleGameLogic::BackToMap()
+{
+	app->log("Where do you want to go?");
+	logicState = LogicState::NAVIGATING_MAP;
 }
 
 void ModuleGameLogic::GameData::Save(JSON_Object* s_GameData)

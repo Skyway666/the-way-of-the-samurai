@@ -11,7 +11,6 @@ struct Event;
 
 
 
-
 class ModuleGameLogic : public Module
 {
 // Public structures
@@ -28,11 +27,19 @@ public:
 		void Save(JSON_Object* s_GameData);
 	};
 
-	enum LogicState
+	enum class LogicState
 	{
-		Initialization,
-		NavigatingMap,
-		InEvent
+		INITIALIZATION,
+		NAVIGATING_MAP,
+		IN_EVENT
+	};
+
+	enum class LoadEventResult
+	{
+		FATAL_ERROR,
+		EVENT_LOADED,
+		EVENT_ENDED,
+		INVALID_INPUT
 	};
 
 // Public methods
@@ -47,12 +54,14 @@ private:
 	// Handles an event
 	void HandleCurrentEvent();
 	// Load map event
-	bool LoadEvent();
+	LoadEventResult LoadEvent();
 
 	// Returns current map event depending in the currentGridPosition
 	MapEvent* GetCurrentMapEvent() const;
-	// Use input to update grid position
-	void UpdateGridPosition();
+	// Use input to update grid position. Returns false if the input was invalid
+	bool UpdateGridPosition();
+	// Sets the logic state to "NAVIGATING_MAP" and notifies the player
+	void BackToMap();
 
 // Private attributes
 private:
@@ -63,6 +72,6 @@ private:
 	Event* handlingEvent = nullptr;
 
 	// State in which the logical machine is
-	LogicState logicState = LogicState::Initialization;
+	LogicState logicState = LogicState::INITIALIZATION;
 };
 
