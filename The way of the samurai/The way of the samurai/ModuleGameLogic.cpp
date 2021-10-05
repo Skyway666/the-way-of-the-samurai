@@ -83,6 +83,7 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 {
 	LoadEventResult ret = LoadEventResult::FATAL_ERROR;
 
+	// Try to load an event depending on the logic state
 	switch (logicState)
 	{
 		// If the map is being navigated, update position
