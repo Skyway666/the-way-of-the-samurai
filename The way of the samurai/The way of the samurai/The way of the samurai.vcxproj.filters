@@ -26,6 +26,9 @@
     <Filter Include="Code\Application\Modules\GameLogic">
       <UniqueIdentifier>{559b2b53-8b00-45ca-a1b3-a223bd94cd7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Application\Helpers">
+      <UniqueIdentifier>{e4da92ec-9b20-4e95-a3fb-cc0f2c848bac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -49,6 +52,9 @@
     <ClCompile Include="ModuleGameLogic.cpp">
       <Filter>Code\Application\Modules\GameLogic</Filter>
     </ClCompile>
+    <ClCompile Include="ContainerUtils.cpp">
+      <Filter>Code\Application\Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Third Party\parson.h">
@@ -68,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="ModuleGameLogic.h">
       <Filter>Code\Application\Modules\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="ContainerUtils.h">
+      <Filter>Code\Application\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

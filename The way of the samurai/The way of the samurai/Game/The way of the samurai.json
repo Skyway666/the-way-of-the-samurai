@@ -1,9 +1,17 @@
 {
+  "config": {
+    "gridRowLength": 10,
+    "initialPosition": 1,
+    "initialText": "Welcome to the way of the samurai! For the moment this is just a test but please be pacient",
+    "savePlayerName": false,
+    "savePlayerNameText": "What is your name brave samurai?",
+    "defaultSubEventRejectionMessage":  "The conditions for picking this event are not met"
+  },
   "tutorialSteps": [],
   "mapEvents": [
     {
       "gridPosition": 1,
-      "text":  "This is the initial grid position. Type 'increase' to go to the next one or 'decrease' to go back"
+      "text": "This is the initial grid position. Type 'increase' to go to the next one or 'decrease' to go back"
     },
     {
       "gridPosition": 2,
@@ -22,7 +30,6 @@
           "option": "right",
           "text": "You have choosen to go right, so now you are righteous!",
           "obtainedConditions": [ "righteous" ]
-
         },
         {
           "option": "left",
@@ -42,8 +49,12 @@
           "text": "Yeah, you are!",
           "rejectionTexts": [
             {
+              "conditions": [ "sinister" ],
+              "text": "Back out sinister soul"
+            },
+            {
               "conditions": [],
-              "text": "No, you are not!"
+              "text": "You are nothing, come back when you are worthy"
             }
           ]
         },
@@ -53,8 +64,12 @@
           "text": "Yeah, you are!",
           "rejectionTexts": [
             {
+              "conditions": [ "righteous" ],
+              "text": "You are too righteous for this path"
+            },
+            {
               "conditions": [],
-              "text": "No, you are not!"
+              "text": "You are nothing, get ready to be consumed!"
             }
           ]
         }

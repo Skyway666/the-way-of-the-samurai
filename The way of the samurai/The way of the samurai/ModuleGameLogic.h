@@ -23,6 +23,8 @@ public:
 		list<string> objects;
 		// Position of the player in the map
 		int currentGridPosition = 0;
+		// Previous position of the player
+		int previousGridPosition = 0;
 
 		void Save(JSON_Object* s_GameData);
 	};

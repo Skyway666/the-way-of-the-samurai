@@ -3,6 +3,7 @@
 #include "ModuleGameImporter.h"
 #include "ModuleInput.h"
 #include "Application.h"
+#include "ContainerUtils.h"
 #include <vector>
 
 using namespace std;
@@ -16,12 +17,11 @@ bool ModuleGameLogic::Init()
 bool ModuleGameLogic::Start()
 {
 	/* TODO: If there is no save file:
-		- Assign initial grid position from GameImporter
-		- Display initial text
 		- Ask player name if it is enabled
 	*/
 
-	app->log("Welcome to the most epic text adventure ever!");
+	gameState.currentGridPosition = app->gameImporter->config.initialPosition;
+	app->log(app->gameImporter->config.initialText.c_str());
 	gameState.currentGridPosition = 1;
 	return true;
 }
@@ -49,15 +49,11 @@ void ModuleGameLogic::HandleCurrentEvent()
 		it++)
 		gameState.conditions.push_back((*it));
 
-	// TODO: Inform the user about the obtained conditions
-
 	// Obtain objects
 	for (vector<string>::iterator it = handlingEvent->obtainedObjects.begin();
 		it != handlingEvent->obtainedObjects.end();
 		it++)
 		gameState.objects.push_back((*it));
-
-	// TODO: Indorm the user about the obtained objects
 
 	// If there are no events to handle, go back to navigating the map
 	if (handlingEvent->subEvents.empty())
@@ -131,22 +127,11 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 			// An option was choosen
 			if (choosenOption != nullptr)
 			{
+
+				// Convert list of condition to a vector
+				vector<string> gameConditionsVector = vector<string>(gameState.conditions.begin(), gameState.conditions.end());
 				// Check if the conditions for the sub event are met
-				bool conditionsMet = true;
-				for (vector<string>::iterator it = choosenOption->conditions.begin();
-					it != choosenOption->conditions.end();
-					it++) 
-				{
-					// If the condition of the choosenOption is not within the gameState conditions
-					if (find(gameState.conditions.begin(), gameState.conditions.end(), (*it)) 
-						== 
-						gameState.conditions.end()) 
-					{
-						// The conditions are not met
-						conditionsMet = false;
-						break;
-					}
-				}
+				bool conditionsMet = ContainerUtils::stringVectorAContainsB(choosenOption->conditions, gameConditionsVector);
 
 				// If the conditions have been met
 				if (conditionsMet)
@@ -158,10 +143,34 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 				// The conditions have not been met
 				else 
 				{
-					// Load the rejection text 
-					// TODO: Choose the rejection text based on the missing conditions
-					app->log("The conditions for picking this sub event are not met.");
-					handlingEvent = nullptr;
+					// Load the rejection text based on the missing conditions
+					RejectionText* rejectionText = nullptr;
+					for (vector<RejectionText>::iterator it = choosenOption->rejectionTexts.begin();
+						it != choosenOption->rejectionTexts.end();
+						it++) 
+					{
+						// If the conditions for the rejection text are met
+						if (ContainerUtils::stringVectorAContainsB((*it).conditions, gameConditionsVector))
+						{
+							// Save the rejection text
+							rejectionText = &(*it);
+							break;
+						}
+					}
+
+					// The rejection text was found
+					if (rejectionText != nullptr) 
+					{
+						// Display the rejection text
+						app->log(rejectionText->text.c_str());
+					}
+					// The rejection text was not found
+					else 
+					{
+						// Display default rejection text
+						app->log(app->gameImporter->config.defaultSubEventRejectionMessage.c_str());
+						handlingEvent = nullptr;
+					}
 
 					// Go back to navigate the map
 					ret = LoadEventResult::EVENT_ENDED;
@@ -198,12 +207,15 @@ MapEvent* ModuleGameLogic::GetCurrentMapEvent() const
 
 bool ModuleGameLogic::UpdateGridPosition()
 {
-	// TODO: : Read input and update grid position (north, south, east, west)
-
+	// Grid movement
 	bool ret = true;
-	if (app->input->currentLoopInput == "increase")
-		gameState.currentGridPosition++;
-	else if (app->input->currentLoopInput == "decrease")
+	if (app->input->currentLoopInput == "north")
+		gameState.currentGridPosition += app->gameImporter->config.gridRowLength;
+	else if (app->input->currentLoopInput == "south")
+		gameState.currentGridPosition -= app->gameImporter->config.gridRowLength;
+	else if (app->input->currentLoopInput == "east")
+		gameState.currentGridPosition ++;
+	else if (app->input->currentLoopInput == "west")
 		gameState.currentGridPosition--;
 	else 
 	{

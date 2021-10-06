@@ -12,6 +12,25 @@ struct MapEvent;
 struct SubEvent;
 struct RejectionText;
 
+// Game parameters
+struct Config
+{
+	// Public methods
+public:
+	// Default constructor so compiler doesn't cry too much
+	Config() {};
+	Config(JSON_Object* s_config);
+
+	// Public attributes
+public:
+	int gridRowLength;
+	int initialPosition;
+	string initialText;
+	bool savePlayerName;
+	string savePlayerNameText;
+	string defaultSubEventRejectionMessage;
+};
+
 
 class ModuleGameImporter: public Module
 {
@@ -22,8 +41,10 @@ public:
 
 // Public attributes
 public:
-	// The game is defined by an array of map events
+	// Map events 
 	vector<MapEvent> mapEvents;
+	// Configuration
+	Config config;
 };
 
 // Event base class

@@ -8,13 +8,14 @@ bool ModuleGameImporter::Init()
 	// Extract map events from file. 
 	JSON_Value* rawFile = json_parse_file("The way of the samurai.json");
 	JSON_Object* game = json_value_get_object(rawFile);
-	JSON_Array* s_mapEvents = json_object_get_array(game, "mapEvents");
 
 	// Read all map events
+	JSON_Array* s_mapEvents = json_object_get_array(game, "mapEvents");
 	for (int i = 0; i < json_array_get_count(s_mapEvents); i++) 
 		mapEvents.push_back(MapEvent(json_array_get_object(s_mapEvents, i)));
 
-
+	// Read config
+	config = Config(json_object_get_object(game, "config"));
 	return true;
 }
 
@@ -73,4 +74,28 @@ RejectionText::RejectionText(JSON_Object* s_rejectionText)
 
 	// Read text
 	text = json_object_get_string(s_rejectionText, "text");
+}
+
+Config::Config(JSON_Object* s_config)
+{
+	// Read grid row length
+	gridRowLength = json_object_get_number(s_config, "gridRowLength");
+
+	// Read initial position
+	initialPosition = json_object_get_number(s_config, "initialPosition");
+
+	// Read initial text
+	initialText = json_object_get_string(s_config, "initialText");
+
+	// Read savePlayerName
+	savePlayerName = json_object_get_boolean(s_config, "savePlayerName");
+
+	// Read savePlayerNameText
+	savePlayerNameText = json_object_get_string(s_config, "savePlayerNameText");
+
+	// Read savePlayerNameText
+	savePlayerNameText = json_object_get_string(s_config, "savePlayerNameText");
+
+	// Read defaultSubEventRejectionMessage
+	defaultSubEventRejectionMessage = json_object_get_string(s_config, "defaultSubEventRejectionMessage");
 }
