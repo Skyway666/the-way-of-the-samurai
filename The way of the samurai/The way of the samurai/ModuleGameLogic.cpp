@@ -95,7 +95,6 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 			// If the moving command was invalid skip the logical frame
 			if (!UpdateGridPosition())
 			{
-				handlingEvent = nullptr;
 				ret = LoadEventResult::INVALID_INPUT;
 				break;
 			}
@@ -124,8 +123,8 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 			// The map event is navigable
 			else 
 			{
-				// TODO: Si se cumplen las condiciones de un evento alternativo se carga ese en su lugar
-				handlingEvent = currentMapEvent;
+				// Load map event
+				SetHandlingEvent(currentMapEvent);
 				ret = LoadEventResult::EVENT_LOADED;
 			}
 
@@ -157,7 +156,7 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 				if (conditionsMet)
 				{
 					// Load the sub event
-					handlingEvent = choosenOption;
+					SetHandlingEvent(choosenOption);
 					ret = LoadEventResult::EVENT_LOADED;
 				}
 				// The conditions have not been met
@@ -189,7 +188,6 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 					{
 						// Display default rejection text
 						app->log(app->gameImporter->config.defaultSubEventRejectionMessage.c_str());
-						handlingEvent = nullptr;
 					}
 
 					// Go back to navigate the map
@@ -253,6 +251,13 @@ bool ModuleGameLogic::UpdateGridPosition()
 
 	return ret;
 
+}
+
+void ModuleGameLogic::SetHandlingEvent(Event* newHandlingEvent)
+{
+	// TODO: Check alternative events to see if another one should be loaded instead.
+
+	handlingEvent = newHandlingEvent;
 }
 
 void ModuleGameLogic::BackToMap()

@@ -56,13 +56,15 @@ public:
 private:
 	// Handles an event
 	void HandleCurrentEvent();
-	// Load map event
+	// Load an event to handle depending on the LogicState
 	LoadEventResult LoadEvent();
 
 	// Returns current map event depending in the currentGridPosition
 	MapEvent* GetCurrentMapEvent() const;
 	// Use input to update grid position. Returns false if the input was invalid
 	bool UpdateGridPosition();
+	// Sets the new event to handle checking for alternative events
+	void SetHandlingEvent(Event* newHandlingEvent);
 	// Sets the logic state to "NAVIGATING_MAP" and notifies the player
 	void BackToMap();
 	// Sets logic state to "SAVING_VARIABLE" and assigns variableSaving.
