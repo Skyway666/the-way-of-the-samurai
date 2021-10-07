@@ -10,14 +10,16 @@ typedef struct json_object_t JSON_Object;
 struct Event;
 struct MapEvent;
 struct SubEvent;
+struct AlternativeEvent;
 struct RejectionText;
+
 
 // Game parameters
 struct Config
 {
 	// Public methods
 public:
-	// Default constructor so compiler doesn't cry too much
+	// C++ pesao
 	Config() {};
 	Config(JSON_Object* s_config);
 
@@ -52,6 +54,8 @@ struct Event
 {
 // Public methods
 public:
+	// C++ pesao
+	Event() {};
 	Event(JSON_Object* s_event);
 // Public attributes
 public:
@@ -59,6 +63,7 @@ public:
 	vector<string> obtainedConditions;
 	vector<string> obtainedObjects;
 	vector<SubEvent> subEvents;
+	vector<AlternativeEvent> alternativeEvents;
 };
 
 // Event that can happen due to a map displacement
@@ -86,6 +91,19 @@ public:
 	string option;
 	vector<string> conditions;
 	vector<RejectionText> rejectionTexts;
+};
+
+// Alternative event that happens when certain conditions are met
+struct AlternativeEvent 
+{
+// Public methods
+public:
+	AlternativeEvent(JSON_Object* s_alternativeEvent);
+
+// Public attributes
+public:
+	vector<string> conditions;
+	Event alternative;
 };
 
 // Rejection text to show depending on the conditions that are met by the player

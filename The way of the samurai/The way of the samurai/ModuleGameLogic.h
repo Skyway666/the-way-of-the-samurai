@@ -23,19 +23,20 @@ public:
 		list<string> objects;
 		// Position of the player in the map
 		int currentGridPosition = 0;
-		// Previous position of the player
-		int previousGridPosition = 0;
 
 		void Save(JSON_Object* s_GameData);
 	};
 
+	// Events are loaded based on the logic state
 	enum class LogicState
 	{
 		INITIALIZATION,
 		NAVIGATING_MAP,
-		IN_EVENT
+		IN_EVENT,
+		SAVING_VARIABLE
 	};
 
+	// Possible outcomes of loading an event
 	enum class LoadEventResult
 	{
 		FATAL_ERROR,
@@ -64,14 +65,21 @@ private:
 	bool UpdateGridPosition();
 	// Sets the logic state to "NAVIGATING_MAP" and notifies the player
 	void BackToMap();
+	// Sets logic state to "SAVING_VARIABLE" and assigns variableSaving.
+	void SaveVariable(string newVariableSaving);
 
 // Private attributes
 private:
 	// The game state
 	GameData gameState;
 
+	// Variables to manage logic
 	// Event being handled. A nullptr means that is time to get a map event
 	Event* handlingEvent = nullptr;
+	// Previous position of the player
+	int previousGridPosition = 0;
+	// Variable to save in the next frame
+	string variableSaving;
 
 	// State in which the logical machine is
 	LogicState logicState = LogicState::INITIALIZATION;

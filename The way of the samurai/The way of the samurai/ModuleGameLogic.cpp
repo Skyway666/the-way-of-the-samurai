@@ -16,13 +16,19 @@ bool ModuleGameLogic::Init()
 
 bool ModuleGameLogic::Start()
 {
-	/* TODO: If there is no save file:
-		- Ask player name if it is enabled
-	*/
-
+	// Initialize position with initial position
 	gameState.currentGridPosition = app->gameImporter->config.initialPosition;
+
+	// Log initial text
 	app->log(app->gameImporter->config.initialText.c_str());
-	gameState.currentGridPosition = 1;
+
+	// Ask player name if it is enabled
+	if (app->gameImporter->config.savePlayerName) 
+	{
+		app->log(app->gameImporter->config.savePlayerNameText.c_str());
+	}
+
+
 	return true;
 }
 
@@ -65,7 +71,8 @@ void ModuleGameLogic::HandleCurrentEvent()
 		logicState = LogicState::IN_EVENT;
 
 		// Inform the user of the possible events to be picked
-		app->log("Pick one of the possible sub events:");
+		// TODO: Introduce this text in the config file
+		app->log("Choose an option:");
 		for (vector<SubEvent>::iterator it = handlingEvent->subEvents.begin();
 			it != handlingEvent->subEvents.end();
 			it++)
@@ -97,18 +104,31 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 		case LogicState::INITIALIZATION:
 		{
 			// Get map event
-			handlingEvent = GetCurrentMapEvent();
+			MapEvent* currentMapEvent = GetCurrentMapEvent();
 
-			// If there is no current map event
-			if (handlingEvent == nullptr)
+
+			// There is no current map event
+			if (currentMapEvent == nullptr)
 			{
 				// Something went terribly wring
 				app->log("FATAL ERROR: The grid position didn't had a matching map event");
 				ret = LoadEventResult::FATAL_ERROR;
 			}
-			// If there is a map event
+			// The map event is not navigable
+			else if (!currentMapEvent->navigable) 
+			{
+				app->log(currentMapEvent->text.c_str());
+				gameState.currentGridPosition = previousGridPosition;
+				ret = LoadEventResult::EVENT_ENDED;
+			}
+			// The map event is navigable
 			else 
+			{
+				// TODO: Si se cumplen las condiciones de un evento alternativo se carga ese en su lugar
+				handlingEvent = currentMapEvent;
 				ret = LoadEventResult::EVENT_LOADED;
+			}
+
 			break;
 		}
 		// If there is an event to handle use the input to load a sub event
@@ -185,6 +205,11 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 			}
 			break;
 		}
+
+		case LogicState::SAVING_VARIABLE: 
+		{
+			// TODO: Develop system to save variables
+		}
 	}
 
 	return ret;
@@ -207,6 +232,9 @@ MapEvent* ModuleGameLogic::GetCurrentMapEvent() const
 
 bool ModuleGameLogic::UpdateGridPosition()
 {
+	// Save previous position, in case we find a non navigatible tile
+	previousGridPosition = gameState.currentGridPosition;
+
 	// Grid movement
 	bool ret = true;
 	if (app->input->currentLoopInput == "north")
@@ -231,6 +259,11 @@ void ModuleGameLogic::BackToMap()
 {
 	app->log("Where do you want to go?");
 	logicState = LogicState::NAVIGATING_MAP;
+}
+
+void ModuleGameLogic::SaveVariable(string newVariableSaving)
+{
+	
 }
 
 void ModuleGameLogic::GameData::Save(JSON_Object* s_GameData)

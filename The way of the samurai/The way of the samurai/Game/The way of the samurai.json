@@ -4,7 +4,7 @@
     "initialPosition": 1,
     "initialText": "Welcome to the way of the samurai! For the moment this is just a test but please be pacient",
     "savePlayerName": false,
-    "savePlayerNameText": "What is your name brave samurai?",
+    "savePlayerNameText": "What is your name, brave samurai?",
     "defaultSubEventRejectionMessage":  "The conditions for picking this event are not met"
   },
   "tutorialSteps": [],
@@ -35,6 +35,20 @@
           "option": "left",
           "text": "You have choosen to go left, how sinister...",
           "obtainedConditions": [ "sinister" ]
+        }
+      ],
+      "alternativeEvents": [
+        {
+          "conditions": [ "righteous" ],
+          "alternative": {
+            "text": "You have already become righteous, go do some good!"
+          }
+        },
+        {
+          "conditions": [ "sinister" ],
+          "alternative": {
+            "text": "You have already become sinister, you can now torment the world"
+          }
         }
       ]
     },
@@ -74,6 +88,11 @@
           ]
         }
       ]
+    },
+    {
+      "gridPosition": 13,
+      "navigable": false,
+      "text": "You are not worthy of walking the path of the righteous"
     }
   ]
 }

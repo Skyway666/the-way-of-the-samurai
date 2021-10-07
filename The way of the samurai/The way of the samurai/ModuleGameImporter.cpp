@@ -38,6 +38,11 @@ Event::Event(JSON_Object* s_event)
 	JSON_Array* s_subEvents = json_object_get_array(s_event, "subEvents");
 	for (int i = 0; i < json_array_get_count(s_subEvents); i++)
 		subEvents.push_back(SubEvent(json_array_get_object(s_subEvents, i)));
+
+	// Read alternative events
+	JSON_Array* s_alternativeEvents = json_object_get_array(s_event, "alternativeEvents");
+	for (int i = 0; i < json_array_get_count(s_alternativeEvents); i++)
+		alternativeEvents.push_back(AlternativeEvent(json_array_get_object(s_alternativeEvents, i)));
 }
 
 MapEvent::MapEvent(JSON_Object* s_mapEvent): Event(s_mapEvent)
@@ -98,4 +103,15 @@ Config::Config(JSON_Object* s_config)
 
 	// Read defaultSubEventRejectionMessage
 	defaultSubEventRejectionMessage = json_object_get_string(s_config, "defaultSubEventRejectionMessage");
+}
+
+AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent)
+{
+	// Read conditions
+	JSON_Array* s_conditions = json_object_get_array(s_alternativeEvent, "conditions");
+	for (int i = 0; i < json_array_get_count(s_conditions); i++)
+		conditions.push_back(json_array_get_string(s_conditions, i));
+
+	// Read alternative event
+	alternative = json_object_get_object(s_alternativeEvent, "alternative");
 }
