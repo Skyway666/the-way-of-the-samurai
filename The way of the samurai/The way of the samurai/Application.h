@@ -38,6 +38,8 @@ public:
 	State GetState() const;
 	// Log messages to the console
 	void log(const char* message) const;
+	// Log fatal error
+	void logFatalError(const char* message) const;
 
 // Public attributes
 public:

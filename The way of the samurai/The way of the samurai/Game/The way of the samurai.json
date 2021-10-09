@@ -3,20 +3,36 @@
     "gridRowLength": 10,
     "initialPosition": 1,
     "initialText": "Welcome to the way of the samurai! For the moment this is just a test but please be pacient",
-    "savePlayerName": true,
-    "savePlayerNameText": "What is your name, brave samurai?",
-    "defaultSubEventRejectionMessage":  "The conditions for picking this event are not met"
+    "defaultSubEventRejectionMessage": "The conditions for picking this event are not met",
+    "defaultVariableSavedConfirmation": "Are you sure?"
   },
   "tutorialSteps": [],
   "mapEvents": [
     {
       "gridPosition": 1,
-      "text": "This is the initial grid position. Type 'increase' to go to the next one or 'decrease' to go back"
+      "text": "What is your name brave samurai?",
+      "obtainedConditions": [ "nameSaved" ],
+      "alternativeEvents": [
+        {
+          "conditions": [ "nameSaved" ],
+          "alternative": {
+            "text": "This is the initial grid position. Move by typing 'east', 'west', 'north' or 'south'./n You can also type 'reenter' to interact with the current grid position."
+          }
+        }
+      ],
+      "savedVariable": {
+        "key": "playerName",
+        "confirmationText": "Are you sure that you want your name to be '@playerName@'?",
+        "successText": "Great! We will from now on call you by your name",
+        "nextEvent": {
+          "text": "This is the initial grid position. Move by typing 'east', 'west', 'north' or 'south'./n You can also type 'reenter' to interact with the current grid position."
+        }
+      }
     },
     {
       "gridPosition": 2,
       "navigable": true,
-      "text": "Initial grid position, do you go left or right?",
+      "text": "Do you go left or right?",
       "obtainedConditions": [
         "Sword",
         "Kung fu"

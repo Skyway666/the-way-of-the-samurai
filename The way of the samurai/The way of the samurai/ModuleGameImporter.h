@@ -7,31 +7,13 @@ using namespace std;
 // Forward declaration
 typedef struct json_object_t JSON_Object;
 
+struct Config;
 struct Event;
 struct MapEvent;
 struct SubEvent;
 struct AlternativeEvent;
 struct RejectionText;
-
-// Game parameters
-struct Config
-{
-	// Public methods
-public:
-	// C++ pesao
-	Config() {};
-	Config(JSON_Object* s_config);
-
-	// Public attributes
-public:
-	int gridRowLength;
-	int initialPosition;
-	string initialText;
-	bool savePlayerName;
-	string savePlayerNameText;
-	string defaultSubEventRejectionMessage;
-};
-
+struct SavedVariable;
 
 class ModuleGameImporter: public Module
 {
@@ -45,7 +27,25 @@ public:
 	// Map events 
 	vector<MapEvent> mapEvents;
 	// Configuration
-	Config config;
+	Config* config = nullptr;
+};
+
+
+// Game parameters
+struct Config
+{
+	// Public methods
+public:
+	// C++ pesao
+	Config() {};
+	Config(JSON_Object* s_config);
+
+	// Public attributes
+public:
+	int gridRowLength = 0;
+	int initialPosition = 0;
+	string initialText;
+	string defaultSubEventRejectionMessage;
 };
 
 // Event base class
@@ -56,6 +56,9 @@ public:
 	// C++ pesao
 	Event() {};
 	Event(JSON_Object* s_event);
+
+	// Error handling functions for serialization
+	static Event* LoadEvent(JSON_Object* object, const char* eventName);
 // Public attributes
 public:
 	string text;
@@ -64,6 +67,7 @@ public:
 	vector<string> obtainedObjects;
 	vector<SubEvent> subEvents;
 	vector<AlternativeEvent> alternativeEvents;
+	SavedVariable* savedVariable = nullptr;
 };
 
 // Event that can happen due to a map displacement
@@ -103,7 +107,7 @@ public:
 // Public attributes
 public:
 	vector<string> conditions;
-	Event alternative;
+	Event* alternative = nullptr;
 };
 
 // Rejection text to show depending on the conditions that are met by the player
@@ -119,3 +123,20 @@ public:
 	string text;
 };
 
+// Data needed to save 
+struct SavedVariable 
+{
+// Public methods
+public:
+	SavedVariable() {};
+	SavedVariable(JSON_Object* s_saveVariable);
+
+	// Error handling function for serialization
+	static SavedVariable* LoadSavedVariable(JSON_Object* object, const char* saveVariableName);
+// Public attributes
+public:
+	string key;
+	string confirmationText;
+	string successText;
+	Event* nextEvent = nullptr;
+};

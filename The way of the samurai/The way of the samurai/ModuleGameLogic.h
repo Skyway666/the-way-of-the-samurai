@@ -6,7 +6,7 @@
 #include <map>
 using namespace std;
 
-// Forward declaration
+// Forward definition
 typedef struct json_object_t JSON_Object;
 struct MapEvent;
 struct Event;
@@ -15,7 +15,7 @@ struct Event;
 
 class ModuleGameLogic : public Module
 {
-// Public structures
+// Public definitions
 public:
 	struct GameData
 	{
@@ -47,6 +47,7 @@ public:
 	{
 		FATAL_ERROR,
 		EVENT_LOADED,
+		EVENT_BRANCHED,
 		EVENT_ENDED,
 		INVALID_INPUT,
 		VARIABLE_SAVED,
@@ -63,11 +64,16 @@ public:
 
 // Private methods
 private:
+	// ----------MAIN UPDATE METHODS
+	// Handles player input
+	PlayerInputResult HandlePlayerInput();
 	// Handles an event
 	void HandleCurrentEvent();
-	// Load an event to handle depending on the LogicState
-	PlayerInputResult HandlePlayerInput();
 
+
+	// ----------LOGIC ENCAPSULATORS (only for readibility)
+	
+	// ----------RECURRENT ACTIONS
 	// Returns current map event depending in the currentGridPosition
 	MapEvent* GetCurrentMapEvent() const;
 	// Use input to update grid position. Returns false if the input was invalid
@@ -75,30 +81,27 @@ private:
 	// Sets the new event to handle checking for alternative events
 	void SetHandlingEvent(Event* newHandlingEvent);
 	// Displays the options the user can choose from
-	void DisplayOptions(vector<string>& options);
+	void DisplayOptions(vector<string>& options) const;
 	// Sets the logic state to "NAVIGATING_MAP" and notifies the player
 	void BackToMap();
-	// Sets logic state to "SAVING_VARIABLE" and assigns variableSaving.
-	void SaveVariable(string variableKey);
-
+	// Handles the display of sub events of an event
+	void HandleSubEventsDisplay(Event* eventToBranch);
 
 // Private attributes
 private:
-	// The game state
+	// ----------GAME STATE VARIABLES
 	GameData gameState;
 
-	// Variables to manage logic
+	// ----------MANAGE LOGIC VARIABLES
 	// State in which the logical machine is
 	LogicState logicState = LogicState::INITIALIZATION;
 	// Event being handled. A nullptr means that is time to get a map event
 	Event* handlingEvent = nullptr;
 	// Previous position of the player
 	int previousGridPosition = 0;
-	// Variable key to assign the currently saving variable
-	string variableKeySaving;
 	// Saving variable
 	string variableSaving;
-	
+
 	// If set to "true" skips an update frame
 	bool skipUpdate = false;
 };

@@ -4,6 +4,7 @@
 
 bool ModuleGameImporter::Init()
 {
+	bool ret = true;
 	// TODO: Look for a dynamic way to configure the name of the file being read as the game
 	// Extract map events from file. 
 	JSON_Value* rawFile = json_parse_file("The way of the samurai.json");
@@ -15,8 +16,30 @@ bool ModuleGameImporter::Init()
 		mapEvents.push_back(MapEvent(json_array_get_object(s_mapEvents, i)));
 
 	// Read config
-	config = Config(json_object_get_object(game, "config"));
-	return true;
+	if(JSON_Object* s_config = json_object_get_object(game, "config"))
+		config = new Config(s_config);
+	else 
+	{
+		app->logFatalError("Couldn't load config file, terminating aplication");
+		ret = false;
+	}
+
+	return ret;
+}
+
+Config::Config(JSON_Object* s_config)
+{
+	// Read grid row length
+	gridRowLength = json_object_get_number(s_config, "gridRowLength");
+
+	// Read initial position
+	initialPosition = json_object_get_number(s_config, "initialPosition");
+
+	// Read initial text
+	initialText = json_object_get_string(s_config, "initialText");
+
+	// Read defaultSubEventRejectionMessage
+	defaultSubEventRejectionMessage = json_object_get_string(s_config, "defaultSubEventRejectionMessage");
 }
 
 Event::Event(JSON_Object* s_event)
@@ -48,6 +71,18 @@ Event::Event(JSON_Object* s_event)
 	JSON_Array* s_alternativeEvents = json_object_get_array(s_event, "alternativeEvents");
 	for (int i = 0; i < json_array_get_count(s_alternativeEvents); i++)
 		alternativeEvents.push_back(AlternativeEvent(json_array_get_object(s_alternativeEvents, i)));
+
+	// Read saved variable
+	savedVariable = SavedVariable::LoadSavedVariable(s_event, "savedVariable");
+}
+
+Event* Event::LoadEvent(JSON_Object* object, const char* eventName)
+{
+	Event* ret = nullptr;
+	if (JSON_Object* s_event = json_object_get_object(object, eventName))
+		ret = new Event(s_event);
+
+	return ret;
 }
 
 MapEvent::MapEvent(JSON_Object* s_mapEvent): Event(s_mapEvent)
@@ -86,30 +121,6 @@ RejectionText::RejectionText(JSON_Object* s_rejectionText)
 	text = json_object_get_string(s_rejectionText, "text");
 }
 
-Config::Config(JSON_Object* s_config)
-{
-	// Read grid row length
-	gridRowLength = json_object_get_number(s_config, "gridRowLength");
-
-	// Read initial position
-	initialPosition = json_object_get_number(s_config, "initialPosition");
-
-	// Read initial text
-	initialText = json_object_get_string(s_config, "initialText");
-
-	// Read savePlayerName
-	savePlayerName = json_object_get_boolean(s_config, "savePlayerName");
-
-	// Read savePlayerNameText
-	savePlayerNameText = json_object_get_string(s_config, "savePlayerNameText");
-
-	// Read savePlayerNameText
-	savePlayerNameText = json_object_get_string(s_config, "savePlayerNameText");
-
-	// Read defaultSubEventRejectionMessage
-	defaultSubEventRejectionMessage = json_object_get_string(s_config, "defaultSubEventRejectionMessage");
-}
-
 AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent)
 {
 	// Read conditions
@@ -118,5 +129,29 @@ AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent)
 		conditions.push_back(json_array_get_string(s_conditions, i));
 
 	// Read alternative event
-	alternative = json_object_get_object(s_alternativeEvent, "alternative");
+	alternative = Event::LoadEvent(s_alternativeEvent, "alternative");
+}
+
+SavedVariable::SavedVariable(JSON_Object* s_saveVariable)
+{
+	// Read key
+	key = json_object_get_string(s_saveVariable, "key");
+
+	// Read confirmation text
+	confirmationText = json_object_get_string(s_saveVariable, "confirmationText");
+
+	// Read success txt
+	successText = json_object_get_string(s_saveVariable, "successText");
+
+	// Read next event
+	nextEvent = Event::LoadEvent(s_saveVariable, "nextEvent");
+}
+
+SavedVariable* SavedVariable::LoadSavedVariable(JSON_Object* object, const char* savedVariableName)
+{
+	SavedVariable* ret = nullptr;
+	if (JSON_Object* s_SavedVariable = json_object_get_object(object, savedVariableName))
+		ret = new SavedVariable(s_SavedVariable);
+
+	return ret;
 }

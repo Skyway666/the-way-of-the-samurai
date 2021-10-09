@@ -94,3 +94,15 @@ void Application::log(const char* message) const
 	// Logs are allways separated by a newline for clarity
 	printf("\n");
 }
+
+void Application::logFatalError(const char* message) const
+{
+	// Notify the user about the fatal error
+	printf("----FATAL ERROR----");
+
+	// Print desired message
+	printf(message);
+
+	// Logs are allways separated by a newline for clarity
+	printf("\n");
+}
