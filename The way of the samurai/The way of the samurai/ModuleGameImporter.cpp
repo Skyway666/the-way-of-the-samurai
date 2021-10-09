@@ -29,6 +29,11 @@ Event::Event(JSON_Object* s_event)
 	for (int i = 0; i < json_array_get_count(s_obtainedConditions); i++)
 		obtainedConditions.push_back(json_array_get_string(s_obtainedConditions, i));
 
+	// Read removed conditions
+	JSON_Array* s_removedConditions = json_object_get_array(s_event, "removedConditions");
+	for (int i = 0; i < json_array_get_count(s_removedConditions); i++)
+		removedConditions.push_back(json_array_get_string(s_removedConditions, i));
+
 	// Read obtained objects
 	JSON_Array* s_obtainedObjects = json_object_get_array(s_event, "obtainedObjects");
 	for (int i = 0; i < json_array_get_count(s_obtainedObjects); i++)

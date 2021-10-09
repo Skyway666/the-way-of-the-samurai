@@ -13,7 +13,6 @@ struct SubEvent;
 struct AlternativeEvent;
 struct RejectionText;
 
-
 // Game parameters
 struct Config
 {
@@ -61,6 +60,7 @@ public:
 public:
 	string text;
 	vector<string> obtainedConditions;
+	vector<string> removedConditions;
 	vector<string> obtainedObjects;
 	vector<SubEvent> subEvents;
 	vector<AlternativeEvent> alternativeEvents;

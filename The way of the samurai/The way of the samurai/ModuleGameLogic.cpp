@@ -26,22 +26,31 @@ bool ModuleGameLogic::Start()
 	if (app->gameImporter->config.savePlayerName) 
 	{
 		app->log(app->gameImporter->config.savePlayerNameText.c_str());
+		SaveVariable("playerName");
+		skipUpdate = true;
 	}
-
 
 	return true;
 }
 
 bool ModuleGameLogic::Update()
 {
+	// Skip one update frame
+	if (skipUpdate) 
+	{
+		skipUpdate = false;
+		return true;
+	}
+
 	// Loads the next event by reading input
-	LoadEventResult loadedEventResult = LoadEvent();
+	PlayerInputResult loadedEventResult = HandlePlayerInput();
 
 	// Handle event if it could be loaded
-	if (loadedEventResult == LoadEventResult::EVENT_LOADED)
+	if (loadedEventResult == PlayerInputResult::EVENT_LOADED)
 		HandleCurrentEvent();
 
-	return loadedEventResult != LoadEventResult::FATAL_ERROR;
+	// Update went right if no fatal error was thrown
+	return loadedEventResult != PlayerInputResult::FATAL_ERROR;
 }
 
 void ModuleGameLogic::HandleCurrentEvent()
@@ -52,8 +61,18 @@ void ModuleGameLogic::HandleCurrentEvent()
 	// Obtain conditions
 	for (vector<string>::iterator it = handlingEvent->obtainedConditions.begin();
 		it != handlingEvent->obtainedConditions.end();
+		it++) 
+	{
+		// The condition is not in the list so it can be added
+		if(find(gameState.conditions.begin(), gameState.conditions.end(), (*it)) == gameState.conditions.end())
+			gameState.conditions.push_back((*it));
+	}
+
+	// Remove conditions
+	for (vector<string>::iterator it = handlingEvent->removedConditions.begin();
+		it != handlingEvent->removedConditions.end();
 		it++)
-		gameState.conditions.push_back((*it));
+		gameState.conditions.remove((*it));
 
 	// Obtain objects
 	for (vector<string>::iterator it = handlingEvent->obtainedObjects.begin();
@@ -70,21 +89,24 @@ void ModuleGameLogic::HandleCurrentEvent()
 		// Set the logic state so a sub event is selected
 		logicState = LogicState::IN_EVENT;
 
-		// Inform the user of the possible events to be picked
-		// TODO: Introduce this text in the config file
-		app->log("Choose an option:");
+		// Save options for the possible sub events
+		vector<string> options;
 		for (vector<SubEvent>::iterator it = handlingEvent->subEvents.begin();
 			it != handlingEvent->subEvents.end();
 			it++)
 		{
-			app->log(("    -" + (*it).option).c_str());
+			options.push_back((*it).option);
 		}
+
+		// Display options
+		DisplayOptions(options);
+		
 	}
 }
 
-ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
+ModuleGameLogic::PlayerInputResult ModuleGameLogic::HandlePlayerInput()
 {
-	LoadEventResult ret = LoadEventResult::FATAL_ERROR;
+	PlayerInputResult ret = PlayerInputResult::FATAL_ERROR;
 
 	// Try to load an event depending on the logic state
 	switch (logicState)
@@ -95,7 +117,7 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 			// If the moving command was invalid skip the logical frame
 			if (!UpdateGridPosition())
 			{
-				ret = LoadEventResult::INVALID_INPUT;
+				ret = PlayerInputResult::INVALID_INPUT;
 				break;
 			}
 		}
@@ -105,27 +127,26 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 			// Get map event
 			MapEvent* currentMapEvent = GetCurrentMapEvent();
 
-
 			// There is no current map event
 			if (currentMapEvent == nullptr)
 			{
 				// Something went terribly wring
 				app->log("FATAL ERROR: The grid position didn't had a matching map event");
-				ret = LoadEventResult::FATAL_ERROR;
+				ret = PlayerInputResult::FATAL_ERROR;
 			}
 			// The map event is not navigable
 			else if (!currentMapEvent->navigable) 
 			{
 				app->log(currentMapEvent->text.c_str());
 				gameState.currentGridPosition = previousGridPosition;
-				ret = LoadEventResult::EVENT_ENDED;
+				ret = PlayerInputResult::EVENT_ENDED;
 			}
 			// The map event is navigable
 			else 
 			{
 				// Load map event
 				SetHandlingEvent(currentMapEvent);
-				ret = LoadEventResult::EVENT_LOADED;
+				ret = PlayerInputResult::EVENT_LOADED;
 			}
 
 			break;
@@ -146,18 +167,17 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 			// An option was choosen
 			if (choosenOption != nullptr)
 			{
-
 				// Convert list of condition to a vector
 				vector<string> gameConditionsVector = vector<string>(gameState.conditions.begin(), gameState.conditions.end());
 				// Check if the conditions for the sub event are met
-				bool conditionsMet = ContainerUtils::stringVectorAContainsB(choosenOption->conditions, gameConditionsVector);
+				bool conditionsMet = ContainerUtils::stringVectorAContainsB(gameConditionsVector, choosenOption->conditions);
 
 				// If the conditions have been met
 				if (conditionsMet)
 				{
 					// Load the sub event
 					SetHandlingEvent(choosenOption);
-					ret = LoadEventResult::EVENT_LOADED;
+					ret = PlayerInputResult::EVENT_LOADED;
 				}
 				// The conditions have not been met
 				else 
@@ -169,7 +189,7 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 						it++) 
 					{
 						// If the conditions for the rejection text are met
-						if (ContainerUtils::stringVectorAContainsB((*it).conditions, gameConditionsVector))
+						if (ContainerUtils::stringVectorAContainsB(gameConditionsVector, (*it).conditions))
 						{
 							// Save the rejection text
 							rejectionText = &(*it);
@@ -191,7 +211,7 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 					}
 
 					// Go back to navigate the map
-					ret = LoadEventResult::EVENT_ENDED;
+					ret = PlayerInputResult::EVENT_ENDED;
 					BackToMap();
 				}
 			}
@@ -199,14 +219,55 @@ ModuleGameLogic::LoadEventResult ModuleGameLogic::LoadEvent()
 			else 
 			{
 				app->log("That is not an option");
-				ret = LoadEventResult::INVALID_INPUT;
+				ret = PlayerInputResult::INVALID_INPUT;
 			}
 			break;
 		}
 
-		case LogicState::SAVING_VARIABLE: 
+		case LogicState::SAVING_VARIABLE_CONFIRMATION: 
 		{
-			// TODO: Develop system to save variables
+			variableSaving = app->input->currentLoopInput;
+			app->log(("Are you sure you want to save '" + variableSaving + "'?").c_str());
+
+			// Display options
+			vector<string> options = { "yes", "no" };
+			DisplayOptions(options);
+
+			// Ask for confirmation
+			logicState = LogicState::SAVING_VARIABLE;
+			ret = PlayerInputResult::VARIABLE_LOADED;
+			break;
+		}
+
+		case LogicState::SAVING_VARIABLE:
+		{
+			// If the user confirms
+			if (app->input->currentLoopInput == "yes") 
+			{
+				// Variable saved
+				gameState.savedVariables[variableKeySaving] = variableSaving;
+				ret = PlayerInputResult::VARIABLE_SAVED;
+				// TODO: Pick next logic state dynamically
+				logicState = LogicState::INITIALIZATION;
+
+				Update();
+			}
+			else if (app->input->currentLoopInput == "no") 
+			{
+				// Go back to the user writing the variable
+				app->log("No problem, what do you want your name to be?");
+				ret = PlayerInputResult::VARIABLE_DISCARTED;
+				logicState = LogicState::SAVING_VARIABLE_CONFIRMATION;
+			}
+			else 
+			{
+				// Incalid input
+				app->log("Invalid input");
+				ret = PlayerInputResult::INVALID_INPUT;
+				break;
+			}
+
+			break;
 		}
 	}
 
@@ -255,9 +316,39 @@ bool ModuleGameLogic::UpdateGridPosition()
 
 void ModuleGameLogic::SetHandlingEvent(Event* newHandlingEvent)
 {
-	// TODO: Check alternative events to see if another one should be loaded instead.
+	// Convert list of condition to a vector
+	vector<string> gameConditionsVector = vector<string>(gameState.conditions.begin(), gameState.conditions.end());
 
-	handlingEvent = newHandlingEvent;
+	// Check if an alternative event should be loaded instead
+	Event* alternativeEvent = nullptr;
+	for (vector<AlternativeEvent>::iterator it = newHandlingEvent->alternativeEvents.begin();
+		it < newHandlingEvent->alternativeEvents.end();
+		it++) 
+	{
+		// Check if the conditions are met
+		if (ContainerUtils::stringVectorAContainsB(gameConditionsVector, (*it).conditions)) 
+		{
+			alternativeEvent = &(*it).alternative;
+			break;
+		}
+	}
+
+	// There is no alternative event
+	if (alternativeEvent == nullptr)
+		handlingEvent = newHandlingEvent;
+	// There is an alternative event
+	else
+		handlingEvent = alternativeEvent;
+}
+
+void ModuleGameLogic::DisplayOptions(vector<string>& options)
+{
+	// TODO: Introduce this text in the config file
+	app->log("Choose an option:");
+
+	// Display options
+	for(vector<string>::iterator it = options.begin(); it != options.end(); it++)
+		app->log(("    -" + (*it)).c_str());
 }
 
 void ModuleGameLogic::BackToMap()
@@ -266,9 +357,12 @@ void ModuleGameLogic::BackToMap()
 	logicState = LogicState::NAVIGATING_MAP;
 }
 
-void ModuleGameLogic::SaveVariable(string newVariableSaving)
+void ModuleGameLogic::SaveVariable(string variableKey)
 {
-	
+	// Get ready to save a variable in the next frame
+	variableKeySaving = variableKey;
+	logicState = LogicState::SAVING_VARIABLE_CONFIRMATION;
+
 }
 
 void ModuleGameLogic::GameData::Save(JSON_Object* s_GameData)

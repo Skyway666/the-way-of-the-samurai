@@ -1,7 +1,9 @@
 #pragma once
 #include "Module.h"
 #include <list>
-#include <string>
+#include <string>s
+#include <vector>
+#include <map>
 using namespace std;
 
 // Forward declaration
@@ -21,6 +23,8 @@ public:
 		list<string> conditions;
 		// Player objects that can be consumed
 		list<string> objects;
+		// Custom variables save
+		map<string,string> savedVariables;
 		// Position of the player in the map
 		int currentGridPosition = 0;
 
@@ -33,16 +37,21 @@ public:
 		INITIALIZATION,
 		NAVIGATING_MAP,
 		IN_EVENT,
-		SAVING_VARIABLE
+		SAVING_VARIABLE_CONFIRMATION,
+		SAVING_VARIABLE,
+		SKIP
 	};
 
 	// Possible outcomes of loading an event
-	enum class LoadEventResult
+	enum class PlayerInputResult
 	{
 		FATAL_ERROR,
 		EVENT_LOADED,
 		EVENT_ENDED,
-		INVALID_INPUT
+		INVALID_INPUT,
+		VARIABLE_SAVED,
+		VARIABLE_LOADED,
+		VARIABLE_DISCARTED
 	};
 
 // Public methods
@@ -57,7 +66,7 @@ private:
 	// Handles an event
 	void HandleCurrentEvent();
 	// Load an event to handle depending on the LogicState
-	LoadEventResult LoadEvent();
+	PlayerInputResult HandlePlayerInput();
 
 	// Returns current map event depending in the currentGridPosition
 	MapEvent* GetCurrentMapEvent() const;
@@ -65,10 +74,13 @@ private:
 	bool UpdateGridPosition();
 	// Sets the new event to handle checking for alternative events
 	void SetHandlingEvent(Event* newHandlingEvent);
+	// Displays the options the user can choose from
+	void DisplayOptions(vector<string>& options);
 	// Sets the logic state to "NAVIGATING_MAP" and notifies the player
 	void BackToMap();
 	// Sets logic state to "SAVING_VARIABLE" and assigns variableSaving.
-	void SaveVariable(string newVariableSaving);
+	void SaveVariable(string variableKey);
+
 
 // Private attributes
 private:
@@ -76,14 +88,18 @@ private:
 	GameData gameState;
 
 	// Variables to manage logic
+	// State in which the logical machine is
+	LogicState logicState = LogicState::INITIALIZATION;
 	// Event being handled. A nullptr means that is time to get a map event
 	Event* handlingEvent = nullptr;
 	// Previous position of the player
 	int previousGridPosition = 0;
-	// Variable to save in the next frame
+	// Variable key to assign the currently saving variable
+	string variableKeySaving;
+	// Saving variable
 	string variableSaving;
-
-	// State in which the logical machine is
-	LogicState logicState = LogicState::INITIALIZATION;
+	
+	// If set to "true" skips an update frame
+	bool skipUpdate = false;
 };
 

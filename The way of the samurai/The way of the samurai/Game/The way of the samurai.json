@@ -3,7 +3,7 @@
     "gridRowLength": 10,
     "initialPosition": 1,
     "initialText": "Welcome to the way of the samurai! For the moment this is just a test but please be pacient",
-    "savePlayerName": false,
+    "savePlayerName": true,
     "savePlayerNameText": "What is your name, brave samurai?",
     "defaultSubEventRejectionMessage":  "The conditions for picking this event are not met"
   },
@@ -88,6 +88,12 @@
           ]
         }
       ]
+    },
+    {
+      "gridPosition": 4,
+      "navigable": true,
+      "text": "You are now freed from the chains of your decisions",
+      "removedConditions": ["righteous", "sinister"]
     },
     {
       "gridPosition": 13,
