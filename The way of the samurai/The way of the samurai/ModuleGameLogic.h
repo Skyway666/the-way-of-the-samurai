@@ -37,8 +37,8 @@ public:
 		INITIALIZATION,
 		NAVIGATING_MAP,
 		IN_EVENT,
-		SAVING_VARIABLE_CONFIRMATION,
 		SAVING_VARIABLE,
+		SAVING_VARIABLE_CONFIRMATION,
 		SKIP
 	};
 
@@ -86,6 +86,10 @@ private:
 	void BackToMap();
 	// Handles the display of sub events of an event
 	void HandleSubEventsDisplay(Event* eventToBranch);
+	// Logs a text after processing it as a gameplay one
+	void logGameplayText(string text) const;
+	// Replaces keys between '@' with gameplay variables
+	void replaceVariables(string& text) const;
 
 // Private attributes
 private:
@@ -99,8 +103,6 @@ private:
 	Event* handlingEvent = nullptr;
 	// Previous position of the player
 	int previousGridPosition = 0;
-	// Saving variable
-	string variableSaving;
 
 	// If set to "true" skips an update frame
 	bool skipUpdate = false;

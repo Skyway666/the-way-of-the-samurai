@@ -20,7 +20,7 @@ bool ModuleGameLogic::Start()
 	gameState.currentGridPosition = app->gameImporter->config->initialPosition;
 
 	// Log initial text
-	app->log(app->gameImporter->config->initialText.c_str());
+	logGameplayText(app->gameImporter->config->initialText);
 
 	return true;
 }
@@ -78,7 +78,7 @@ ModuleGameLogic::PlayerInputResult ModuleGameLogic::HandlePlayerInput()
 			// The map event is not navigable
 			else if (!currentMapEvent->navigable) 
 			{
-				app->log(currentMapEvent->text.c_str());
+				logGameplayText(currentMapEvent->text);
 				gameState.currentGridPosition = previousGridPosition;
 				ret = PlayerInputResult::EVENT_ENDED;
 			}
@@ -142,13 +142,13 @@ ModuleGameLogic::PlayerInputResult ModuleGameLogic::HandlePlayerInput()
 					if (rejectionText != nullptr) 
 					{
 						// Display the rejection text
-						app->log(rejectionText->text.c_str());
+						logGameplayText(rejectionText->text);
 					}
 					// The rejection text was not found
 					else 
 					{
 						// Display default rejection text
-						app->log(app->gameImporter->config->defaultSubEventRejectionMessage.c_str());
+						logGameplayText(app->gameImporter->config->defaultSubEventRejectionMessage);
 					}
 
 					// Go back to navigate the map
@@ -159,39 +159,40 @@ ModuleGameLogic::PlayerInputResult ModuleGameLogic::HandlePlayerInput()
 			// The choosen option was not avaliable
 			else 
 			{
-				app->log("That is not an option");
+				// TODO: Include in config
+				logGameplayText("That is not an option");
 				ret = PlayerInputResult::INVALID_INPUT;
 			}
 			break;
 		}
 
-		case LogicState::SAVING_VARIABLE_CONFIRMATION: 
+		case LogicState::SAVING_VARIABLE: 
 		{
-			variableSaving = app->input->currentLoopInput;
-			app->log(handlingEvent->savedVariable->confirmationText.c_str());
+			// Variable saved
+			gameState.savedVariables[handlingEvent->savedVariable->key.c_str()] = app->input->currentLoopInput;
+
+			// Display confirmation text
+			logGameplayText(handlingEvent->savedVariable->confirmationText);
 
 			// Display options
 			vector<string> options = { "yes", "no" };
 			DisplayOptions(options);
 
 			// Ask for confirmation
-			logicState = LogicState::SAVING_VARIABLE;
+			logicState = LogicState::SAVING_VARIABLE_CONFIRMATION;
 			ret = PlayerInputResult::VARIABLE_LOADED;
 			break;
 		}
 
-		case LogicState::SAVING_VARIABLE:
+		case LogicState::SAVING_VARIABLE_CONFIRMATION:
 		{
 			// If the user confirms
 			if (app->input->currentLoopInput == "yes") 
 			{
 				// Display success to the user
-				app->log(handlingEvent->savedVariable->successText.c_str());
+				logGameplayText(handlingEvent->savedVariable->successText);
 
-				// Variable saved
-				gameState.savedVariables[handlingEvent->savedVariable->key.c_str()] = variableSaving;
 				ret = PlayerInputResult::VARIABLE_SAVED;
-				
 				// There is an event after saving variable
 				if (handlingEvent->savedVariable->nextEvent != nullptr) 
 				{
@@ -217,14 +218,14 @@ ModuleGameLogic::PlayerInputResult ModuleGameLogic::HandlePlayerInput()
 			else if (app->input->currentLoopInput == "no") 
 			{
 				// Go back to the user writing the variable
-				app->log(handlingEvent->text.c_str());
+				logGameplayText(handlingEvent->text);
 				ret = PlayerInputResult::VARIABLE_DISCARTED;
-				logicState = LogicState::SAVING_VARIABLE_CONFIRMATION;
+				logicState = LogicState::SAVING_VARIABLE;
 			}
 			else 
 			{
-				// Invalid input
-				app->log("Invalid input");
+				// Invalid input. TODO: Include in config
+				logGameplayText("Invalid input");
 				ret = PlayerInputResult::INVALID_INPUT;
 			}
 
@@ -238,7 +239,7 @@ ModuleGameLogic::PlayerInputResult ModuleGameLogic::HandlePlayerInput()
 void ModuleGameLogic::HandleCurrentEvent()
 {
 	// Display event text
-	app->log(handlingEvent->text.c_str());
+	logGameplayText(handlingEvent->text);
 
 	// Obtain conditions
 	for (vector<string>::iterator it = handlingEvent->obtainedConditions.begin();
@@ -265,7 +266,7 @@ void ModuleGameLogic::HandleCurrentEvent()
 	// There is a variable to save: Priority 1
 	if (handlingEvent->savedVariable != nullptr)
 	{
-		logicState = LogicState::SAVING_VARIABLE_CONFIRMATION;
+		logicState = LogicState::SAVING_VARIABLE;
 	}
 	// There are sub events to handle: Priority 2
 	else if (!handlingEvent->subEvents.empty())
@@ -296,6 +297,54 @@ void ModuleGameLogic::HandleSubEventsDisplay(Event* eventToBranch)
 
 	// Display options
 	DisplayOptions(options);
+}
+
+void ModuleGameLogic::logGameplayText(string text) const
+{
+	// TODO 1: Treat it as a localization index by default. If it doesn't match any, use it as the final string
+	
+	// Add gameplay variables
+	replaceVariables(text);
+
+	// Display final text to the user
+	app->log(text.c_str());
+}
+
+void ModuleGameLogic::replaceVariables(string& text) const
+{
+	int lastOcurrance = 0;
+
+	// Iterate until all '@' are substituted
+	while (text.find('@')!= string::npos) 
+	{
+		// Get position of the first and second @
+		int openingAdd = text.find('@', lastOcurrance + 1);
+		int closingAdd = text.find('@', openingAdd + 1);
+		
+		// Compute length of the variable key plus both @ at the beggining and the end
+		int variableKeyLength = closingAdd - openingAdd;
+
+		// Error handling
+		if (closingAdd == string::npos) 
+		{
+			app->logFatalError("Variable without closing '@'");
+			break;
+		}
+
+		// Get substring between @
+		string variableKey = text.substr(openingAdd + 1, variableKeyLength - 1);
+
+		// Check that the variable is in the dictionary
+		if (gameState.savedVariables.find(variableKey) == gameState.savedVariables.end()) 
+		{
+			// Inform the user of the variable that wasn't found
+			app->logFatalError(("Variable key: '" + variableKey + "' not found in variables dictionary").c_str());
+			break;
+		}
+
+		// Finally, replace key with value
+		text.replace(openingAdd, variableKeyLength + 1, gameState.savedVariables.at(variableKey));
+	}
 }
 
 MapEvent* ModuleGameLogic::GetCurrentMapEvent() const
@@ -332,11 +381,11 @@ bool ModuleGameLogic::UpdateGridPosition()
 	else if(app->input->currentLoopInput != "reenter")
 	{
 		ret = false;
-		app->log("Invalid moving input, please introduce another command");
+		// TODO: Include in config
+		logGameplayText("Invalid moving input, please introduce another command");
 	}
 
 	return ret;
-
 }
 
 void ModuleGameLogic::SetHandlingEvent(Event* newHandlingEvent)
@@ -369,7 +418,7 @@ void ModuleGameLogic::SetHandlingEvent(Event* newHandlingEvent)
 void ModuleGameLogic::DisplayOptions(vector<string>& options) const
 {
 	// TODO: Introduce this text in the config file
-	app->log("Choose an option:");
+	logGameplayText("Choose an option:");
 
 	// Display options
 	for(vector<string>::iterator it = options.begin(); it != options.end(); it++)
@@ -378,7 +427,8 @@ void ModuleGameLogic::DisplayOptions(vector<string>& options) const
 
 void ModuleGameLogic::BackToMap()
 {
-	app->log("Where do you want to go?");
+	// TODO: Include in config file
+	logGameplayText("Where do you want to go?");
 	logicState = LogicState::NAVIGATING_MAP;
 }
 

@@ -22,7 +22,7 @@
       ],
       "savedVariable": {
         "key": "playerName",
-        "confirmationText": "Are you sure that you want your name to be '@playerName@'?",
+        "confirmationText": "Are you sure that you want your name to be '@playerName@'? @playerName@ is a fantastic name, but it can't ever be changed!",
         "successText": "Great! We will from now on call you by your name",
         "nextEvent": {
           "text": "This is the initial grid position. Move by typing 'east', 'west', 'north' or 'south'./n You can also type 'reenter' to interact with the current grid position."
