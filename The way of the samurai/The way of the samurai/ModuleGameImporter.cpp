@@ -24,7 +24,49 @@ bool ModuleGameImporter::Init()
 		ret = false;
 	}
 
+	// Clean JSON after loading it
+	json_value_free(rawFile);
+
 	return ret;
+}
+
+bool ModuleGameImporter::CleanUp()
+{
+	// Clean config
+	delete config;
+	config = nullptr;
+
+	// Clean map events
+	for (vector<MapEvent>::iterator it = mapEvents.begin(); it != mapEvents.end(); it++) 
+	{
+		// Clean saved variable in map event
+		if ((*it).savedVariable != nullptr) 
+		{
+			// Clean nextEvent in saved variable
+			if ((*it).savedVariable->nextEvent != nullptr)
+				delete (*it).savedVariable->nextEvent;
+
+			delete (*it).savedVariable;
+		}
+
+		// Clean alternative events
+		for (vector<AlternativeEvent>::iterator altIt = (*it).alternativeEvents.begin(); 
+			altIt != (*it).alternativeEvents.end(); 
+			altIt++)
+		{
+			// Clean alternative in alternativeEvents
+			if ((*altIt).alternative != nullptr)
+				delete (*altIt).alternative;
+		}
+
+		(*it).alternativeEvents.clear();
+	}
+
+	mapEvents.clear();
+	mapEvents.shrink_to_fit();
+
+	// I don't know what could go wrong while cleaning up
+	return true;
 }
 
 Config::Config(JSON_Object* s_config)

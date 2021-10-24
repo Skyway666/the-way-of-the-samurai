@@ -79,7 +79,13 @@ void Application::CleanUp()
 		if (!(*it)->CleanUp())
 			// TODO: Print which module failed to clean up
 			log("A module failed while cleaning up");
+
+		// Completelly erase the module
+		delete (*it);
 	}
+
+	// Clear the module's list
+	modules.clear();
 }
 
 Application::State Application::GetState() const

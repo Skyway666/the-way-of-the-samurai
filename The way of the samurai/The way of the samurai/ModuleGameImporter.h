@@ -21,6 +21,7 @@ class ModuleGameImporter: public Module
 public:
 	// Module inherited methods
 	bool Init() override;
+	bool CleanUp() override;
 
 // Public attributes
 public:

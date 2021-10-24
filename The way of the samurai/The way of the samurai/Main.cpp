@@ -42,4 +42,9 @@ void main()
 	}
 
 	app->log("Application terminated \n");
+
+	// Clear app
+	delete app;
+	app = nullptr;
+	return;
 }
