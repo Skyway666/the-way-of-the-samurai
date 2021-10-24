@@ -77,6 +77,8 @@ struct MapEvent : public Event
 public:
 	MapEvent(JSON_Object* s_mapEvent);
 
+	// Error handling function for serialization
+	static MapEvent* LoadMapEvent(JSON_Object* object, const char* mapEventName);
 // Public attributes
 public:
 	int gridPosition;
@@ -107,7 +109,7 @@ public:
 // Public attributes
 public:
 	vector<string> conditions;
-	Event* alternative = nullptr;
+	MapEvent* alternative = nullptr;
 };
 
 // Rejection text to show depending on the conditions that are met by the player

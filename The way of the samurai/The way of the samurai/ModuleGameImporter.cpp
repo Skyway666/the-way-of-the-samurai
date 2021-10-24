@@ -94,6 +94,15 @@ MapEvent::MapEvent(JSON_Object* s_mapEvent): Event(s_mapEvent)
 	navigable = json_object_get_boolean(s_mapEvent, "navigable");
 }
 
+MapEvent* MapEvent::LoadMapEvent(JSON_Object* object, const char* mapEventName)
+{
+	MapEvent* ret = nullptr;
+	if (JSON_Object* s_MapEvent = json_object_get_object(object, mapEventName))
+		ret = new MapEvent(s_MapEvent);
+
+	return ret;
+}
+
 SubEvent::SubEvent(JSON_Object* s_subEvent): Event(s_subEvent)
 {
 	// Read option
@@ -129,7 +138,7 @@ AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent)
 		conditions.push_back(json_array_get_string(s_conditions, i));
 
 	// Read alternative event
-	alternative = Event::LoadEvent(s_alternativeEvent, "alternative");
+	alternative = MapEvent::LoadMapEvent(s_alternativeEvent, "alternative");
 }
 
 SavedVariable::SavedVariable(JSON_Object* s_saveVariable)

@@ -144,18 +144,22 @@ ModuleGameLogic::PlayerInputResult ModuleGameLogic::LoadCurrentMapEvent()
 		app->logFatalError("The grid position didn't had a matching map event");
 		return PlayerInputResult::FATAL_ERROR;
 	}
-	// The map event is not navigable
-	else if (!currentMapEvent->navigable)
-	{
-		logGameplayText(currentMapEvent->text);
-		gameState.currentGridPosition = previousGridPosition;
-		return PlayerInputResult::EVENT_ENDED;
-	}
-	// The map event is navigable
+	// The event can be loaded
 	else
 	{
 		// Load map event
 		SetHandlingEvent(currentMapEvent);
+
+		// If the loaded event is not navigable
+		if (!((MapEvent*)handlingEvent)->navigable)
+		{
+			// Display text and go back to previous position
+			logGameplayText(currentMapEvent->text);
+			gameState.currentGridPosition = previousGridPosition;
+			return PlayerInputResult::EVENT_ENDED;
+		}
+
+		// If it is navigable the event is loaded
 		return PlayerInputResult::EVENT_LOADED;
 	}
 }
