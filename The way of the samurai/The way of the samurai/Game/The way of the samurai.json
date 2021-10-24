@@ -56,13 +56,15 @@
       "alternativeEvents": [
         {
           "conditions": [ "righteous" ],
-          "alternative": {
+          "alternative": 
+          {
             "text": "You have already become righteous, go do some good!"
           }
         },
         {
           "conditions": [ "sinister" ],
-          "alternative": {
+          "alternative": 
+          {
             "text": "You have already become sinister, you can now torment the world"
           }
         }
@@ -114,7 +116,17 @@
     {
       "gridPosition": 13,
       "navigable": false,
-      "text": "You are not worthy of walking the path of the righteous"
+      "text": "You are not worthy of walking the path of the righteous",
+      "alternativeEvents": 
+      [
+        {
+          "conditions": [ "righteous" ],
+          "alternative": 
+          {
+            "text": "You might walk this path since you are righteous"
+          }
+        }
+      ]
     }
   ]
 }

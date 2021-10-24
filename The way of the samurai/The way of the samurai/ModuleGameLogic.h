@@ -1,7 +1,7 @@
 #pragma once
 #include "Module.h"
 #include <list>
-#include <string>s
+#include <string>
 #include <vector>
 #include <map>
 using namespace std;
@@ -34,9 +34,9 @@ public:
 	// Events are loaded based on the logic state
 	enum class LogicState
 	{
-		INITIALIZATION,
+		LOAD_MAP_EVENT,
 		NAVIGATING_MAP,
-		IN_EVENT,
+		BRANCHING_EVENT,
 		SAVING_VARIABLE,
 		SAVING_VARIABLE_CONFIRMATION,
 		SKIP
@@ -50,7 +50,6 @@ public:
 		EVENT_BRANCHED,
 		EVENT_ENDED,
 		INVALID_INPUT,
-		VARIABLE_SAVED,
 		VARIABLE_LOADED,
 		VARIABLE_DISCARTED
 	};
@@ -71,7 +70,15 @@ private:
 	void HandleCurrentEvent();
 
 
-	// ----------LOGIC ENCAPSULATORS (only for readibility)
+	// ----------LOGIC ENCAPSULATORS (only for readibility, this functions shouldn't be used more than once)
+	// Loads map event depending on the current grid position
+	PlayerInputResult LoadCurrentMapEvent();
+	// Handles sub events of the current event
+	PlayerInputResult HandleCurrentEventBranching();
+	// Saves the variable inputed for the player and triggers confirmationb
+	void SaveInputedVariable();
+	// Performs confirmation for the saved variable
+	PlayerInputResult ConfirmSavedVariable();
 	
 	// ----------RECURRENT ACTIONS
 	// Returns current map event depending in the currentGridPosition
@@ -98,13 +105,10 @@ private:
 
 	// ----------MANAGE LOGIC VARIABLES
 	// State in which the logical machine is
-	LogicState logicState = LogicState::INITIALIZATION;
+	LogicState logicState = LogicState::LOAD_MAP_EVENT;
 	// Event being handled. A nullptr means that is time to get a map event
 	Event* handlingEvent = nullptr;
 	// Previous position of the player
 	int previousGridPosition = 0;
-
-	// If set to "true" skips an update frame
-	bool skipUpdate = false;
 };
 

@@ -4,7 +4,6 @@
 #include "ModuleInput.h"
 #include "Application.h"
 #include "ContainerUtils.h"
-#include <vector>
 
 using namespace std;
 
@@ -27,17 +26,10 @@ bool ModuleGameLogic::Start()
 
 bool ModuleGameLogic::Update()
 {
-	// Skip one update frame
-	if (skipUpdate) 
-	{
-		skipUpdate = false;
-		return true;
-	}
-
 	// Loads the next event by reading input
 	PlayerInputResult playerInputResult = HandlePlayerInput();
 
-	// Handle event if it could be loaded
+	// If an event was loaded, handle it
 	if (playerInputResult == PlayerInputResult::EVENT_LOADED)
 		HandleCurrentEvent();
 
@@ -63,172 +55,31 @@ ModuleGameLogic::PlayerInputResult ModuleGameLogic::HandlePlayerInput()
 			}
 		}
 		// If the map is being navigated OR we are in an initialization phase, load map event
-		case LogicState::INITIALIZATION:
+		case LogicState::LOAD_MAP_EVENT:
 		{
-			// Get map event
-			MapEvent* currentMapEvent = GetCurrentMapEvent();
-
-			// There is no current map event
-			if (currentMapEvent == nullptr)
-			{
-				// Something went terribly wrong
-				app->logFatalError("The grid position didn't had a matching map event");
-				ret = PlayerInputResult::FATAL_ERROR;
-			}
-			// The map event is not navigable
-			else if (!currentMapEvent->navigable) 
-			{
-				logGameplayText(currentMapEvent->text);
-				gameState.currentGridPosition = previousGridPosition;
-				ret = PlayerInputResult::EVENT_ENDED;
-			}
-			// The map event is navigable
-			else 
-			{
-				// Load map event
-				SetHandlingEvent(currentMapEvent);
-				ret = PlayerInputResult::EVENT_LOADED;
-			}
-
+			ret = LoadCurrentMapEvent();
 			break;
 		}
 		// If there is an event to handle use the input to load a sub event
-		case LogicState::IN_EVENT:
+		case LogicState::BRANCHING_EVENT:
 		{
-			// Check if the provided input leads to a sub event
-			SubEvent* choosenOption = nullptr;
-			for (vector<SubEvent>::iterator it = handlingEvent->subEvents.begin();
-				it != handlingEvent->subEvents.end();
-				it++)
-			{
-				if ((*it).option == app->input->currentLoopInput)
-					choosenOption = &(*it);
-			}
-
-			// An option was choosen
-			if (choosenOption != nullptr)
-			{
-				// Convert list of condition to a vector
-				vector<string> gameConditionsVector = vector<string>(gameState.conditions.begin(), gameState.conditions.end());
-				// Check if the conditions for the sub event are met
-				bool conditionsMet = ContainerUtils::stringVectorAContainsB(gameConditionsVector, choosenOption->conditions);
-
-				// If the conditions have been met
-				if (conditionsMet)
-				{
-					// Load the sub event
-					SetHandlingEvent(choosenOption);
-					ret = PlayerInputResult::EVENT_LOADED;
-				}
-				// The conditions have not been met
-				else 
-				{
-					// Load the rejection text based on the missing conditions
-					RejectionText* rejectionText = nullptr;
-					for (vector<RejectionText>::iterator it = choosenOption->rejectionTexts.begin();
-						it != choosenOption->rejectionTexts.end();
-						it++) 
-					{
-						// If the conditions for the rejection text are met
-						if (ContainerUtils::stringVectorAContainsB(gameConditionsVector, (*it).conditions))
-						{
-							// Save the rejection text
-							rejectionText = &(*it);
-							break;
-						}
-					}
-
-					// The rejection text was found
-					if (rejectionText != nullptr) 
-					{
-						// Display the rejection text
-						logGameplayText(rejectionText->text);
-					}
-					// The rejection text was not found
-					else 
-					{
-						// Display default rejection text
-						logGameplayText(app->gameImporter->config->defaultSubEventRejectionMessage);
-					}
-
-					// Go back to navigate the map
-					ret = PlayerInputResult::EVENT_ENDED;
-					BackToMap();
-				}
-			}
-			// The choosen option was not avaliable
-			else 
-			{
-				// TODO: Include in config
-				logGameplayText("That is not an option");
-				ret = PlayerInputResult::INVALID_INPUT;
-			}
+			ret = HandleCurrentEventBranching();
 			break;
 		}
 
 		case LogicState::SAVING_VARIABLE: 
 		{
 			// Variable saved
-			gameState.savedVariables[handlingEvent->savedVariable->key.c_str()] = app->input->currentLoopInput;
-
-			// Display confirmation text
-			logGameplayText(handlingEvent->savedVariable->confirmationText);
-
-			// Display options
-			vector<string> options = { "yes", "no" };
-			DisplayOptions(options);
+			SaveInputedVariable();
 
 			// Ask for confirmation
 			logicState = LogicState::SAVING_VARIABLE_CONFIRMATION;
 			ret = PlayerInputResult::VARIABLE_LOADED;
 			break;
 		}
-
 		case LogicState::SAVING_VARIABLE_CONFIRMATION:
 		{
-			// If the user confirms
-			if (app->input->currentLoopInput == "yes") 
-			{
-				// Display success to the user
-				logGameplayText(handlingEvent->savedVariable->successText);
-
-				ret = PlayerInputResult::VARIABLE_SAVED;
-				// There is an event after saving variable
-				if (handlingEvent->savedVariable->nextEvent != nullptr) 
-				{
-					// Load next 
-					SetHandlingEvent(handlingEvent->savedVariable->nextEvent);
-					ret = PlayerInputResult::EVENT_LOADED;
-				}
-				// There is no next event
-				else if (!handlingEvent->subEvents.empty()) 
-				{
-					// Handle the sub events
-					HandleSubEventsDisplay(handlingEvent);
-					ret = PlayerInputResult::EVENT_BRANCHED;
-				}
-				// There is no next event nor sub events
-				else 
-				{
-					// The event has ended, so go back to map
-					BackToMap();
-					ret = PlayerInputResult::EVENT_ENDED;
-				}
-			}
-			else if (app->input->currentLoopInput == "no") 
-			{
-				// Go back to the user writing the variable
-				logGameplayText(handlingEvent->text);
-				ret = PlayerInputResult::VARIABLE_DISCARTED;
-				logicState = LogicState::SAVING_VARIABLE;
-			}
-			else 
-			{
-				// Invalid input. TODO: Include in config
-				logGameplayText("Invalid input");
-				ret = PlayerInputResult::INVALID_INPUT;
-			}
-
+			ret = ConfirmSavedVariable();
 			break;
 		}
 	}
@@ -281,10 +132,170 @@ void ModuleGameLogic::HandleCurrentEvent()
 	}
 }
 
+ModuleGameLogic::PlayerInputResult ModuleGameLogic::LoadCurrentMapEvent()
+{
+	// Get map event
+	MapEvent* currentMapEvent = GetCurrentMapEvent();
+
+	// There is no current map event
+	if (currentMapEvent == nullptr)
+	{
+		// Something went terribly wrong
+		app->logFatalError("The grid position didn't had a matching map event");
+		return PlayerInputResult::FATAL_ERROR;
+	}
+	// The map event is not navigable
+	else if (!currentMapEvent->navigable)
+	{
+		logGameplayText(currentMapEvent->text);
+		gameState.currentGridPosition = previousGridPosition;
+		return PlayerInputResult::EVENT_ENDED;
+	}
+	// The map event is navigable
+	else
+	{
+		// Load map event
+		SetHandlingEvent(currentMapEvent);
+		return PlayerInputResult::EVENT_LOADED;
+	}
+}
+
+ModuleGameLogic::PlayerInputResult ModuleGameLogic::HandleCurrentEventBranching()
+{
+	// Check if the provided input leads to a sub event
+	SubEvent* choosenOption = nullptr;
+	for (vector<SubEvent>::iterator it = handlingEvent->subEvents.begin();
+		it != handlingEvent->subEvents.end();
+		it++)
+	{
+		if ((*it).option == app->input->currentLoopInput)
+			choosenOption = &(*it);
+	}
+
+	// An option was choosen
+	if (choosenOption != nullptr)
+	{
+		// Convert list of condition to a vector
+		vector<string> gameConditionsVector = vector<string>(gameState.conditions.begin(), gameState.conditions.end());
+		// Check if the conditions for the sub event are met
+		bool conditionsMet = ContainerUtils::stringVectorAContainsB(gameConditionsVector, choosenOption->conditions);
+
+		// If the conditions have been met
+		if (conditionsMet)
+		{
+			// Load the sub event
+			SetHandlingEvent(choosenOption);
+			return PlayerInputResult::EVENT_LOADED;
+		}
+		// The conditions have not been met
+		else
+		{
+			// Load the rejection text based on the missing conditions
+			RejectionText* rejectionText = nullptr;
+			for (vector<RejectionText>::iterator it = choosenOption->rejectionTexts.begin();
+				it != choosenOption->rejectionTexts.end();
+				it++)
+			{
+				// If the conditions for the rejection text are met
+				if (ContainerUtils::stringVectorAContainsB(gameConditionsVector, (*it).conditions))
+				{
+					// Save the rejection text
+					rejectionText = &(*it);
+					break;
+				}
+			}
+
+			// The rejection text was found
+			if (rejectionText != nullptr)
+			{
+				// Display the rejection text
+				logGameplayText(rejectionText->text);
+			}
+			// The rejection text was not found
+			else
+			{
+				// Display default rejection text
+				logGameplayText(app->gameImporter->config->defaultSubEventRejectionMessage);
+			}
+
+			// Go back to navigate the map
+			BackToMap();
+			return PlayerInputResult::EVENT_ENDED;
+		}
+	}
+	// The choosen option was not avaliable
+	else
+	{
+		// TODO: Include in config
+		logGameplayText("That is not an option");
+		return PlayerInputResult::INVALID_INPUT;
+	}
+}
+
+void ModuleGameLogic::SaveInputedVariable()
+{
+	gameState.savedVariables[handlingEvent->savedVariable->key.c_str()] = app->input->currentLoopInput;
+
+	// Display confirmation text
+	logGameplayText(handlingEvent->savedVariable->confirmationText);
+
+	// Display options
+	vector<string> options = { "yes", "no" };
+	DisplayOptions(options);
+}
+
+ModuleGameLogic::PlayerInputResult ModuleGameLogic::ConfirmSavedVariable()
+{
+	// User confirms the variable
+	if (app->input->currentLoopInput == "yes")
+	{
+		// Display success to the user
+		logGameplayText(handlingEvent->savedVariable->successText);
+
+		// There is an event after saving variable
+		if (handlingEvent->savedVariable->nextEvent != nullptr)
+		{
+			// Load next 
+			SetHandlingEvent(handlingEvent->savedVariable->nextEvent);
+			return PlayerInputResult::EVENT_LOADED;
+		}
+		// There is no next event
+		else if (!handlingEvent->subEvents.empty())
+		{
+			// Handle the sub events
+			HandleSubEventsDisplay(handlingEvent);
+			return PlayerInputResult::EVENT_BRANCHED;
+		}
+		// There is no next event nor sub events
+		else
+		{
+			// The event has ended, so go back to map
+			BackToMap();
+			return PlayerInputResult::EVENT_ENDED;
+		}
+	}
+
+	// User doesn't confirm the variable
+	else if (app->input->currentLoopInput == "no")
+	{
+		// Go back to the user writing the variable
+		logGameplayText(handlingEvent->text);
+
+		logicState = LogicState::SAVING_VARIABLE;
+		return PlayerInputResult::VARIABLE_DISCARTED;
+	}
+	else
+	{
+		// Invalid input. TODO: Include in config
+		logGameplayText("Invalid input");
+		return PlayerInputResult::INVALID_INPUT;
+	}
+}
+
 void ModuleGameLogic::HandleSubEventsDisplay(Event* eventToBranch)
 {
 	// Set the logic state so a sub event is selected
-	logicState = LogicState::IN_EVENT;
+	logicState = LogicState::BRANCHING_EVENT;
 
 	// Save options for the possible sub events
 	vector<string> options;
