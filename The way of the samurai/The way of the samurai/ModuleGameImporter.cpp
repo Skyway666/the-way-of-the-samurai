@@ -9,28 +9,51 @@ bool ModuleGameImporter::Init()
 	name = "Game Importer";
 
 	// TODO: Look for a dynamic way to configure the name of the file being read as the game
-	// Extract map events from file. 
+	// Read file
 	JSON_Value* rawFile = json_parse_file("The way of the samurai.json");
+	// Error handling for missing file
+	if (rawFile == nullptr) 
+	{
+		app->logFatalError("Couldn't load game file: 'The way of the samurai.json'");
+		return false;
+	}
+
+	// Read root object
 	JSON_Object* game = json_value_get_object(rawFile);
+	// Error handling for missing root object in file
+	if (game == nullptr) 
+	{
+		app->logFatalError("No root object in the game file");
+		return false;
+	}
 
 	// Read all map events
 	JSON_Array* s_mapEvents = json_object_get_array(game, "mapEvents");
+	// Error handling for map events
+	if (s_mapEvents == nullptr) 
+	{
+		app->logFatalError("No 'mapEvents' array in root object");
+		return false;
+	}
+	// Parse each map event
 	for (int i = 0; i < json_array_get_count(s_mapEvents); i++) 
 		mapEvents.push_back(MapEvent(json_array_get_object(s_mapEvents, i)));
 
 	// Read config
-	if(JSON_Object* s_config = json_object_get_object(game, "config"))
-		config = new Config(s_config);
-	else 
+	JSON_Object* s_config = json_object_get_object(game, "config");
+	// Error handling for config file
+	if(s_config == nullptr)
 	{
 		app->logFatalError("Couldn't load config file, terminating aplication");
-		ret = false;
+		return false;
 	}
+	// Parse config file
+	config = new Config(s_config);
 
 	// Clean JSON after loading it
 	json_value_free(rawFile);
 
-	return ret;
+	return true;
 }
 
 bool ModuleGameImporter::CleanUp()
