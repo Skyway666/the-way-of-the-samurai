@@ -5,6 +5,9 @@
 bool ModuleGameImporter::Init()
 {
 	bool ret = true;
+
+	name = "Game Importer";
+
 	// TODO: Look for a dynamic way to configure the name of the file being read as the game
 	// Extract map events from file. 
 	JSON_Value* rawFile = json_parse_file("The way of the samurai.json");

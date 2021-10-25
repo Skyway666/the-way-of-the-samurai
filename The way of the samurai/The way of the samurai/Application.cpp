@@ -77,8 +77,7 @@ void Application::CleanUp()
 	{
 		// If a module fails to clean up a log is printed. 
 		if (!(*it)->CleanUp())
-			// TODO: Print which module failed to clean up
-			log("A module failed while cleaning up");
+			log(("Module " + (*it)->name + " failed to clean up").c_str());
 
 		// Completelly erase the module
 		delete (*it);

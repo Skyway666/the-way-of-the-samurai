@@ -9,6 +9,7 @@ using namespace std;
 
 bool ModuleGameLogic::Init()
 {
+	name = "Game Logic";
 	// TODO: Load game state from save file
 	return true;
 }

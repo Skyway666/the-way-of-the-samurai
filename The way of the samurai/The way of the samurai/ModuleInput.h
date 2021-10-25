@@ -15,6 +15,10 @@ public:
 public:
 	// Input provided in this loop
 	string currentLoopInput;
+
+// Private variables
+private:
+	char invalidCharacters[MAX_INVALID_CHARS] = { '@' };
 	
 };
 
