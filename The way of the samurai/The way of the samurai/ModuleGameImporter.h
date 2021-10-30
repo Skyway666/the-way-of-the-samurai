@@ -23,12 +23,25 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
+	static bool HandleMandatoryFields(JSON_Object* jsonObject, const char* objectType);
+	// Returns en empty string if the object has all the mandatory fields and the missing mandatory field otherwise
+	static string HasFields(JSON_Object* jsonObject, vector<string>& mandatoryFields);
+
 // Public attributes
 public:
 	// Map events 
 	vector<MapEvent> mapEvents;
 	// Configuration
 	Config* config = nullptr;
+
+
+// Private methods
+private:
+	void InitMandatoryFields();
+
+// Private attributes
+private:
+	static bool correctLoading;
 };
 
 
@@ -47,10 +60,13 @@ public:
 	int initialPosition = 0;
 	string initialText;
 	string defaultSubEventRejectionMessage;
+
+	// Mandatory fields when loading the object
+	static vector<string> mandatoryFields;
 };
 
 // Event base class
-struct Event 
+struct Event
 {
 // Public methods
 public:
@@ -69,6 +85,9 @@ public:
 	vector<SubEvent> subEvents;
 	vector<AlternativeEvent> alternativeEvents;
 	SavedVariable* savedVariable = nullptr;
+
+	// Mandatory fields when loading the object
+	static vector<string> mandatoryFields;
 };
 
 // Event that can happen due to a map displacement
@@ -82,8 +101,11 @@ public:
 	static MapEvent* LoadMapEvent(JSON_Object* object, const char* mapEventName);
 // Public attributes
 public:
-	int gridPosition;
-	bool navigable;
+	int gridPosition = 0;
+	bool navigable = false;
+
+	// Mandatory fields when loading the object
+	static vector<string> mandatoryFields;
 };
 
 // Event that can happen within an event
@@ -98,10 +120,13 @@ public:
 	string option;
 	vector<string> conditions;
 	vector<RejectionText> rejectionTexts;
+
+	// Mandatory fields when loading the object
+	static vector<string> mandatoryFields;
 };
 
 // Alternative event that happens when certain conditions are met
-struct AlternativeEvent 
+struct AlternativeEvent
 {
 // Public methods
 public:
@@ -111,10 +136,13 @@ public:
 public:
 	vector<string> conditions;
 	MapEvent* alternative = nullptr;
+
+	// Mandatory fields when loading the object
+	static vector<string> mandatoryFields;
 };
 
 // Rejection text to show depending on the conditions that are met by the player
-struct RejectionText 
+struct RejectionText
 {
 // Public methods
 public:
@@ -124,10 +152,13 @@ public:
 public:
 	vector<string> conditions;
 	string text;
+
+	// Mandatory fields when loading the object
+	static vector<string> mandatoryFields;
 };
 
 // Data needed to save 
-struct SavedVariable 
+struct SavedVariable
 {
 // Public methods
 public:
@@ -142,4 +173,7 @@ public:
 	string confirmationText;
 	string successText;
 	Event* nextEvent = nullptr;
+
+	// Mandatory fields when loading the object
+	static vector<string> mandatoryFields;
 };

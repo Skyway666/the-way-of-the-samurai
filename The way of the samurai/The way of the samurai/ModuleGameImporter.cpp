@@ -2,11 +2,23 @@
 #include "Application.h"
 #include "Third Party/parson.h"
 
+// Static variables declaration
+vector<string> Config::mandatoryFields;
+vector<string> Event::mandatoryFields;
+vector<string> MapEvent::mandatoryFields;
+vector<string> SubEvent::mandatoryFields;
+vector<string> AlternativeEvent::mandatoryFields;
+vector<string> RejectionText::mandatoryFields;
+vector<string> SavedVariable::mandatoryFields;
+bool ModuleGameImporter::correctLoading = true;
+
 bool ModuleGameImporter::Init()
 {
-	bool ret = true;
-
+	// Module name
 	name = "Game Importer";
+
+	// Set mandatory fields for every object
+	InitMandatoryFields();
 
 	// TODO: Look for a dynamic way to configure the name of the file being read as the game
 	// Read file
@@ -53,7 +65,7 @@ bool ModuleGameImporter::Init()
 	// Clean JSON after loading it
 	json_value_free(rawFile);
 
-	return true;
+	return correctLoading;
 }
 
 bool ModuleGameImporter::CleanUp()
@@ -95,8 +107,90 @@ bool ModuleGameImporter::CleanUp()
 	return true;
 }
 
+bool ModuleGameImporter::HandleMandatoryFields(JSON_Object* jsonObject, const char* objectType)
+{
+	// Get referece to the mandatory fields depending on the object type
+	vector<string>* mandatoryFields = nullptr;
+
+	if (objectType == "Config")
+		mandatoryFields = &Config::mandatoryFields;
+	else if (objectType == "Event")
+		mandatoryFields = &Event::mandatoryFields;
+	else if (objectType == "MapEvent")
+		mandatoryFields = &MapEvent::mandatoryFields;
+	else if (objectType == "SubEvent")
+		mandatoryFields = &SubEvent::mandatoryFields;
+	else if (objectType == "AlternativeEvent")
+		mandatoryFields = &AlternativeEvent::mandatoryFields;
+	else if (objectType == "RejectionText")
+		mandatoryFields = &RejectionText::mandatoryFields;
+	else if (objectType == "SavedVariable")
+		mandatoryFields = &SavedVariable::mandatoryFields;
+
+	// Check if the jsonObject has all the mandatory fields
+	string missingField = HasFields(jsonObject, *mandatoryFields);
+	// Return true if no missing field was found and false otherwise
+	bool ret = missingField.empty();
+
+	// If the object is missing a field
+	if (!ret) 
+	{
+		// Inform the user about the missing mandatory field
+		string errorLog = ("Object of type '" + string(objectType) + "' is missing the mandatory field " + missingField);
+		app->logFatalError(errorLog.c_str());
+		// Inform the Game Importer of an incorrect loading
+		correctLoading = false;
+	}
+
+	return ret;
+}
+
+string ModuleGameImporter::HasFields(JSON_Object* jsonObject, vector<string>& fields)
+{
+	// Iterate mandatory fields
+	for (vector<string>::iterator it = fields.begin(); it != fields.end(); it++) 
+		// Check if the object has the mandatory value
+		if (json_object_has_value(jsonObject, (*it).c_str()) == 0) 
+			// Return the missing mandatory field
+			return *it;
+
+	// No mandatory field was missing
+	return string();
+}
+
+void ModuleGameImporter::InitMandatoryFields()
+{
+	// Config
+	Config::mandatoryFields.push_back("gridRowLength");
+	Config::mandatoryFields.push_back("initialPosition");
+	Config::mandatoryFields.push_back("initialText");
+	Config::mandatoryFields.push_back("defaultSubEventRejectionMessage");
+
+	// Event
+	Event::mandatoryFields.push_back("text");
+
+	// SubEvent
+	SubEvent::mandatoryFields.push_back("option");
+
+	// Rejection text
+	RejectionText::mandatoryFields.push_back("text");
+
+	// Alternative event
+	AlternativeEvent::mandatoryFields.push_back("conditions");
+	AlternativeEvent::mandatoryFields.push_back("alternative");
+
+	// Saved variable
+	SavedVariable::mandatoryFields.push_back("key");
+	SavedVariable::mandatoryFields.push_back("confirmationText");
+	SavedVariable::mandatoryFields.push_back("successText");
+}
+
 Config::Config(JSON_Object* s_config)
 {
+	// Check for mandatory fields
+	if (!ModuleGameImporter::HandleMandatoryFields(s_config, "Config"))
+		return;
+
 	// Read grid row length
 	gridRowLength = json_object_get_number(s_config, "gridRowLength");
 
@@ -112,6 +206,10 @@ Config::Config(JSON_Object* s_config)
 
 Event::Event(JSON_Object* s_event)
 {
+	// Check for mandatory fields
+	if (!ModuleGameImporter::HandleMandatoryFields(s_event, "Event"))
+		return;
+
 	// Read text
 	text = json_object_get_string(s_event, "text");
 
@@ -155,11 +253,18 @@ Event* Event::LoadEvent(JSON_Object* object, const char* eventName)
 
 MapEvent::MapEvent(JSON_Object* s_mapEvent): Event(s_mapEvent)
 {
+	// Check for mandatory fields
+	if (!ModuleGameImporter::HandleMandatoryFields(s_mapEvent, "MapEvent"))
+		return;
+
 	// Read grid position
 	gridPosition = json_object_get_number(s_mapEvent, "gridPosition");
 
-	// Read navigable flag
-	navigable = json_object_get_boolean(s_mapEvent, "navigable");
+	// Read navigable flag (map events are navigable by default)
+	if (json_object_has_value(s_mapEvent, "navigable") == 0)
+		navigable = true;
+	else 
+		navigable = json_object_get_boolean(s_mapEvent, "navigable");
 }
 
 MapEvent* MapEvent::LoadMapEvent(JSON_Object* object, const char* mapEventName)
@@ -173,6 +278,10 @@ MapEvent* MapEvent::LoadMapEvent(JSON_Object* object, const char* mapEventName)
 
 SubEvent::SubEvent(JSON_Object* s_subEvent): Event(s_subEvent)
 {
+	// Check for mandatory fields
+	if (!ModuleGameImporter::HandleMandatoryFields(s_subEvent, "SubEvent"))
+		return;
+
 	// Read option
 	option = json_object_get_string(s_subEvent, "option");
 
@@ -189,6 +298,10 @@ SubEvent::SubEvent(JSON_Object* s_subEvent): Event(s_subEvent)
 
 RejectionText::RejectionText(JSON_Object* s_rejectionText)
 {
+	// Check for mandatory fields
+	if (!ModuleGameImporter::HandleMandatoryFields(s_rejectionText, "RejectionText"))
+		return;
+
 	// Read conditions
 	JSON_Array* s_conditions = json_object_get_array(s_rejectionText, "conditions");
 	for (int i = 0; i < json_array_get_count(s_conditions); i++)
@@ -200,6 +313,10 @@ RejectionText::RejectionText(JSON_Object* s_rejectionText)
 
 AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent)
 {
+	// Check for mandatory fields
+	if (!ModuleGameImporter::HandleMandatoryFields(s_alternativeEvent, "AlternativeEvent"))
+		return;
+
 	// Read conditions
 	JSON_Array* s_conditions = json_object_get_array(s_alternativeEvent, "conditions");
 	for (int i = 0; i < json_array_get_count(s_conditions); i++)
@@ -211,6 +328,10 @@ AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent)
 
 SavedVariable::SavedVariable(JSON_Object* s_saveVariable)
 {
+	// Check for mandatory fields
+	if (!ModuleGameImporter::HandleMandatoryFields(s_saveVariable, "SavedVariable"))
+		return;
+
 	// Read key
 	key = json_object_get_string(s_saveVariable, "key");
 

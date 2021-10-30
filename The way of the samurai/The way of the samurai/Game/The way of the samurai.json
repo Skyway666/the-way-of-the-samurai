@@ -3,8 +3,7 @@
     "gridRowLength": 10,
     "initialPosition": 1,
     "initialText": "Welcome to the way of the samurai! For the moment this is just a test but please be pacient",
-    "defaultSubEventRejectionMessage": "The conditions for picking this event are not met",
-    "defaultVariableSavedConfirmation": "Are you sure?"
+    "defaultSubEventRejectionMessage": "The conditions for picking this event are not met"
   },
   "tutorialSteps": [],
   "mapEvents": [
