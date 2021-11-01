@@ -11,6 +11,7 @@ vector<string> AlternativeEvent::mandatoryFields;
 vector<string> RejectionText::mandatoryFields;
 vector<string> SavedVariable::mandatoryFields;
 bool ModuleGameImporter::correctLoading = true;
+vector<JSON_Value*> ModuleGameImporter::linkedFiles;
 
 bool ModuleGameImporter::Init()
 {
@@ -22,7 +23,7 @@ bool ModuleGameImporter::Init()
 
 	// TODO: Look for a dynamic way to configure the name of the file being read as the game
 	// Read file
-	JSON_Value* rawFile = json_parse_file("The way of the samurai.json");
+	JSON_Value* rawFile = json_parse_file("Game.json");
 	// Error handling for missing file
 	if (rawFile == nullptr) 
 	{
@@ -40,7 +41,7 @@ bool ModuleGameImporter::Init()
 	}
 
 	// Read all map events
-	JSON_Array* s_mapEvents = json_object_get_array(game, "mapEvents");
+	JSON_Array* s_mapEvents = GetLinkableArray(game, "mapEvents");
 	// Error handling for map events
 	if (s_mapEvents == nullptr) 
 	{
@@ -62,14 +63,22 @@ bool ModuleGameImporter::Init()
 	// Parse config file
 	config = new Config(s_config);
 
-	// Clean JSON after loading it
+	// Clean game file
 	json_value_free(rawFile);
+	// Clean linked files
+	for (vector<JSON_Value*>::iterator it = ModuleGameImporter::linkedFiles.begin();
+		it != ModuleGameImporter::linkedFiles.end();
+		it++)
+		json_value_free(*it);
 
 	return correctLoading;
 }
 
 bool ModuleGameImporter::CleanUp()
 {
+	// Clean up mandatory fields
+	CleanUpMandatoryFields();
+
 	// Clean config
 	delete config;
 	config = nullptr;
@@ -127,8 +136,11 @@ bool ModuleGameImporter::HandleMandatoryFields(JSON_Object* jsonObject, const ch
 	else if (objectType == "SavedVariable")
 		mandatoryFields = &SavedVariable::mandatoryFields;
 
-	// Check if the jsonObject has all the mandatory fields
-	string missingField = HasFields(jsonObject, *mandatoryFields);
+	// Check if the jsonObject has all the mandatory 
+	string missingField("");
+	if(mandatoryFields)
+	 missingField = HasFields(jsonObject, *mandatoryFields);
+
 	// Return true if no missing field was found and false otherwise
 	bool ret = missingField.empty();
 
@@ -183,6 +195,67 @@ void ModuleGameImporter::InitMandatoryFields()
 	SavedVariable::mandatoryFields.push_back("key");
 	SavedVariable::mandatoryFields.push_back("confirmationText");
 	SavedVariable::mandatoryFields.push_back("successText");
+}
+
+void ModuleGameImporter::CleanUpMandatoryFields()
+{
+	Config::mandatoryFields.clear();
+	Event::mandatoryFields.clear();
+	SubEvent::mandatoryFields.clear();
+	RejectionText::mandatoryFields.clear();
+	AlternativeEvent::mandatoryFields.clear();
+	SavedVariable::mandatoryFields.clear();
+}
+
+JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Object* object, const char* arrayName)
+{
+	JSON_Value* rootArrayValue = json_object_get_value(object, arrayName);
+
+	// The object did not contain the value
+	if (rootArrayValue == nullptr)
+		return nullptr;
+
+	JSON_Array* ret = nullptr;
+	// The root object already contains the array
+	if (json_value_get_type(rootArrayValue) == json_value_type::JSONArray)
+		ret = json_value_get_array(rootArrayValue);
+	// The root object contains a link to the file that contains the array
+	else if (json_value_get_type(rootArrayValue) == json_value_type::JSONString) 
+	{
+		// Load linked file
+		const char* linkedArrayPath = json_value_get_string(rootArrayValue);
+		JSON_Value* rawArrayFile = json_parse_file(linkedArrayPath);
+		// Error handling
+		if (rawArrayFile == nullptr) 
+		{
+			// Inform the user the linked file could not be loaded
+			app->logFatalError(("File for linked array '" + string(arrayName) + "' with path " + linkedArrayPath + " could not be found").c_str());
+			return nullptr;
+		}
+		// Add loaded files for later cleaning
+		ModuleGameImporter::linkedFiles.push_back(rawArrayFile);
+
+		// Load array from file
+		ret = json_value_get_array(rawArrayFile);
+		// Error handling
+		if (ret == nullptr) 
+		{
+			app->logFatalError(("File for linked array '" + string(arrayName) + "' with path " + linkedArrayPath + " didn't contain an array as root value").c_str());
+		}
+	}
+
+
+	return ret;
+}
+
+Linkable::Linkable(JSON_Object*& s_linkable)
+{
+	// Check if the object has a link
+	if (json_object_has_value(s_linkable, "link") == 1) 
+	{
+		// TODO: Load the object with error handling and override the s_linkable parameter value
+		// remember to add the loaded JSON_Value into the "ModuleGameImporter::linkedFiles" vector
+	}
 }
 
 Config::Config(JSON_Object* s_config)

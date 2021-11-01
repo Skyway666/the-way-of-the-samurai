@@ -158,7 +158,8 @@
     <ClInclude Include="Third Party\parson.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Game\The way of the samurai.json" />
+    <None Include="Game\Game.json" />
+    <None Include="Game\MapEvents.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

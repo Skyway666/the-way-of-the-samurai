@@ -80,7 +80,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Game\The way of the samurai.json">
+    <None Include="Game\Game.json">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Game\MapEvents.json">
       <Filter>Resources</Filter>
     </None>
   </ItemGroup>

@@ -6,6 +6,8 @@ using namespace std;
 
 // Forward declaration
 typedef struct json_object_t JSON_Object;
+typedef struct json_array_t  JSON_Array;
+typedef struct json_value_t  JSON_Value;
 
 struct Config;
 struct Event;
@@ -23,6 +25,8 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
+	// Returns "true" if the object has all the mandatory fields and "false" otherwise. Additionally, handles the absence of mandatory
+	// fields as an error
 	static bool HandleMandatoryFields(JSON_Object* jsonObject, const char* objectType);
 	// Returns en empty string if the object has all the mandatory fields and the missing mandatory field otherwise
 	static string HasFields(JSON_Object* jsonObject, vector<string>& mandatoryFields);
@@ -37,13 +41,31 @@ public:
 
 // Private methods
 private:
+
+	// ----------LOGIC ENCAPSULATORS (only for readibility, this functions shouldn't be used more than once)
+	// Initializes static mandatory fields for all the objects
 	void InitMandatoryFields();
+	// Cleans up memory for static mandatory fields in all the objects
+	void CleanUpMandatoryFields();
+	
+
+	// Gets an array from an object accounting for linkability
+	JSON_Array* GetLinkableArray(JSON_Object* object, const char* arrayName);
 
 // Private attributes
 private:
+	// If set to "false" at any time during loading it will terminate the application
 	static bool correctLoading;
+	// Stores all the linked files in the game JSON to clean up afterwards
+	static vector<JSON_Value*> linkedFiles;
+
 };
 
+// Abstrct structure for all linkable objects to inherit from
+struct Linkable 
+{
+	Linkable(JSON_Object*& s_linkable);
+};
 
 // Game parameters
 struct Config
