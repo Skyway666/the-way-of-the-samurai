@@ -37,7 +37,8 @@ public:
 	vector<MapEvent> mapEvents;
 	// Configuration
 	Config* config = nullptr;
-
+	// Stores all the linked files in the game JSON to clean up afterwards
+	static vector<JSON_Value*> linkedFiles;
 
 // Private methods
 private:
@@ -56,19 +57,18 @@ private:
 private:
 	// If set to "false" at any time during loading it will terminate the application
 	static bool correctLoading;
-	// Stores all the linked files in the game JSON to clean up afterwards
-	static vector<JSON_Value*> linkedFiles;
-
 };
 
 // Abstrct structure for all linkable objects to inherit from
 struct Linkable 
 {
-	Linkable(JSON_Object*& s_linkable);
+	// C++ pesao
+	Linkable() {};
+	Linkable(JSON_Object*& s_linkable, const char* objectName);
 };
 
 // Game parameters
-struct Config
+struct Config : public Linkable
 {
 	// Public methods
 public:
@@ -88,13 +88,13 @@ public:
 };
 
 // Event base class
-struct Event
+struct Event : public Linkable
 {
 // Public methods
 public:
 	// C++ pesao
 	Event() {};
-	Event(JSON_Object* s_event);
+	Event(JSON_Object*& s_event);
 
 	// Error handling functions for serialization
 	static Event* LoadEvent(JSON_Object* object, const char* eventName);
@@ -148,7 +148,7 @@ public:
 };
 
 // Alternative event that happens when certain conditions are met
-struct AlternativeEvent
+struct AlternativeEvent: public Linkable
 {
 // Public methods
 public:
@@ -164,7 +164,7 @@ public:
 };
 
 // Rejection text to show depending on the conditions that are met by the player
-struct RejectionText
+struct RejectionText: public Linkable
 {
 // Public methods
 public:
@@ -180,15 +180,15 @@ public:
 };
 
 // Data needed to save 
-struct SavedVariable
+struct SavedVariable: public Linkable
 {
 // Public methods
 public:
 	SavedVariable() {};
-	SavedVariable(JSON_Object* s_saveVariable);
+	SavedVariable(JSON_Object* s_savedVariable);
 
 	// Error handling function for serialization
-	static SavedVariable* LoadSavedVariable(JSON_Object* object, const char* saveVariableName);
+	static SavedVariable* LoadSavedVariable(JSON_Object* object, const char* savedVariableName);
 // Public attributes
 public:
 	string key;

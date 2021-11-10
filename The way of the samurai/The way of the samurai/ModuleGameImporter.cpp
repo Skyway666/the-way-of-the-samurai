@@ -148,7 +148,7 @@ bool ModuleGameImporter::HandleMandatoryFields(JSON_Object* jsonObject, const ch
 	if (!ret) 
 	{
 		// Inform the user about the missing mandatory field
-		string errorLog = ("Object of type '" + string(objectType) + "' is missing the mandatory field " + missingField);
+		string errorLog = ("Object of type '" + string(objectType) + "' is missing the mandatory field '" + missingField + "'");
 		app->logFatalError(errorLog.c_str());
 		// Inform the Game Importer of an incorrect loading
 		correctLoading = false;
@@ -228,8 +228,8 @@ JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Object* object, const char
 		// Error handling
 		if (rawArrayFile == nullptr) 
 		{
-			// Inform the user the linked file could not be loaded
-			app->logFatalError(("File for linked array '" + string(arrayName) + "' with path " + linkedArrayPath + " could not be found").c_str());
+			// Inform the user about the error
+			app->logFatalError(("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' could not be found").c_str());
 			return nullptr;
 		}
 		// Add loaded files for later cleaning
@@ -240,25 +240,50 @@ JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Object* object, const char
 		// Error handling
 		if (ret == nullptr) 
 		{
-			app->logFatalError(("File for linked array '" + string(arrayName) + "' with path " + linkedArrayPath + " didn't contain an array as root value").c_str());
+			// Inform the user about the error
+			app->logFatalError(("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' didn't contain an array as root value").c_str());
 		}
 	}
-
 
 	return ret;
 }
 
-Linkable::Linkable(JSON_Object*& s_linkable)
+Linkable::Linkable(JSON_Object*& s_linkable, const char* objectName)
 {
 	// Check if the object has a link
 	if (json_object_has_value(s_linkable, "link") == 1) 
 	{
 		// TODO: Load the object with error handling and override the s_linkable parameter value
 		// remember to add the loaded JSON_Value into the "ModuleGameImporter::linkedFiles" vector
+
+		// Load linked file
+		const char* linkedObjectPath = json_object_get_string(s_linkable, "link");
+		JSON_Value* rawObjectFile = json_parse_file(linkedObjectPath);
+		// Error handling
+		if (rawObjectFile == nullptr) 
+		{
+			// Inform the user about the error
+			app->logFatalError(("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' could not be found").c_str());
+			return;
+		}
+		// Add loaded files for later cleaning
+		ModuleGameImporter::linkedFiles.push_back(rawObjectFile);
+
+		// Load object from file
+		JSON_Object* linkedObject = json_value_get_object(rawObjectFile);
+		if (linkedObject == nullptr) 
+		{
+			// Inform the user about the error
+			app->logFatalError(("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' didn't contain an object as root value").c_str());
+			return;
+		}
+
+		// Replace serialized object for further parsing
+		s_linkable = linkedObject;
 	}
 }
 
-Config::Config(JSON_Object* s_config)
+Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_config, "Config"))
@@ -277,7 +302,7 @@ Config::Config(JSON_Object* s_config)
 	defaultSubEventRejectionMessage = json_object_get_string(s_config, "defaultSubEventRejectionMessage");
 }
 
-Event::Event(JSON_Object* s_event)
+Event::Event(JSON_Object*& s_event) : Linkable(s_event, "event")
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_event, "Event"))
@@ -369,7 +394,7 @@ SubEvent::SubEvent(JSON_Object* s_subEvent): Event(s_subEvent)
 		rejectionTexts.push_back(RejectionText(json_array_get_object(s_rejectionTexts, i)));
 }
 
-RejectionText::RejectionText(JSON_Object* s_rejectionText)
+RejectionText::RejectionText(JSON_Object* s_rejectionText): Linkable(s_rejectionText, "rejectionText")
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_rejectionText, "RejectionText"))
@@ -384,7 +409,7 @@ RejectionText::RejectionText(JSON_Object* s_rejectionText)
 	text = json_object_get_string(s_rejectionText, "text");
 }
 
-AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent)
+AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent): Linkable(s_alternativeEvent, "alternativeEvent")
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_alternativeEvent, "AlternativeEvent"))
@@ -399,23 +424,23 @@ AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent)
 	alternative = MapEvent::LoadMapEvent(s_alternativeEvent, "alternative");
 }
 
-SavedVariable::SavedVariable(JSON_Object* s_saveVariable)
+SavedVariable::SavedVariable(JSON_Object* s_savedVariable): Linkable(s_savedVariable, "savedVariable")
 {
 	// Check for mandatory fields
-	if (!ModuleGameImporter::HandleMandatoryFields(s_saveVariable, "SavedVariable"))
+	if (!ModuleGameImporter::HandleMandatoryFields(s_savedVariable, "SavedVariable"))
 		return;
 
 	// Read key
-	key = json_object_get_string(s_saveVariable, "key");
+	key = json_object_get_string(s_savedVariable, "key");
 
 	// Read confirmation text
-	confirmationText = json_object_get_string(s_saveVariable, "confirmationText");
+	confirmationText = json_object_get_string(s_savedVariable, "confirmationText");
 
 	// Read success txt
-	successText = json_object_get_string(s_saveVariable, "successText");
+	successText = json_object_get_string(s_savedVariable, "successText");
 
 	// Read next event
-	nextEvent = Event::LoadEvent(s_saveVariable, "nextEvent");
+	nextEvent = Event::LoadEvent(s_savedVariable, "nextEvent");
 }
 
 SavedVariable* SavedVariable::LoadSavedVariable(JSON_Object* object, const char* savedVariableName)
