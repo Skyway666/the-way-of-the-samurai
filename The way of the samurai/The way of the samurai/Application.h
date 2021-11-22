@@ -6,6 +6,7 @@
 class ModuleGameLogic;
 class ModuleInput;
 class ModuleGameImporter;
+class ModuleLocalization;
 
 
 // Manages the application
@@ -48,7 +49,7 @@ public:
 	ModuleGameLogic* gameLogic = nullptr;
 	ModuleInput* input = nullptr;
 	ModuleGameImporter* gameImporter = nullptr;
-
+	ModuleLocalization* localization = nullptr;
 
 // Private attributes
 private:

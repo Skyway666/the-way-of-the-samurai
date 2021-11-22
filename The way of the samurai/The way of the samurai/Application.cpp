@@ -2,6 +2,7 @@
 #include "ModuleGameImporter.h"
 #include "ModuleInput.h"
 #include "ModuleGameLogic.h"
+#include "ModuleLocalization.h"
 #include <stdio.h>
 
 // Initializes app by creating the Modules and calling "Init" on them
@@ -11,13 +12,14 @@ void Application::Init()
 	gameLogic = new ModuleGameLogic();
 	input = new ModuleInput();
 	gameImporter = new ModuleGameImporter();
+	localization = new ModuleLocalization();
 
 
 	// Save in the app
 	modules.push_back((Module*)gameLogic);
 	modules.push_back((Module*)input);
 	modules.push_back((Module*)gameImporter);
-
+	modules.push_back((Module*)localization);
 
 
 	// Initialize

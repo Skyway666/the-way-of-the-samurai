@@ -146,6 +146,7 @@
     <ClCompile Include="ModuleGameImporter.cpp" />
     <ClCompile Include="ModuleGameLogic.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
+    <ClCompile Include="ModuleLocalization.cpp" />
     <ClCompile Include="Third Party\parson.c" />
   </ItemGroup>
   <ItemGroup>
@@ -155,10 +156,14 @@
     <ClInclude Include="ModuleGameImporter.h" />
     <ClInclude Include="ModuleGameLogic.h" />
     <ClInclude Include="ModuleInput.h" />
+    <ClInclude Include="ModuleLocalization.h" />
     <ClInclude Include="Third Party\parson.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Game\Config.json" />
     <None Include="Game\Game.json" />
+    <None Include="Game\InitialEvent.json" />
+    <None Include="Game\Localization.json" />
     <None Include="Game\MapEvents.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

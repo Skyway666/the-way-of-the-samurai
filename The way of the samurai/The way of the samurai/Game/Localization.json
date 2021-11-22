@@ -1,0 +1,28 @@
+{
+  "languages": 
+  [
+    "en",
+    "es",
+    "de"
+  ],
+  "entries": [
+    {
+      "key": "HELLO",
+      "en": "Hello",
+      "es": "Hola",
+      "de": "Hallo"
+    },
+    {
+      "key": "GOODBYE",
+      "en": "Goodbye",
+      "es": "Adios",
+      "de": "Wiedersehen"
+    },
+    {
+      "key": "MORU",
+      "en": "The Silly Moru",
+      "es": "The Moru Tontainas",
+      "de": "Der Moru-Narr"
+    }
+  ]
+}

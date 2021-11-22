@@ -253,9 +253,6 @@ Linkable::Linkable(JSON_Object*& s_linkable, const char* objectName)
 	// Check if the object has a link
 	if (json_object_has_value(s_linkable, "link") == 1) 
 	{
-		// TODO: Load the object with error handling and override the s_linkable parameter value
-		// remember to add the loaded JSON_Value into the "ModuleGameImporter::linkedFiles" vector
-
 		// Load linked file
 		const char* linkedObjectPath = json_object_get_string(s_linkable, "link");
 		JSON_Value* rawObjectFile = json_parse_file(linkedObjectPath);

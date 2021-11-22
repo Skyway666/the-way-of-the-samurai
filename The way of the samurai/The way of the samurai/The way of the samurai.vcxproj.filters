@@ -29,6 +29,9 @@
     <Filter Include="Code\Application\Helpers">
       <UniqueIdentifier>{e4da92ec-9b20-4e95-a3fb-cc0f2c848bac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Application\Modules\Localization">
+      <UniqueIdentifier>{36cb0434-fc9a-4f40-9d80-7db0d3b7ede1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -55,6 +58,9 @@
     <ClCompile Include="ContainerUtils.cpp">
       <Filter>Code\Application\Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleLocalization.cpp">
+      <Filter>Code\Application\Modules\Localization</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Third Party\parson.h">
@@ -78,12 +84,24 @@
     <ClInclude Include="ContainerUtils.h">
       <Filter>Code\Application\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleLocalization.h">
+      <Filter>Code\Application\Modules\Localization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\Game.json">
       <Filter>Resources</Filter>
     </None>
     <None Include="Game\MapEvents.json">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Game\Config.json">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Game\InitialEvent.json">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Game\Localization.json">
       <Filter>Resources</Filter>
     </None>
   </ItemGroup>
