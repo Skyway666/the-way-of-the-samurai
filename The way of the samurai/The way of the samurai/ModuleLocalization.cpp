@@ -1,6 +1,8 @@
 ﻿#include "ModuleLocalization.h"
 #include "Application.h"
 #include "Third Party/parson.h"
+#include <iostream>
+#include <fstream>
 
 bool ModuleLocalization::Init()
 {
@@ -38,6 +40,9 @@ void ModuleLocalization::SetLanguage(string newLanguage)
 	language = newLanguage;
 
 	// TODO: Upadte "Language.json" with new language
+	ofstream language_json("Language.json");
+	language_json << "\"" << language << "\"";
+	language_json.close();
 }
 
 string ModuleLocalization::GetLanguage() const
@@ -147,6 +152,7 @@ bool ModuleLocalization::LoadLanguage()
 	// A language was stored
 	if (rawFile != nullptr)
 	{
+		// Load language
 		const char* char_language = json_value_get_string(rawFile);
 
 		if (char_language == nullptr)
@@ -155,11 +161,13 @@ bool ModuleLocalization::LoadLanguage()
 			return false;
 		}
 
+		// Assign language
 		language = char_language;
+
+		json_value_free(rawFile);
 	}
 	else
 		language = "none";
 
-	json_value_free(rawFile);
 	return true;
 }
