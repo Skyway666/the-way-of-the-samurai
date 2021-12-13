@@ -2,6 +2,7 @@
 #include "Third Party/parson.h"
 #include "ModuleGameImporter.h"
 #include "ModuleInput.h"
+#include "ModuleLocalization.h"
 #include "Application.h"
 #include "ContainerUtils.h"
 
@@ -11,6 +12,7 @@ bool ModuleGameLogic::Init()
 {
 	name = "Game Logic";
 	// TODO: Load game state from save file
+	// TODO: Check if there is 
 	return true;
 }
 
@@ -21,6 +23,20 @@ bool ModuleGameLogic::Start()
 
 	// Log initial text
 	logGameplayText(app->gameImporter->config->initialText);
+
+	if (app->localization->GetLanguage() == "none") 
+	{
+		// TODO: Check system language to ask this question in the appropiate language
+		logGameplayText("What language do you wish to play in? These are the avaliable languages:");
+
+		// Display avaliable languages
+		for (string language : app->localization->GetLanguages()) 
+		{
+			logGameplayText("	- " + language);
+		}
+
+		logicState = LogicState::CHOOSING_LANGUAGE;
+	}
 
 	return true;
 }
@@ -81,6 +97,11 @@ ModuleGameLogic::PlayerInputResult ModuleGameLogic::HandlePlayerInput()
 		case LogicState::SAVING_VARIABLE_CONFIRMATION:
 		{
 			ret = ConfirmSavedVariable();
+			break;
+		}
+		case LogicState::CHOOSING_LANGUAGE: 
+		{
+			ret = ChooseLanguage();
 			break;
 		}
 	}
@@ -297,6 +318,34 @@ ModuleGameLogic::PlayerInputResult ModuleGameLogic::ConfirmSavedVariable()
 	}
 }
 
+ModuleGameLogic::PlayerInputResult ModuleGameLogic::ChooseLanguage()
+{
+	PlayerInputResult ret = PlayerInputResult::INVALID_INPUT;
+	vector<string> languages = app->localization->GetLanguages();
+
+	// The provided input is a selectable language
+	if (std::find(languages.begin(), languages.end(), app->input->currentLoopInput) != languages.end()) 
+	{
+		// Invalid input. TODO: Include in config
+		logGameplayText("Language '" + app->input->currentLoopInput + "' selected");
+		// Set language
+		app->localization->SetLanguage(app->input->currentLoopInput);
+		// Set logic state to start the game
+		// TODO: This is only right if the language can only be choosen at the beggining of the game
+		LoadCurrentMapEvent();
+		ret = PlayerInputResult::EVENT_LOADED;
+	}
+	// Invalid input not empty
+	else if(app->input->currentLoopInput != "")
+	{
+		// Invalid input. TODO: Include in config
+		logGameplayText("Invalid input");
+	}
+	// If the input is empty, just skip
+
+	return ret;
+}
+
 void ModuleGameLogic::HandleSubEventsDisplay(Event* eventToBranch)
 {
 	// Set the logic state so a sub event is selected
@@ -317,13 +366,24 @@ void ModuleGameLogic::HandleSubEventsDisplay(Event* eventToBranch)
 
 void ModuleGameLogic::logGameplayText(string text) const
 {
-	// TODO 1: Treat it as a localization index by default. If it doesn't match any, use it as the final string
+	// Handle localization
+	handleLocalization(text);
 	
 	// Add gameplay variables
 	replaceVariables(text);
 
 	// Display final text to the user
 	app->log(text.c_str());
+}
+
+void ModuleGameLogic::handleLocalization(string& text) const
+{
+	// 'text' exists as a localization entry key
+	if (app->localization->Exists(text)) 
+	{
+		// Overrwrite 'text' with localization value
+		text = app->localization->GetLocalizatedText(text);
+	}
 }
 
 void ModuleGameLogic::replaceVariables(string& text) const

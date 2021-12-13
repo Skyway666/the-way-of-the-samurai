@@ -27,6 +27,8 @@ public:
 		map<string,string> savedVariables;
 		// Position of the player in the map
 		int currentGridPosition = 0;
+		// Language the game is being played in
+
 
 		void Save(JSON_Object* s_GameData);
 	};
@@ -39,6 +41,7 @@ public:
 		BRANCHING_EVENT,
 		SAVING_VARIABLE,
 		SAVING_VARIABLE_CONFIRMATION,
+		CHOOSING_LANGUAGE,
 		SKIP
 	};
 
@@ -51,7 +54,8 @@ public:
 		EVENT_ENDED,
 		INVALID_INPUT,
 		VARIABLE_LOADED,
-		VARIABLE_DISCARTED
+		VARIABLE_DISCARTED,
+		LANGUAGE_SELECTED
 	};
 
 // Public methods
@@ -79,6 +83,8 @@ private:
 	void SaveInputedVariable();
 	// Performs confirmation for the saved variable
 	PlayerInputResult ConfirmSavedVariable();
+	// Allows player to select a language
+	PlayerInputResult ChooseLanguage();
 	
 	// ----------RECURRENT ACTIONS
 	// Returns current map event depending in the currentGridPosition
@@ -95,6 +101,8 @@ private:
 	void HandleSubEventsDisplay(Event* eventToBranch);
 	// Logs a text after processing it as a gameplay one
 	void logGameplayText(string text) const;
+	// If 'text' is a localization key, substitutes its value depending on the configured language
+	void handleLocalization(string& text) const;
 	// Replaces keys between '@' with gameplay variables
 	void replaceVariables(string& text) const;
 

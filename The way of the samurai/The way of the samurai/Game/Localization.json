@@ -7,10 +7,10 @@
   ],
   "entries": [
     {
-      "key": "HELLO",
-      "en": "Hello",
-      "es": "Hola",
-      "de": "Hallo"
+      "key": "INITIAL_TEXT",
+      "en": "What is your name, brave samurai?",
+      "es": "Cual es tu nombre, valiente samurai?",
+      "de": "Wie ist dein Name, tapferer samurai?"
     },
     {
       "key": "GOODBYE",

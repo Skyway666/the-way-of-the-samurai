@@ -1,6 +1,6 @@
 {
   "gridPosition": 1,
-  "text": "What is your name brave samurai?",
+  "text": "INITIAL_TEXT",
   "obtainedConditions": [ "nameSaved" ],
   "alternativeEvents": [
     {
