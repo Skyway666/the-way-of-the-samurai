@@ -30,11 +30,9 @@ bool ModuleGameLogic::Start()
 		logGameplayText("What language do you wish to play in? These are the avaliable languages:");
 
 		// Display avaliable languages
-		for (string language : app->localization->GetLanguages()) 
-		{
-			logGameplayText("	- " + language);
-		}
+		DisplayOptions(app->localization->GetLanguages());
 
+		// Set logic state to "choosing language"
 		logicState = LogicState::CHOOSING_LANGUAGE;
 	}
 
@@ -388,13 +386,11 @@ void ModuleGameLogic::handleLocalization(string& text) const
 
 void ModuleGameLogic::replaceVariables(string& text) const
 {
-	int lastOcurrance = 0;
-
 	// Iterate until all '@' are substituted
 	while (text.find('@')!= string::npos) 
 	{
 		// Get position of the first and second @
-		int openingAdd = text.find('@', lastOcurrance + 1);
+		int openingAdd = text.find('@', 0);
 		int closingAdd = text.find('@', openingAdd + 1);
 		
 		// Compute length of the variable key plus both @ at the beggining and the end
@@ -491,14 +487,14 @@ void ModuleGameLogic::SetHandlingEvent(Event* newHandlingEvent)
 		handlingEvent = alternativeEvent;
 }
 
-void ModuleGameLogic::DisplayOptions(vector<string>& options) const
+void ModuleGameLogic::DisplayOptions(const vector<string>& options) const
 {
 	// TODO: Introduce this text in the config file
 	logGameplayText("Choose an option:");
 
 	// Display options
-	for(vector<string>::iterator it = options.begin(); it != options.end(); it++)
-		app->log(("    -" + (*it)).c_str());
+	for(string option : options)
+		app->log(("    -" + option).c_str());
 }
 
 void ModuleGameLogic::BackToMap()

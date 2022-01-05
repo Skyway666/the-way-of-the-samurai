@@ -94,7 +94,7 @@ private:
 	// Sets the new event to handle checking for alternative events
 	void SetHandlingEvent(Event* newHandlingEvent);
 	// Displays the options the user can choose from
-	void DisplayOptions(vector<string>& options) const;
+	void DisplayOptions(const vector<string>& options) const;
 	// Sets the logic state to "NAVIGATING_MAP" and notifies the player
 	void BackToMap();
 	// Handles the display of sub events of an event
