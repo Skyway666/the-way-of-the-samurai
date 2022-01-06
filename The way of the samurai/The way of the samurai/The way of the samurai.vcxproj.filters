@@ -23,14 +23,29 @@
     <Filter Include="Code\Application\Modules\Input">
       <UniqueIdentifier>{e8622d74-8e9e-4818-a5f2-fb627721fc93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Code\Application\Modules\GameLogic">
-      <UniqueIdentifier>{559b2b53-8b00-45ca-a1b3-a223bd94cd7b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Code\Application\Helpers">
       <UniqueIdentifier>{e4da92ec-9b20-4e95-a3fb-cc0f2c848bac}</UniqueIdentifier>
     </Filter>
     <Filter Include="Code\Application\Modules\Localization">
       <UniqueIdentifier>{36cb0434-fc9a-4f40-9d80-7db0d3b7ede1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Application\Modules\GameLogic">
+      <UniqueIdentifier>{e0b70b7f-40ed-4c1d-a498-baa13a2a820f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Application\Modules\GameLogic\LogicProcessors">
+      <UniqueIdentifier>{1693e129-ec7f-4801-aa05-304144a01584}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Application\Modules\GameLogic\LogicProcessors\MapNavigation">
+      <UniqueIdentifier>{8acef5ca-b906-463c-966a-64bb98422ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Application\Modules\GameLogic\LogicProcessors\MapEvents">
+      <UniqueIdentifier>{d3f54b73-a654-40c9-9998-72e33c74fe37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Application\Modules\GameLogic\LogicProcessors\VariableSaving">
+      <UniqueIdentifier>{8d9c59c5-a54d-4aef-8c9a-cc4903c40ca8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Application\Modules\GameLogic\LogicProcessors\ChoosingLanguage">
+      <UniqueIdentifier>{059e72d2-b599-42c6-85a7-eafbb25eaa45}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,14 +67,29 @@
     <ClCompile Include="ModuleInput.cpp">
       <Filter>Code\Application\Modules\Input</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleGameLogic.cpp">
-      <Filter>Code\Application\Modules\GameLogic</Filter>
-    </ClCompile>
     <ClCompile Include="ContainerUtils.cpp">
       <Filter>Code\Application\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="ModuleLocalization.cpp">
       <Filter>Code\Application\Modules\Localization</Filter>
+    </ClCompile>
+    <ClCompile Include="LogicProcessor.cpp">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors</Filter>
+    </ClCompile>
+    <ClCompile Include="MapNavigationLogic.cpp">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors\MapNavigation</Filter>
+    </ClCompile>
+    <ClCompile Include="MapEventsLogic.cpp">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors\MapEvents</Filter>
+    </ClCompile>
+    <ClCompile Include="VariableSavingLogic.cpp">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors\VariableSaving</Filter>
+    </ClCompile>
+    <ClCompile Include="LanguageChoosingLogic.cpp">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors\ChoosingLanguage</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleGameLogic.cpp">
+      <Filter>Code\Application\Modules\GameLogic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -78,14 +108,29 @@
     <ClInclude Include="ModuleInput.h">
       <Filter>Code\Application\Modules\Input</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleGameLogic.h">
-      <Filter>Code\Application\Modules\GameLogic</Filter>
-    </ClInclude>
     <ClInclude Include="ContainerUtils.h">
       <Filter>Code\Application\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="ModuleLocalization.h">
       <Filter>Code\Application\Modules\Localization</Filter>
+    </ClInclude>
+    <ClInclude Include="LogicProcessor.h">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors</Filter>
+    </ClInclude>
+    <ClInclude Include="MapNavigationLogic.h">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors\MapNavigation</Filter>
+    </ClInclude>
+    <ClInclude Include="MapEventsLogic.h">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors\MapEvents</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableSavingLogic.h">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors\VariableSaving</Filter>
+    </ClInclude>
+    <ClInclude Include="LanguageChoosingLogic.h">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors\ChoosingLanguage</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleGameLogic.h">
+      <Filter>Code\Application\Modules\GameLogic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

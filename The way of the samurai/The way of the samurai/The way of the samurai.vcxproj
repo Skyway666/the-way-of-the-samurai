@@ -140,24 +140,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="LanguageChoosingLogic.cpp" />
     <ClCompile Include="ContainerUtils.cpp" />
+    <ClCompile Include="LogicProcessor.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MapEventsLogic.cpp" />
+    <ClCompile Include="MapNavigationLogic.cpp" />
     <ClCompile Include="Module.cpp" />
     <ClCompile Include="ModuleGameImporter.cpp" />
     <ClCompile Include="ModuleGameLogic.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleLocalization.cpp" />
     <ClCompile Include="Third Party\parson.c" />
+    <ClCompile Include="VariableSavingLogic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="LanguageChoosingLogic.h" />
     <ClInclude Include="ContainerUtils.h" />
+    <ClInclude Include="LogicProcessor.h" />
+    <ClInclude Include="MapEventsLogic.h" />
+    <ClInclude Include="MapNavigationLogic.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleGameImporter.h" />
     <ClInclude Include="ModuleGameLogic.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleLocalization.h" />
     <ClInclude Include="Third Party\parson.h" />
+    <ClInclude Include="VariableSavingLogic.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\Config.json" />

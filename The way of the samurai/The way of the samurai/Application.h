@@ -4,6 +4,7 @@
 
 // Forward declaration
 class ModuleGameLogic;
+class ModuleGameLogic;
 class ModuleInput;
 class ModuleGameImporter;
 class ModuleLocalization;

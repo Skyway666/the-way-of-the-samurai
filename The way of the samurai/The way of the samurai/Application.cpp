@@ -1,7 +1,7 @@
 #include "Application.h"
-#include "ModuleGameImporter.h"
-#include "ModuleInput.h"
 #include "ModuleGameLogic.h"
+#include "ModuleInput.h"
+#include "ModuleGameImporter.h"
 #include "ModuleLocalization.h"
 #include <stdio.h>
 
@@ -16,8 +16,8 @@ void Application::Init()
 
 
 	// Save in the app
-	modules.push_back((Module*)gameLogic);
 	modules.push_back((Module*)input);
+	modules.push_back((Module*)gameLogic);
 	modules.push_back((Module*)gameImporter);
 	modules.push_back((Module*)localization);
 
