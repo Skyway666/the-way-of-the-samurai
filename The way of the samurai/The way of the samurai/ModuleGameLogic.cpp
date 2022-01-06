@@ -112,7 +112,10 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 			break;
 		}
 		case LogicProcessorResult::MAP_EVENT_BRANCHING: 
+		{
+			SetLogicProcessor(mapEvents);
 			break;
+		}
 		case LogicProcessorResult::MAP_EVENT_SAVE_VARIABLE: 
 		{
 			// Load saving variable and switch logic processor
@@ -151,6 +154,7 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 				SetLogicProcessor(mapEvents);
 				HandleLogicProcessorResult(mapEvents->LoadMapEvent(GetCurrentMapEvent()));
 			}
+			break;
 		}
 	}
 
