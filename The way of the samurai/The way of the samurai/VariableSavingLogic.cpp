@@ -23,7 +23,7 @@ LogicProcessorResult VariableSavingLogic::Step(string input)
 	return ret;
 }
 
-void VariableSavingLogic::LoadSavingVariable(Event* newSavingVariableEvent)
+void VariableSavingLogic::LoadSavingVariableEvent(Event* newSavingVariableEvent)
 {
 	savingVariableEvent = newSavingVariableEvent;
 	savingVariableState = SavingVariableState::SAVING;

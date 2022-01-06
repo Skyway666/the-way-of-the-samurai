@@ -17,7 +17,7 @@ private:
 	// Reads user input to make choices about the state of "savedVariables"
 	LogicProcessorResult Step(string input) override;
 	// Loads the data for saving the variable
-	void LoadSavingVariable(Event* newSavingVariableEvent);
+	void LoadSavingVariableEvent(Event* newSavingVariableEvent);
 
 	// Methods (internal)
 	// Saves the variable inputed for the player and triggers confirmation

@@ -121,9 +121,9 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 		}
 		case LogicProcessorResult::MAP_EVENT_SAVE_VARIABLE: 
 		{
-			// Load saving variable and switch logic processor
-			variableSaving->LoadSavingVariable(mapEvents->handlingEvent);
+			// Switch logic processor and load saving variable event
 			SetLogicProcessor(variableSaving);
+			variableSaving->LoadSavingVariableEvent(mapEvents->handlingEvent);
 			break;
 		}
 		case LogicProcessorResult::VARIABLE_SAVING_SAVING:
