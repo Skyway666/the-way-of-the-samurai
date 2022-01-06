@@ -39,11 +39,14 @@ bool ModuleGameLogic::Start()
 
 	mapEvents->conditions = &gameState.conditions;
 	mapEvents->objects = &gameState.objects;
+
 	variableSaving->savedVariables = &gameState.savedVariables;
+
 	mapNavigation->log = 
 		mapEvents->log = 
 		variableSaving->log = 
 		languageChoosing->log =  LogGameplayText;
+
 	mapEvents->displayOptions = 
 		variableSaving->displayOptions =
 		languageChoosing->displayOptions =
