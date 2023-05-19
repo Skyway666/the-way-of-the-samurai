@@ -15,8 +15,10 @@ LogicProcessorResult MapNavigationLogic::Step(string input)
 		(*currentGridPosition)++;
 	else if (input == "west")
 		(*currentGridPosition)--;
+	else if (input == "options")
+		ret = LogicProcessorResult::OPTIONS_CHOOSING_START;
 	// If the input is "reenter" we reproduce the same event again
-	else if (input != "reenter")
+	else if(input != "reenter")
 	{
 		ret = LogicProcessorResult::MAP_NAVIGATION_INVALID;
 		// TODO: Include in config

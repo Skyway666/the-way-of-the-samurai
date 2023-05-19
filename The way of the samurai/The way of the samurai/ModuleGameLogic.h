@@ -15,6 +15,7 @@ class MapNavigationLogic;
 class MapEventsLogic;
 class VariableSavingLogic;
 class LanguageChoosingLogic;
+class OptionsChoosingLogic;
 enum class LogicProcessorResult;
 
 
@@ -32,7 +33,6 @@ public:
 		map<string, string> savedVariables;
 		// Position of the player in the map
 		int currentGridPosition = 0;
-		// Language the game is being played in
 
 
 		void Save(JSON_Object* s_GameData);
@@ -71,11 +71,12 @@ private:
 	LogicProcessor* currentLogicProcessor = nullptr;
 	LogicProcessor* lastLogicProcessor = nullptr;
 
-	// ----------LOGIC PROCESSOR
+	// ----------LOGIC PROCESSORS
 	MapNavigationLogic* mapNavigation = nullptr;
 	MapEventsLogic* mapEvents = nullptr;
 	VariableSavingLogic* variableSaving = nullptr;
 	LanguageChoosingLogic* languageChoosing = nullptr;
+	OptionsChoosingLogic* optionsChoosing = nullptr;
 };
 
 // If 'text' is a localization key, substitutes its value depending on the configured language
@@ -84,3 +85,5 @@ void HandleLocalization(string& text);
 void LogGameplayText(string text);
 // Displays the options the user can choose from
 void DisplayOptions(const vector<string>& options);
+// Display a list of elements
+void DisplayList(const vector<string>& options);

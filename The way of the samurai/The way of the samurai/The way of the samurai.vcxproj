@@ -151,6 +151,7 @@
     <ClCompile Include="ModuleGameLogic.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleLocalization.cpp" />
+    <ClCompile Include="OptionsChoosingLogic.cpp" />
     <ClCompile Include="Third Party\parson.c" />
     <ClCompile Include="VariableSavingLogic.cpp" />
   </ItemGroup>
@@ -166,6 +167,7 @@
     <ClInclude Include="ModuleGameLogic.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleLocalization.h" />
+    <ClInclude Include="OptionsChoosingLogic.h" />
     <ClInclude Include="Third Party\parson.h" />
     <ClInclude Include="VariableSavingLogic.h" />
   </ItemGroup>

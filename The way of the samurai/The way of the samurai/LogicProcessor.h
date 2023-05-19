@@ -22,7 +22,14 @@ enum class LogicProcessorResult
 	VARIABLE_SAVING_SAVED,
 	// LANGUAGE CHOOSING
 	LANGUAGE_CHOOSING_CHOOSING,
-	LANGUAGE_CHOOSING_CHOSEN
+	LANGUAGE_CHOOSING_CHOSEN,
+	// OPTIONS
+	OPTIONS_CHOOSING_START,
+	OPTIONS_CHOOSING_CHOOSING,
+	OPTIONS_CHOOSING_CHOOSE_LANGUAGE,
+	OPTIONS_CHOOSING_START_TUTORIAL,
+	OPTIONS_CHOOSING_RESUME,
+	OPTIONS_CHOOSING_EXIT
 };
 
 class LogicProcessor
@@ -30,7 +37,6 @@ class LogicProcessor
 protected:
 	virtual LogicProcessorResult Step(string input) { return LogicProcessorResult::NONE; }
 	void (*log)(string);
-
 
 	friend class ModuleGameLogic;
 };

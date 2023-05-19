@@ -7,6 +7,7 @@
 #include "MapEventsLogic.h"
 #include "VariableSavingLogic.h"
 #include "LanguageChoosingLogic.h"
+#include "OptionsChoosingLogic.h"
 
 #include <iostream>
 
@@ -34,23 +35,38 @@ bool ModuleGameLogic::Start()
 	languageChoosing = new LanguageChoosingLogic();
 	languageChoosing->languages = app->localization->GetLanguages();
 
+	// Initialize option choosing logic
+	optionsChoosing = new OptionsChoosingLogic();
+	optionsChoosing->options.push_back("objects");
+	optionsChoosing->options.push_back("conditions");
+	optionsChoosing->options.push_back("help");
+	optionsChoosing->options.push_back("language");
+	optionsChoosing->options.push_back("tutorial");
+	optionsChoosing->options.push_back("resume");
+	optionsChoosing->options.push_back("exit");
+
 	// Initialize all logic processor references
 	mapNavigation->currentGridPosition = &gameState.currentGridPosition;
 
-	mapEvents->conditions = &gameState.conditions;
-	mapEvents->objects = &gameState.objects;
+	mapEvents->conditions = 
+		optionsChoosing->conditions = &gameState.conditions;
 
+	mapEvents->objects =
+		optionsChoosing->objects = &gameState.objects;
+			
 	variableSaving->savedVariables = &gameState.savedVariables;
 
 	mapNavigation->log = 
 		mapEvents->log = 
 		variableSaving->log = 
-		languageChoosing->log =  LogGameplayText;
+		languageChoosing->log =
+		optionsChoosing->log = LogGameplayText;
 
 	mapEvents->displayOptions = 
 		variableSaving->displayOptions =
-		languageChoosing->displayOptions =
-		DisplayOptions;
+		languageChoosing->displayOptions = DisplayOptions;
+
+	optionsChoosing->displayList = DisplayList;
 
 	// Initialize position with initial position
 	gameState.currentGridPosition = app->gameImporter->config->initialPosition;
@@ -86,6 +102,7 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 	bool ret = true;
 	switch (result)
 	{
+		#pragma region MAP_NAVIGATION
 		case LogicProcessorResult::MAP_NAVIGATION_INVALID:
 			break;
 		case LogicProcessorResult::MAP_NAVIGATION_SUCCESSFUL:
@@ -94,44 +111,49 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 			ret = HandleLogicProcessorResult(mapEvents->LoadMapEvent(GetCurrentMapEvent()));
 			break;
 		}
+		#pragma endregion
+		#pragma region MAP_EVENT
 		case LogicProcessorResult::MAP_EVENT_INVALID:
 		{
 			// Fatal error
+			// TODO: Localize
 			app->logFatalError("The grid position didn't had a matching map event");
 			ret = false;
 			break;
 		}
-		case LogicProcessorResult::MAP_EVENT_NOT_NAVIGABLE: 
+		case LogicProcessorResult::MAP_EVENT_NOT_NAVIGABLE:
 		{
 			// Go to previous grid and back to map navigation
 			mapNavigation->BackToPreviousGridPosition();
 			BackToMap();
 			break;
 		}
-		case LogicProcessorResult::MAP_EVENT_ENDED: 
+		case LogicProcessorResult::MAP_EVENT_ENDED:
 		{
 			// Go back to map navigation
 			BackToMap();
 			break;
 		}
-		case LogicProcessorResult::MAP_EVENT_BRANCHING: 
+		case LogicProcessorResult::MAP_EVENT_BRANCHING:
 		{
 			SetLogicProcessor(mapEvents);
 			break;
 		}
-		case LogicProcessorResult::MAP_EVENT_SAVE_VARIABLE: 
+		case LogicProcessorResult::MAP_EVENT_SAVE_VARIABLE:
 		{
 			// Switch logic processor and load saving variable event
 			SetLogicProcessor(variableSaving);
 			variableSaving->LoadSavingVariableEvent(mapEvents->handlingEvent);
 			break;
 		}
+		#pragma endregion
+		#pragma region VARIABLE_SAVING
 		case LogicProcessorResult::VARIABLE_SAVING_SAVING:
 			break;
 		case LogicProcessorResult::VARIABLE_SAVING_SAVED:
 		{
 			// Go back to the last logical state
-			BackToLastLogicalState(); 
+			BackToLastLogicalState();
 
 			// If it is a map event, artificially step it
 			if (currentLogicProcessor == mapEvents)
@@ -140,6 +162,8 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 			}
 			break;
 		}
+		#pragma endregion
+		#pragma region LANGUAGE_CHOOSING
 		case LogicProcessorResult::LANGUAGE_CHOOSING_CHOOSING:
 			break;
 		case LogicProcessorResult::LANGUAGE_CHOOSING_CHOSEN:
@@ -157,8 +181,45 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 				SetLogicProcessor(mapEvents);
 				HandleLogicProcessorResult(mapEvents->LoadMapEvent(GetCurrentMapEvent()));
 			}
+
+			// If the previous logical state was options choosing, artificially start it
+			if (currentLogicProcessor == optionsChoosing)
+			{
+				optionsChoosing->StartOptionChoosing();
+			}
 			break;
 		}
+		#pragma endregion
+		#pragma region OPTIONS_CHOOSING
+		case LogicProcessorResult::OPTIONS_CHOOSING_START:
+		{
+			SetLogicProcessor(optionsChoosing);
+			optionsChoosing->StartOptionChoosing();
+			break;
+		}
+		case LogicProcessorResult::OPTIONS_CHOOSING_CHOOSING:
+		{
+			optionsChoosing->StartOptionChoosing();
+			break;
+		}
+		case LogicProcessorResult::OPTIONS_CHOOSING_CHOOSE_LANGUAGE:
+		{
+			SetLogicProcessor(languageChoosing);
+			languageChoosing->StartLanguageChoosing();
+			break;
+		}
+		case LogicProcessorResult::OPTIONS_CHOOSING_RESUME:
+		{
+			BackToMap();
+			break;
+		}
+		case LogicProcessorResult::OPTIONS_CHOOSING_EXIT:
+		{
+			ret = false;
+			// TODO: Localize
+			app->log("Thank you for playing!");
+		}
+		#pragma endregion
 	}
 
 	return ret;
@@ -268,10 +329,15 @@ void LogGameplayText(string text)
 
 void DisplayOptions(const vector<string>& options)
 {
-	// TODO: Introduce this text in the config file
+	// TODO: Localize
 	LogGameplayText("Choose an option:");
 
 	// Display options
-	for (string option : options)
-		app->log(("    -" + option).c_str());
+	DisplayList(options);
+}
+
+void DisplayList(const vector<string>& list)
+{
+	for (string element : list)
+		app->log(("    -" + element).c_str());
 }

@@ -47,6 +47,9 @@
     <Filter Include="Code\Application\Modules\GameLogic\LogicProcessors\ChoosingLanguage">
       <UniqueIdentifier>{059e72d2-b599-42c6-85a7-eafbb25eaa45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Application\Modules\GameLogic\LogicProcessors\Options">
+      <UniqueIdentifier>{a005dcdc-9af0-4b61-b1ef-bba35bfdc87f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -91,6 +94,9 @@
     <ClCompile Include="ModuleGameLogic.cpp">
       <Filter>Code\Application\Modules\GameLogic</Filter>
     </ClCompile>
+    <ClCompile Include="OptionsChoosingLogic.cpp">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors\Options</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Third Party\parson.h">
@@ -131,6 +137,9 @@
     </ClInclude>
     <ClInclude Include="ModuleGameLogic.h">
       <Filter>Code\Application\Modules\GameLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionsChoosingLogic.h">
+      <Filter>Code\Application\Modules\GameLogic\LogicProcessors\Options</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
