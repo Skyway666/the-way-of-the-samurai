@@ -23,7 +23,7 @@ bool ModuleGameImporter::Init()
 
 	// TODO: Look for a dynamic way to configure the name of the file being read as the game
 	// Read file
-	JSON_Value* rawFile = json_parse_file("Game.json");
+	JSON_Value* rawFile = json_parse_file_with_comments("Game.json");
 	// Error handling for missing file
 	if (rawFile == nullptr) 
 	{
@@ -224,7 +224,7 @@ JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Object* object, const char
 	{
 		// Load linked file
 		const char* linkedArrayPath = json_value_get_string(rootArrayValue);
-		JSON_Value* rawArrayFile = json_parse_file(linkedArrayPath);
+		JSON_Value* rawArrayFile = json_parse_file_with_comments(linkedArrayPath);
 		// Error handling
 		if (rawArrayFile == nullptr) 
 		{
@@ -255,7 +255,7 @@ Linkable::Linkable(JSON_Object*& s_linkable, const char* objectName)
 	{
 		// Load linked file
 		const char* linkedObjectPath = json_object_get_string(s_linkable, "link");
-		JSON_Value* rawObjectFile = json_parse_file(linkedObjectPath);
+		JSON_Value* rawObjectFile = json_parse_file_with_comments(linkedObjectPath);
 		// Error handling
 		if (rawObjectFile == nullptr) 
 		{

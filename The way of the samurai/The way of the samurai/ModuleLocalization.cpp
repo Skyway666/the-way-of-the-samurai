@@ -58,7 +58,7 @@ vector<string> ModuleLocalization::GetLanguages() const
 bool ModuleLocalization::LoadLocalizationData()
 {
 	// Load localization file
-	JSON_Value* rawFile = json_parse_file("Localization.json");
+	JSON_Value* rawFile = json_parse_file_with_comments("Localization.json");
 	// File was not found
 	if (rawFile == nullptr)
 		return true;
@@ -147,7 +147,7 @@ bool ModuleLocalization::LoadLocalizationData()
 
 bool ModuleLocalization::LoadLanguage()
 {
-	JSON_Value* rawFile = json_parse_file("Language.json");
+	JSON_Value* rawFile = json_parse_file_with_comments("Language.json");
 
 	// A language was stored
 	if (rawFile != nullptr)
