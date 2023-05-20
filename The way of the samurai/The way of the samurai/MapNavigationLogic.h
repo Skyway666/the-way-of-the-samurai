@@ -14,6 +14,7 @@ private:
 
 	// Parameters
 	int gridRowLength = 0;
+	string invalidOptionText;
 
 	// Variables
 	int previousGridPosition = 0;

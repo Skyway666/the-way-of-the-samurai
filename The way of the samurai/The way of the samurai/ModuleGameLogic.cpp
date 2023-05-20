@@ -26,7 +26,7 @@ bool ModuleGameLogic::Start()
 
 	// Intialize map events logic
 	mapEvents = new MapEventsLogic();
-	mapEvents->defaultSubEventRejectionMessage = app->gameImporter->config->defaultSubEventRejectionMessage;
+	mapEvents->defaultSubEventRejectionText = app->gameImporter->config->defaultSubEventRejectionText;
 
 	// Intialize variable saving logic
 	variableSaving = new VariableSavingLogic();
@@ -45,7 +45,13 @@ bool ModuleGameLogic::Start()
 	optionsChoosing->options.push_back("resume");
 	optionsChoosing->options.push_back("exit");
 
-	// Initialize all logic processor references
+	// Initialize commun logic processor parameters
+	mapNavigation->invalidOptionText = 
+		mapEvents->invalidOptionText =
+		variableSaving->invalidOptionText =
+		languageChoosing->invalidOptionText = app->gameImporter->config->invalidOptionText;
+	
+	// Initialize commun logic processor references
 	mapNavigation->currentGridPosition = &gameState.currentGridPosition;
 
 	mapEvents->conditions = 
@@ -54,7 +60,9 @@ bool ModuleGameLogic::Start()
 	mapEvents->objects =
 		optionsChoosing->objects = &gameState.objects;
 			
-	variableSaving->savedVariables = &gameState.savedVariables;
+	variableSaving->savedVariables = 
+	languageChoosing->savedVariables = 
+		&gameState.savedVariables;
 
 	mapNavigation->log = 
 		mapEvents->log = 
@@ -71,18 +79,19 @@ bool ModuleGameLogic::Start()
 	// Initialize position with initial position
 	gameState.currentGridPosition = app->gameImporter->config->initialPosition;
 
-	// Log initial text
-	LogGameplayText(app->gameImporter->config->initialText);
-
 	// There is no language set
 	if (app->localization->GetLanguage() == "none")
 	{
 		SetLogicProcessor(languageChoosing);
 		languageChoosing->StartLanguageChoosing();
 	}
-	// A language is set, load the even in the first grid position
+	// A language is set, start the game
 	else
 	{
+		// Log initial text
+		LogGameplayText(app->gameImporter->config->initialText);
+
+		// Load current map event
 		SetLogicProcessor(mapEvents);
 		HandleLogicProcessorResult(mapEvents->LoadMapEvent(GetCurrentMapEvent()));
 	}
@@ -169,7 +178,10 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 		case LogicProcessorResult::LANGUAGE_CHOOSING_CHOSEN:
 		{
 			// Set the choosen language
-			app->localization->SetLanguage(languageChoosing->choosenLanguage);
+			app->localization->SetLanguage(gameState.savedVariables["language"]);
+
+			// Inform the user of the selected language
+			LogGameplayText(app->gameImporter->config->languageSelectedText);
 
 			// Go back to the last logical state
 			BackToLastLogicalState();
@@ -177,7 +189,10 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 			// If there was no previous logical state
 			if (currentLogicProcessor == nullptr)
 			{
-				// Load the event in the first grid position
+				// Log initial text
+				LogGameplayText(app->gameImporter->config->initialText);
+
+				// Load current map event
 				SetLogicProcessor(mapEvents);
 				HandleLogicProcessorResult(mapEvents->LoadMapEvent(GetCurrentMapEvent()));
 			}
@@ -241,8 +256,7 @@ MapEvent* ModuleGameLogic::GetCurrentMapEvent() const
 
 void ModuleGameLogic::BackToMap()
 {
-	// TODO: Include in config file
-	LogGameplayText("Where do you want to go?");
+	LogGameplayText(app->gameImporter->config->backToMapText);
 	SetLogicProcessor(mapNavigation);
 }
 
@@ -329,8 +343,7 @@ void LogGameplayText(string text)
 
 void DisplayOptions(const vector<string>& options)
 {
-	// TODO: Localize
-	LogGameplayText("Choose an option:");
+	LogGameplayText(app->gameImporter->config->displayOptionsText);
 
 	// Display options
 	DisplayList(options);

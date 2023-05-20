@@ -1,28 +1,45 @@
 {
-  "languages": 
-  [
-    "en",
-    "es",
-    "de"
-  ],
-  "entries": [
-    {
-      "key": "INITIAL_TEXT",
-      "en": "What is your name, brave samurai?",
-      "es": "Cual es tu nombre, valiente samurai?",
-      "de": "Wie ist dein Name, tapferer samurai?"
-    },
-    {
-      "key": "GOODBYE",
-      "en": "Goodbye",
-      "es": "Adios",
-      "de": "Wiedersehen"
-    },
-    {
-      "key": "MORU",
-      "en": "The Silly Moru",
-      "es": "The Moru Tontainas",
-      "de": "Der Moru-Narr"
-    }
-  ]
+    "languages":
+    [
+        "en",
+        "es"
+    ],
+    "entries":
+    [
+        {
+            "key": "INITIAL_TEXT",
+            "en": "Welcome to the way of the samurai! For the moment this is just a test, but please be pacient",
+            "es": "Bienvenido al camino del samurai! Por ahora esto es solo una prueba, pero por favor se paciente"
+        },
+        {
+            "key": "DEFAULT_SUB_EVENT_REJECTION_MESSAGE",
+            "en": "The conditions for picking this event are not met",
+            "es": "Las condiciones para escoger este evento no se cumplen"
+        },
+        {
+            "key": "DISPLAY_OPTIONS",
+            "en": "Choose an option:",
+            "es": "Escoge una opcion:"
+        },
+        {
+            "key": "BACK_TO_MAP",
+            "en": "Where do you want to go?",
+            "es": "Donde quieres ir?"
+        },
+        {
+            "key": "INVALID_OPTION",
+            "en": "That is not an option",
+            "es": "Eso no es una opcion"
+        },
+        {
+            "key": "LANGUAGE_SELECTED",
+            "en": "Language \"@language@\" selected",
+            "es": "Lenguaje \"@language@\" seleccionado"
+        },
+        {
+            "key": "ASK_NAME",
+            "en": "What is your name, brave samurai?",
+            "es": "Cual es tu nombre, valiente samurai?"
+        }
+    ]
 }

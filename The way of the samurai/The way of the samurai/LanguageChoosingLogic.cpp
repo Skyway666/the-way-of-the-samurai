@@ -7,10 +7,9 @@ LogicProcessorResult LanguageChoosingLogic::Step(string input)
 	// The provided input is a selectable language
 	if (std::find(languages.begin(), languages.end(), input) != languages.end())
 	{
-		// Invalid input. TODO: Include in config
-		log("Language '" + input + "' selected");
-		// Set language
-		choosenLanguage = input;
+		// Save selected language as variable
+		(*savedVariables)["language"] = input;
+
 		// Communicate a language has been choosen
 		ret = LogicProcessorResult::LANGUAGE_CHOOSING_CHOSEN;
 	}
@@ -18,7 +17,7 @@ LogicProcessorResult LanguageChoosingLogic::Step(string input)
 	else 
 	{
 		// Invalid input. TODO: Include in config
-		log("Invalid input");
+		log(invalidOptionText);
 		ret = LogicProcessorResult::LANGUAGE_CHOOSING_CHOOSING;
 	}
 

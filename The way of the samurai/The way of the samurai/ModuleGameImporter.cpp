@@ -176,7 +176,11 @@ void ModuleGameImporter::InitMandatoryFields()
 	Config::mandatoryFields.push_back("gridRowLength");
 	Config::mandatoryFields.push_back("initialPosition");
 	Config::mandatoryFields.push_back("initialText");
-	Config::mandatoryFields.push_back("defaultSubEventRejectionMessage");
+	Config::mandatoryFields.push_back("defaultSubEventRejectionText");
+	Config::mandatoryFields.push_back("displayOptionsText");
+	Config::mandatoryFields.push_back("backToMapText");
+	Config::mandatoryFields.push_back("invalidOptionText");
+	Config::mandatoryFields.push_back("languageSelectedText");
 
 	// Event
 	Event::mandatoryFields.push_back("text");
@@ -286,17 +290,29 @@ Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 	if (!ModuleGameImporter::HandleMandatoryFields(s_config, "Config"))
 		return;
 
-	// Read grid row length
+	// Read gridRowLength
 	gridRowLength = json_object_get_number(s_config, "gridRowLength");
 
-	// Read initial position
+	// Read initialPosition
 	initialPosition = json_object_get_number(s_config, "initialPosition");
 
-	// Read initial text
+	// Read initialText
 	initialText = json_object_get_string(s_config, "initialText");
 
-	// Read defaultSubEventRejectionMessage
-	defaultSubEventRejectionMessage = json_object_get_string(s_config, "defaultSubEventRejectionMessage");
+	// Read defaultSubEventRejectionText
+	defaultSubEventRejectionText = json_object_get_string(s_config, "defaultSubEventRejectionText");
+
+	// Read displayOptionsText
+	displayOptionsText = json_object_get_string(s_config, "displayOptionsText");
+
+	// Read backToMapText
+	backToMapText = json_object_get_string(s_config, "backToMapText");
+
+	// Read invalidOptionText
+	invalidOptionText = json_object_get_string(s_config, "invalidOptionText");
+
+	// Read languageSelectedText
+	languageSelectedText = json_object_get_string(s_config, "languageSelectedText");
 }
 
 Event::Event(JSON_Object*& s_event) : Linkable(s_event, "event")

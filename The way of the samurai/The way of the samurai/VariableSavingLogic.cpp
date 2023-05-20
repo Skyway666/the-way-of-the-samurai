@@ -31,11 +31,13 @@ void VariableSavingLogic::LoadSavingVariableEvent(Event* newSavingVariableEvent)
 
 LogicProcessorResult VariableSavingLogic::SaveInputedVariable(string input)
 {
+	// Save inputed variable in dictionary
 	(*savedVariables)[savingVariableEvent->savedVariable->key.c_str()] = input;
 
 	// Display confirmation text
 	log(savingVariableEvent->savedVariable->confirmationText);
 
+	// TODO: Localize
 	// Display options
 	vector<string> options = { "yes", "no" };
 	displayOptions(options);
@@ -65,8 +67,7 @@ LogicProcessorResult VariableSavingLogic::ConfirmSavedVariable(string input)
 	}
 	else
 	{
-		// Invalid input. TODO: Include in config
-		log("Invalid input");
+		log(invalidOptionText);
 		ret = LogicProcessorResult::VARIABLE_SAVING_SAVING;
 	}
 

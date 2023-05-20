@@ -190,7 +190,7 @@ LogicProcessorResult MapEventsLogic::HandleCurrentEventBranching(string input)
 			else
 			{
 				// Display default rejection text
-				log(defaultSubEventRejectionMessage);
+				log(defaultSubEventRejectionText);
 			}
 
 			ret = LogicProcessorResult::MAP_EVENT_ENDED;
@@ -200,7 +200,7 @@ LogicProcessorResult MapEventsLogic::HandleCurrentEventBranching(string input)
 	else
 	{
 		// TODO: Include in config
-		log("That is not an option");
+		log(invalidOptionText);
 		ret =  LogicProcessorResult::MAP_EVENT_BRANCHING;
 	}
 

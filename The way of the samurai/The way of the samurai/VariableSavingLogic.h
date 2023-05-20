@@ -33,6 +33,7 @@ private:
 	// Parameters
 	// Variable being saved when stepping
 	Event* savingVariableEvent;
+	string invalidOptionText;
 
 	// Variables
 	SavingVariableState savingVariableState;

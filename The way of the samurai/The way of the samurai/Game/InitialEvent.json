@@ -1,6 +1,6 @@
 {
   "gridPosition": 1,
-  "text": "INITIAL_TEXT",
+  "text": "ASK_NAME",
   "obtainedConditions": [ "nameSaved" ],
   "alternativeEvents": [
     {

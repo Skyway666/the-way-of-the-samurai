@@ -1,6 +1,10 @@
 {
-  "gridRowLength": 10,
-  "initialPosition": 1,
-  "initialText": "Welcome to the way of the samurai! For the moment this is just a test but please be pacient",
-  "defaultSubEventRejectionMessage": "The conditions for picking this event are not met"
+    "gridRowLength": 10,
+    "initialPosition": 1,
+    "initialText": "INITIAL_TEXT",
+    "defaultSubEventRejectionText": "DEFAULT_SUB_EVENT_REJECTION",
+    "displayOptionsText": "DISPLAY_OPTIONS",
+    "backToMapText": "BACK_TO_MAP",
+    "invalidOptionText": "INVALID_OPTION",
+    "languageSelectedText": "LANGUAGE_SELECTED"
 }

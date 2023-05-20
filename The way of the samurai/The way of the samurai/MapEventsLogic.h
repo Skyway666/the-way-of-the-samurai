@@ -40,7 +40,8 @@ private:
 	void (*displayOptions)(const vector<string>&);
 
 	// Parameters
-	string defaultSubEventRejectionMessage;
+	string defaultSubEventRejectionText;
+	string invalidOptionText;
 	// Event being handled.
 	Event* handlingEvent = nullptr;
 

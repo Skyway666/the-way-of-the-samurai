@@ -21,8 +21,7 @@ LogicProcessorResult MapNavigationLogic::Step(string input)
 	else if(input != "reenter")
 	{
 		ret = LogicProcessorResult::MAP_NAVIGATION_INVALID;
-		// TODO: Include in config
-		log("Invalid moving input, please introduce another command");
+		log(invalidOptionText);
 	}
 
 	return ret;

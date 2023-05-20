@@ -81,7 +81,11 @@ public:
 	int gridRowLength = 0;
 	int initialPosition = 0;
 	string initialText;
-	string defaultSubEventRejectionMessage;
+	string defaultSubEventRejectionText;
+	string displayOptionsText;
+	string backToMapText;
+	string invalidOptionText;
+	string languageSelectedText;
 
 	// Mandatory fields when loading the object
 	static vector<string> mandatoryFields;

@@ -1,6 +1,8 @@
 #pragma once
 #include "LogicProcessor.h"
 #include <vector>
+#include <map>
+
 class LanguageChoosingLogic : public LogicProcessor
 {
 private:
@@ -12,12 +14,11 @@ private:
 
 	// References
 	void (*displayOptions)(const vector<string>&);
+	map<string, string>* savedVariables;
 
 	// Parameters
 	vector<string> languages;
-
-	// Variables
-	string choosenLanguage;
+	string invalidOptionText;
 
 	friend class ModuleGameLogic;
 };
