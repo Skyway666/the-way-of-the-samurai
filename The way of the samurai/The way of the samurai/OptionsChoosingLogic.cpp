@@ -16,6 +16,7 @@ LogicProcessorResult OptionsChoosingLogic::Step(string input)
         // Objects
         case 0:
         {
+            // TODO: Localize
             log("This are your avaliable objects:");
             vector<string> displayVector(objects->begin(), objects->end());
             displayList(displayVector);
@@ -25,6 +26,7 @@ LogicProcessorResult OptionsChoosingLogic::Step(string input)
         // Conditions
         case 1:
         {
+            // TODO: Localize
             log("This are your current conditions:");
             vector<string> displayVector(conditions->begin(), conditions->end());
             displayList(displayVector);
@@ -69,6 +71,7 @@ LogicProcessorResult OptionsChoosingLogic::Step(string input)
         // Invalid option
         case -1:
         {
+            // TODO: Localize
             log("Invalid option");
             ret = LogicProcessorResult::OPTIONS_CHOOSING_CHOOSING;
             break;
@@ -81,6 +84,7 @@ LogicProcessorResult OptionsChoosingLogic::Step(string input)
 
 void OptionsChoosingLogic::StartOptionChoosing()
 {
+    // TODO: Localize
     log("Welcome to the options menu. Choose an option:");
     displayList(options);
 }

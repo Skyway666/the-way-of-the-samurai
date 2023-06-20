@@ -36,6 +36,7 @@ bool ModuleGameLogic::Start()
 	languageChoosing->languages = app->localization->GetLanguages();
 
 	// Initialize option choosing logic
+	// TODO: Localize
 	optionsChoosing = new OptionsChoosingLogic();
 	optionsChoosing->options.push_back("objects");
 	optionsChoosing->options.push_back("conditions");

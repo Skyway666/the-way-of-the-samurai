@@ -66,10 +66,8 @@ bool ModuleGameImporter::Init()
 	// Clean game file
 	json_value_free(rawFile);
 	// Clean linked files
-	for (vector<JSON_Value*>::iterator it = ModuleGameImporter::linkedFiles.begin();
-		it != ModuleGameImporter::linkedFiles.end();
-		it++)
-		json_value_free(*it);
+	for (JSON_Value* jsonValue : linkedFiles)
+		json_value_free(jsonValue);
 
 	return correctLoading;
 }
@@ -84,29 +82,27 @@ bool ModuleGameImporter::CleanUp()
 	config = nullptr;
 
 	// Clean map events
-	for (vector<MapEvent>::iterator it = mapEvents.begin(); it != mapEvents.end(); it++) 
+	for (MapEvent& mapEvent : mapEvents) 
 	{
 		// Clean saved variable in map event
-		if ((*it).savedVariable != nullptr) 
+		if (mapEvent.savedVariable != nullptr)
 		{
 			// Clean nextEvent in saved variable
-			if ((*it).savedVariable->nextEvent != nullptr)
-				delete (*it).savedVariable->nextEvent;
+			if (mapEvent.savedVariable->nextEvent != nullptr)
+				delete mapEvent.savedVariable->nextEvent;
 
-			delete (*it).savedVariable;
+			delete mapEvent.savedVariable;
 		}
 
 		// Clean alternative events
-		for (vector<AlternativeEvent>::iterator altIt = (*it).alternativeEvents.begin(); 
-			altIt != (*it).alternativeEvents.end(); 
-			altIt++)
+		for (AlternativeEvent& alternativeEvent : mapEvent.alternativeEvents)
 		{
 			// Clean alternative in alternativeEvents
-			if ((*altIt).alternative != nullptr)
-				delete (*altIt).alternative;
+			if (alternativeEvent.alternative != nullptr)
+				delete alternativeEvent.alternative;
 		}
 
-		(*it).alternativeEvents.clear();
+		mapEvent.alternativeEvents.clear();
 	}
 
 	mapEvents.clear();
@@ -160,11 +156,11 @@ bool ModuleGameImporter::HandleMandatoryFields(JSON_Object* jsonObject, const ch
 string ModuleGameImporter::HasFields(JSON_Object* jsonObject, vector<string>& fields)
 {
 	// Iterate mandatory fields
-	for (vector<string>::iterator it = fields.begin(); it != fields.end(); it++) 
+	for (string& field : fields) 
 		// Check if the object has the mandatory value
-		if (json_object_has_value(jsonObject, (*it).c_str()) == 0) 
+		if (json_object_has_value(jsonObject, field.c_str()) == 0)
 			// Return the missing mandatory field
-			return *it;
+			return field;
 
 	// No mandatory field was missing
 	return string();

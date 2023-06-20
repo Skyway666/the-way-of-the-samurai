@@ -39,7 +39,6 @@ void ModuleLocalization::SetLanguage(string newLanguage)
 {
 	language = newLanguage;
 
-	// TODO: Upadte "Language.json" with new language
 	ofstream language_json("Language.json");
 	language_json << "\"" << language << "\"";
 	language_json.close();

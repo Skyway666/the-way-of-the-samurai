@@ -5,6 +5,7 @@ LogicProcessorResult MapNavigationLogic::Step(string input)
 	// Save previous position, in case we find a non navigatible tile
 	previousGridPosition = *currentGridPosition;
 
+	// TODO: Localize
 	// Grid movement
 	LogicProcessorResult ret = LogicProcessorResult::MAP_NAVIGATION_SUCCESSFUL;
 	if (input == "north")

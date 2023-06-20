@@ -50,6 +50,8 @@ LogicProcessorResult VariableSavingLogic::SaveInputedVariable(string input)
 LogicProcessorResult VariableSavingLogic::ConfirmSavedVariable(string input)
 {
 	LogicProcessorResult ret = LogicProcessorResult::NONE;
+
+	// TODO: Localize
 	// User confirms the variable
 	if (input == "yes")
 	{

@@ -23,9 +23,9 @@ void Application::Init()
 
 
 	// Initialize
-	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
+	for (Module* mdl : modules)
 	{
-		if (!(*it)->Init())
+		if (!mdl->Init())
 		{
 			state = State::QUITTING;
 			return;
@@ -40,10 +40,10 @@ void Application::Init()
 void Application::Start()
 {
 	// Module iteration
-	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it) 
+	for (Module* mdl : modules)
 	{
 		// If a module fails the application quits
-		if (!(*it)->Start()) 
+		if (!mdl->Start())
 		{
 			state = State::QUITTING;
 			return;
@@ -58,10 +58,10 @@ void Application::Start()
 void Application::Update()
 {
 	// Module iteration
-	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
+	for (Module* mdl : modules)
 	{
 		// If a module fails the application quits
-		if (!(*it)->Update())
+		if (!mdl->Update())
 		{
 			state = State::QUITTING;
 			return;
@@ -75,14 +75,14 @@ void Application::Update()
 void Application::CleanUp()
 {
 	// Module iteration
-	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it) 
+	for (Module* mdl : modules)
 	{
 		// If a module fails to clean up a log is printed. 
-		if (!(*it)->CleanUp())
-			log(("Module " + (*it)->name + " failed to clean up").c_str());
+		if (!mdl->CleanUp())
+			log(("Module " + mdl->name + " failed to clean up").c_str());
 
 		// Completelly erase the module
-		delete (*it);
+		delete mdl;
 	}
 
 	// Clear the module's list

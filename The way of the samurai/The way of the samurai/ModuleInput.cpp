@@ -19,6 +19,7 @@ bool ModuleInput::Update()
 			// Check if the current input contains an invalid character
 			if (currentLoopInput.find(invalidCharacters[i]) != string::npos) 
 			{
+				// TODO: Localize
 				// Notify the player about the invalid character
 				string invalidInputMessage("Invalid character: ");
 				invalidInputMessage += invalidCharacters[i];
