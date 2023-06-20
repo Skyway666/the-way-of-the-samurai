@@ -50,7 +50,8 @@ bool ModuleGameLogic::Start()
 	mapNavigation->invalidOptionText = 
 		mapEvents->invalidOptionText =
 		variableSaving->invalidOptionText =
-		languageChoosing->invalidOptionText = app->gameImporter->config->invalidOptionText;
+		languageChoosing->invalidOptionText = 
+		optionsChoosing->invalidOptionText = app->gameImporter->config->invalidOptionText;
 	
 	// Initialize commun logic processor references
 	mapNavigation->currentGridPosition = &gameState.currentGridPosition;

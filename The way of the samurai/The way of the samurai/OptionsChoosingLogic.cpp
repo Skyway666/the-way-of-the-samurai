@@ -71,8 +71,7 @@ LogicProcessorResult OptionsChoosingLogic::Step(string input)
         // Invalid option
         case -1:
         {
-            // TODO: Localize
-            log("Invalid option");
+            log(invalidOptionText);
             ret = LogicProcessorResult::OPTIONS_CHOOSING_CHOOSING;
             break;
         }

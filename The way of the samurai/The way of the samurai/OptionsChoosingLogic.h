@@ -16,6 +16,7 @@ private:
 
     // Parameters:
     vector<string> options;
+    string invalidOptionText;
 
     friend class ModuleGameLogic;
 };
