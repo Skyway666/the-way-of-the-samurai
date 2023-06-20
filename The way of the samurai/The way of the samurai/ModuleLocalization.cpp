@@ -35,10 +35,22 @@ string ModuleLocalization::GetLocalizatedText(string key)
 	return ret;
 }
 
+void ModuleLocalization::HandleLocalization(string& text)
+{
+	// 'text' exists as a localization entry key
+	if (Exists(text))
+	{
+		// Overrwrite 'text' with localization value
+		text = GetLocalizatedText(text);
+	}
+}
+
 void ModuleLocalization::SetLanguage(string newLanguage)
 {
+	// Update language
 	language = newLanguage;
 
+	// Save in language file
 	ofstream language_json("Language.json");
 	language_json << "\"" << language << "\"";
 	language_json.close();

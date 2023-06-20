@@ -1,5 +1,7 @@
 #include "ModuleInput.h"
 #include "Application.h"
+#include "ModuleGameImporter.h"
+#include "ModuleLocalization.h"
 #include <iostream>
 
 
@@ -19,11 +21,15 @@ bool ModuleInput::Update()
 			// Check if the current input contains an invalid character
 			if (currentLoopInput.find(invalidCharacters[i]) != string::npos) 
 			{
-				// TODO: Localize
+				// Localize invalid character text
+				string invalidCharacterText = app->gameImporter->config->invalidCharacterText;
+				app->localization->HandleLocalization(invalidCharacterText);
+
+				// Assemble message
+				string invalidCharacterMessage = invalidCharacterText + ": " + invalidCharacters[i];
+
 				// Notify the player about the invalid character
-				string invalidInputMessage("Invalid character: ");
-				invalidInputMessage += invalidCharacters[i];
-				app->log(invalidInputMessage.c_str());
+				app->log(invalidCharacterMessage.c_str());
 
 				// Ask for input again
 				validInputProvided = false;

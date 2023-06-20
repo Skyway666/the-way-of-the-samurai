@@ -285,16 +285,6 @@ bool ModuleGameLogic::CleanUp()
 	return true;
 }
 
-void HandleLocalization(string& text)
-{
-	// 'text' exists as a localization entry key
-	if (app->localization->Exists(text))
-	{
-		// Overrwrite 'text' with localization value
-		text = app->localization->GetLocalizatedText(text);
-	}
-}
-
 void ModuleGameLogic::ReplaceVariables(string& text) const
 {
 	// Iterate until all '@' are substituted
@@ -333,7 +323,7 @@ void ModuleGameLogic::ReplaceVariables(string& text) const
 void LogGameplayText(string text)
 {
 	// Handle localization
-	HandleLocalization(text);
+	app->localization->HandleLocalization(text);
 
 	// Add gameplay variables
 	app->gameLogic->ReplaceVariables(text);

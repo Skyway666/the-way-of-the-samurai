@@ -85,6 +85,7 @@ public:
 	string displayOptionsText;
 	string backToMapText;
 	string invalidOptionText;
+	string invalidCharacterText;
 	string languageSelectedText;
 
 	// Mandatory fields when loading the object

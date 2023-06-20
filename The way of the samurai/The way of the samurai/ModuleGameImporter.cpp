@@ -307,6 +307,9 @@ Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 	// Read invalidOptionText
 	invalidOptionText = json_object_get_string(s_config, "invalidOptionText");
 
+	// Read invalidCharacterText
+	invalidCharacterText = json_object_get_string(s_config, "invalidCharacterText");
+
 	// Read languageSelectedText
 	languageSelectedText = json_object_get_string(s_config, "languageSelectedText");
 }

@@ -6,6 +6,7 @@
     ],
     "entries":
     [
+        // Engine
         {
             "key": "INITIAL_TEXT",
             "en": "Welcome to the way of the samurai! For the moment this is just a test, but please be pacient",
@@ -32,10 +33,17 @@
             "es": "Eso no es una opcion"
         },
         {
+            "key": "INVALID_CHARACTER",
+            "en": "Invalid character",
+            "es": "Caracter invalido"
+        },
+        {
             "key": "LANGUAGE_SELECTED",
             "en": "Language \"@language@\" selected",
             "es": "Lenguaje \"@language@\" seleccionado"
         },
+
+        // Game
         {
             "key": "ASK_NAME",
             "en": "What is your name, brave samurai?",

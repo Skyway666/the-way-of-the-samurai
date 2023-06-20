@@ -6,5 +6,6 @@
     "displayOptionsText": "DISPLAY_OPTIONS",
     "backToMapText": "BACK_TO_MAP",
     "invalidOptionText": "INVALID_OPTION",
+    "invalidCharacterText": "INVALID_CHARACTER",
     "languageSelectedText": "LANGUAGE_SELECTED"
 }

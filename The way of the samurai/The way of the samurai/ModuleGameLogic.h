@@ -79,8 +79,6 @@ private:
 	OptionsChoosingLogic* optionsChoosing = nullptr;
 };
 
-// If 'text' is a localization key, substitutes its value depending on the configured language
-void HandleLocalization(string& text);
 // Logs a text after processing it as a gameplay one
 void LogGameplayText(string text);
 // Displays the options the user can choose from

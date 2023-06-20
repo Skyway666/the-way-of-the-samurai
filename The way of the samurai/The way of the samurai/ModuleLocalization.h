@@ -17,6 +17,8 @@ public:
 	bool Exists(string key) const;
 	// Gets value for a key depending on the configured language. Returns an empty string if the key has no value
 	string GetLocalizatedText(string key);
+	// If 'text' is a localization key, substitutes its value depending on the configured language
+	void HandleLocalization(string& text);
 	// Sets language
 	void SetLanguage(string newLanguage);
 	// Gets language
