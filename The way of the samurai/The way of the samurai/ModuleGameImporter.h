@@ -87,6 +87,9 @@ public:
 	string invalidOptionText;
 	string invalidCharacterText;
 	string languageSelectedText;
+	string optionsMenuIntroductionText;
+	string avaliableObjectsText;
+	string currentConditionsText;
 	string exitGameText;
 
 	// Mandatory fields when loading the object

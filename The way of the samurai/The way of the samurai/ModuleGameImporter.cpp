@@ -313,6 +313,15 @@ Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 	// Read languageSelectedText
 	languageSelectedText = json_object_get_string(s_config, "languageSelectedText");
 
+	// Read avaliableObjectsText
+	optionsMenuIntroductionText = json_object_get_string(s_config, "optionsMenuIntroductionText");
+
+	// Read avaliableObjectsText
+	avaliableObjectsText = json_object_get_string(s_config, "avaliableObjectsText");
+
+	// Read currentConditionsText
+	currentConditionsText = json_object_get_string(s_config, "currentConditionsText");
+
 	// Read exitGameText
 	exitGameText = json_object_get_string(s_config, "exitGameText");
 }

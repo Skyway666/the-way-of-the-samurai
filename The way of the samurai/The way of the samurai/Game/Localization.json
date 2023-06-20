@@ -43,10 +43,26 @@
             "es": "Lenguaje \"@language@\" seleccionado"
         },
         {
+            "key": "OPTIONS_MENU_INTRODUCTION",
+            "en": "Welcome to the options menu. Choose an option:",
+            "es": "Bienvenido al menu de opciones. Elige una opcion:"
+        },
+        {
+            "key": "AVALIABLE_OBJECTS",
+            "en": "This are your avaliable objects:",
+            "es": "Estos son tus objetos disponibles:"
+        },
+        {
+            "key": "CURRENT_CONDITIONS",
+            "en": "This are your current conditions:",
+            "es": "Estas son tus condiciones actuales:"
+        },
+        {
             "key": "EXIT_GAME",
             "en": "Thank you for playing!",
             "es": "Gracias por jugar!"
         },
+
 
         // Game
         {

@@ -8,5 +8,9 @@
     "invalidOptionText": "INVALID_OPTION",
     "invalidCharacterText": "INVALID_CHARACTER",
     "languageSelectedText": "LANGUAGE_SELECTED",
+    "optionsMenuIntroductionText": "OPTIONS_MENU_INTRODUCTION",
+    "avaliableObjectsText": "AVALIABLE_OBJECTS",
+    "currentConditionsText": "CURRENT_CONDITIONS",
     "exitGameText": "EXIT_GAME"
+
 }

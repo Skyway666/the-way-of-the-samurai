@@ -46,6 +46,10 @@ bool ModuleGameLogic::Start()
 	optionsChoosing->options.push_back("resume");
 	optionsChoosing->options.push_back("exit");
 
+	optionsChoosing->optionsMenuIntroductionText = app->gameImporter->config->optionsMenuIntroductionText;
+	optionsChoosing->avaliableObjectsText = app->gameImporter->config->avaliableObjectsText;
+	optionsChoosing->currentConditionsText = app->gameImporter->config->currentConditionsText;
+
 	// Initialize commun logic processor parameters
 	mapNavigation->invalidOptionText = 
 		mapEvents->invalidOptionText =
