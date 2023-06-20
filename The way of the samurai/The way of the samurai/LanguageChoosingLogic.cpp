@@ -16,7 +16,7 @@ LogicProcessorResult LanguageChoosingLogic::Step(string input)
 	// Invalid input not empty
 	else 
 	{
-		// Invalid input. TODO: Include in config
+		// Invalid input.
 		log(invalidOptionText);
 		ret = LogicProcessorResult::LANGUAGE_CHOOSING_CHOOSING;
 	}

@@ -199,7 +199,6 @@ LogicProcessorResult MapEventsLogic::HandleCurrentEventBranching(string input)
 	// The choosen option was not avaliable
 	else
 	{
-		// TODO: Include in config
 		log(invalidOptionText);
 		ret =  LogicProcessorResult::MAP_EVENT_BRANCHING;
 	}

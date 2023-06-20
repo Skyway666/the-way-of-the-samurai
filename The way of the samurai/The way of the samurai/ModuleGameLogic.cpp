@@ -231,7 +231,6 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 		case LogicProcessorResult::OPTIONS_CHOOSING_EXIT:
 		{
 			ret = false;
-			// TODO: Localize
 			LogGameplayText(app->gameImporter->config->exitGameText);
 		}
 		#pragma endregion
