@@ -7,5 +7,6 @@
     "backToMapText": "BACK_TO_MAP",
     "invalidOptionText": "INVALID_OPTION",
     "invalidCharacterText": "INVALID_CHARACTER",
-    "languageSelectedText": "LANGUAGE_SELECTED"
+    "languageSelectedText": "LANGUAGE_SELECTED",
+    "exitGameText": "EXIT_GAME"
 }

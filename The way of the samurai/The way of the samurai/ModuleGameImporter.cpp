@@ -312,6 +312,9 @@ Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 
 	// Read languageSelectedText
 	languageSelectedText = json_object_get_string(s_config, "languageSelectedText");
+
+	// Read exitGameText
+	exitGameText = json_object_get_string(s_config, "exitGameText");
 }
 
 Event::Event(JSON_Object*& s_event) : Linkable(s_event, "event")

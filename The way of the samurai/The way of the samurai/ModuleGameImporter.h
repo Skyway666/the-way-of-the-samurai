@@ -87,6 +87,7 @@ public:
 	string invalidOptionText;
 	string invalidCharacterText;
 	string languageSelectedText;
+	string exitGameText;
 
 	// Mandatory fields when loading the object
 	static vector<string> mandatoryFields;

@@ -42,6 +42,11 @@
             "en": "Language \"@language@\" selected",
             "es": "Lenguaje \"@language@\" seleccionado"
         },
+        {
+            "key": "EXIT_GAME",
+            "en": "Thank you for playing!",
+            "es": "Gracias por jugar!"
+        },
 
         // Game
         {

@@ -126,7 +126,6 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 		case LogicProcessorResult::MAP_EVENT_INVALID:
 		{
 			// Fatal error
-			// TODO: Localize
 			app->logFatalError("The grid position didn't had a matching map event");
 			ret = false;
 			break;
@@ -233,7 +232,7 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 		{
 			ret = false;
 			// TODO: Localize
-			app->log("Thank you for playing!");
+			LogGameplayText(app->gameImporter->config->exitGameText);
 		}
 		#pragma endregion
 	}
