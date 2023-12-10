@@ -1,6 +1,9 @@
 {
+    // Map
     "gridRowLength": 10,
     "initialPosition": 1,
+
+    // Engine localization
     "initialText": "INITIAL_TEXT",
     "defaultSubEventRejectionText": "DEFAULT_SUB_EVENT_REJECTION",
     "displayOptionsText": "DISPLAY_OPTIONS",
@@ -12,5 +15,4 @@
     "avaliableObjectsText": "AVALIABLE_OBJECTS",
     "currentConditionsText": "CURRENT_CONDITIONS",
     "exitGameText": "EXIT_GAME"
-
 }
