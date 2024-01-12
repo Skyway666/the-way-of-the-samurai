@@ -29,7 +29,7 @@ bool ModuleInput::Update()
 				string invalidCharacterMessage = invalidCharacterText + ": " + invalidCharacters[i];
 
 				// Notify the player about the invalid character
-				app->log(invalidCharacterMessage.c_str());
+				app->Log(invalidCharacterMessage.c_str());
 
 				// Ask for input again
 				validInputProvided = false;

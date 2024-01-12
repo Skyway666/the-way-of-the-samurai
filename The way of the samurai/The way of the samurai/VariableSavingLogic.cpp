@@ -37,10 +37,8 @@ LogicProcessorResult VariableSavingLogic::SaveInputedVariable(string input)
 	// Display confirmation text
 	log(savingVariableEvent->savedVariable->confirmationText);
 
-	// TODO: Localize
 	// Display options
-	vector<string> options = { "yes", "no" };
-	displayOptions(options);
+	displayOptions({ dichotomousAnswerTexts[0],  dichotomousAnswerTexts[1] });
 
 	// After saving the variable we need confirmation
 	savingVariableState = SavingVariableState::CONFIRMING;
@@ -51,16 +49,21 @@ LogicProcessorResult VariableSavingLogic::ConfirmSavedVariable(string input)
 {
 	LogicProcessorResult ret = LogicProcessorResult::NONE;
 
-	// TODO: Localize
+	// Process options
+	string yes = dichotomousAnswerTexts[0];
+	string no = dichotomousAnswerTexts[1];
+	processGameplayText(yes);
+	processGameplayText(no);
+
 	// User confirms the variable
-	if (input == "yes")
+	if (input == yes)
 	{
 		// Display success to the user
 		log(savingVariableEvent->savedVariable->successText);
 		ret = LogicProcessorResult::VARIABLE_SAVING_SAVED;
 	}
 	// User doesn't confirm the variable
-	else if (input == "no")
+	else if (input == no)
 	{
 		// Go back to the user writing the variable
 		log(savingVariableEvent->text);

@@ -48,7 +48,7 @@
             "es": "Bienvenido al menu de opciones. Elige una opcion:"
         },
         {
-            "key": "AVALIABLE_OBJECTS",
+            "key": "AVAILABLE_OBJECTS",
             "en": "This are your avaliable objects:",
             "es": "Estos son tus objetos disponibles:"
         },
@@ -61,6 +61,16 @@
             "key": "EXIT_GAME",
             "en": "Thank you for playing!",
             "es": "Gracias por jugar!"
+        },
+        {
+            "key": "YES",
+            "en": "yes",
+            "es": "si"
+        },
+        {
+            "key": "NO",
+            "en": "no",
+            "es": "no"
         },
 
 

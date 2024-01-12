@@ -27,7 +27,7 @@ bool ModuleGameImporter::Init()
 	// Error handling for missing file
 	if (rawFile == nullptr) 
 	{
-		app->logFatalError("Couldn't load game file: 'The way of the samurai.json'");
+		app->LogFatalError("Couldn't load game file: 'The way of the samurai.json'");
 		return false;
 	}
 
@@ -36,7 +36,7 @@ bool ModuleGameImporter::Init()
 	// Error handling for missing root object in file
 	if (game == nullptr) 
 	{
-		app->logFatalError("No root object in the game file");
+		app->LogFatalError("No root object in the game file");
 		return false;
 	}
 
@@ -45,7 +45,7 @@ bool ModuleGameImporter::Init()
 	// Error handling for map events
 	if (s_mapEvents == nullptr) 
 	{
-		app->logFatalError("No 'mapEvents' array in root object");
+		app->LogFatalError("No 'mapEvents' array in root object");
 		return false;
 	}
 	// Parse each map event
@@ -57,7 +57,7 @@ bool ModuleGameImporter::Init()
 	// Error handling for config file
 	if(s_config == nullptr)
 	{
-		app->logFatalError("Couldn't load config file, terminating aplication");
+		app->LogFatalError("Couldn't load config file, terminating aplication");
 		return false;
 	}
 	// Parse config file
@@ -145,7 +145,7 @@ bool ModuleGameImporter::HandleMandatoryFields(JSON_Object* jsonObject, const ch
 	{
 		// Inform the user about the missing mandatory field
 		string errorLog = ("Object of type '" + string(objectType) + "' is missing the mandatory field '" + missingField + "'");
-		app->logFatalError(errorLog.c_str());
+		app->LogFatalError(errorLog.c_str());
 		// Inform the Game Importer of an incorrect loading
 		correctLoading = false;
 	}
@@ -177,6 +177,11 @@ void ModuleGameImporter::InitMandatoryFields()
 	Config::mandatoryFields.push_back("backToMapText");
 	Config::mandatoryFields.push_back("invalidOptionText");
 	Config::mandatoryFields.push_back("languageSelectedText");
+	Config::mandatoryFields.push_back("optionsMenuIntroductionText");
+	Config::mandatoryFields.push_back("availableObjectsText");
+	Config::mandatoryFields.push_back("currentConditionsText");
+	Config::mandatoryFields.push_back("exitGameText");
+	Config::mandatoryFields.push_back("dichotomousAnswerTexts");
 
 	// Event
 	Event::mandatoryFields.push_back("text");
@@ -229,7 +234,7 @@ JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Object* object, const char
 		if (rawArrayFile == nullptr) 
 		{
 			// Inform the user about the error
-			app->logFatalError(("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' could not be found").c_str());
+			app->LogFatalError(("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' could not be found").c_str());
 			return nullptr;
 		}
 		// Add loaded files for later cleaning
@@ -241,7 +246,7 @@ JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Object* object, const char
 		if (ret == nullptr) 
 		{
 			// Inform the user about the error
-			app->logFatalError(("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' didn't contain an array as root value").c_str());
+			app->LogFatalError(("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' didn't contain an array as root value").c_str());
 		}
 	}
 
@@ -260,7 +265,7 @@ Linkable::Linkable(JSON_Object*& s_linkable, const char* objectName)
 		if (rawObjectFile == nullptr) 
 		{
 			// Inform the user about the error
-			app->logFatalError(("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' could not be found").c_str());
+			app->LogFatalError(("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' could not be found").c_str());
 			return;
 		}
 		// Add loaded files for later cleaning
@@ -271,7 +276,7 @@ Linkable::Linkable(JSON_Object*& s_linkable, const char* objectName)
 		if (linkedObject == nullptr) 
 		{
 			// Inform the user about the error
-			app->logFatalError(("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' didn't contain an object as root value").c_str());
+			app->LogFatalError(("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' didn't contain an object as root value").c_str());
 			return;
 		}
 
@@ -317,13 +322,22 @@ Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 	optionsMenuIntroductionText = json_object_get_string(s_config, "optionsMenuIntroductionText");
 
 	// Read avaliableObjectsText
-	avaliableObjectsText = json_object_get_string(s_config, "avaliableObjectsText");
+	availableObjectsText = json_object_get_string(s_config, "availableObjectsText");
 
 	// Read currentConditionsText
 	currentConditionsText = json_object_get_string(s_config, "currentConditionsText");
 
 	// Read exitGameText
 	exitGameText = json_object_get_string(s_config, "exitGameText");
+
+	// Read dichotomousAnswerTexts
+	JSON_Array* s_dichotomousAnswerTexts = json_object_get_array(s_config, "dichotomousAnswerTexts");
+
+	// Read dichotomousAnswerTexts[0]
+	dichotomousAnswerTexts[0] = json_array_get_string(s_dichotomousAnswerTexts, 0);
+
+	// Read dichotomousAnswerTexts[]
+	dichotomousAnswerTexts[1] = json_array_get_string(s_dichotomousAnswerTexts, 1);
 }
 
 Event::Event(JSON_Object*& s_event) : Linkable(s_event, "event")

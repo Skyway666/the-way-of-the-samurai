@@ -3,7 +3,7 @@
 #include <map>
 #include <vector>
 
-class Event;
+struct Event;
 
 enum class SavingVariableState 
 {
@@ -28,7 +28,9 @@ private:
 
 	// References
 	map<string, string>* savedVariables;
+	string* dichotomousAnswerTexts;
 	void (*displayOptions)(const vector<string>&);
+	void (*processGameplayText)(string&);
 
 	// Parameters
 	// Variable being saved when stepping

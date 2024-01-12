@@ -10,14 +10,14 @@ private:
     void StartOptionChoosing();
 
     // References:
-    void (*displayList)(const vector<string>&);
-    list<string>* conditions;
-    list<string>* objects;
+    void (*displayList)(const vector<string>&) = nullptr;
+    list<string>* conditions = nullptr;
+    list<string>* objects = nullptr;
 
     // Parameters:
     vector<string> options;
     string optionsMenuIntroductionText;
-    string avaliableObjectsText;
+    string availableObjectsText;
     string currentConditionsText;
     string invalidOptionText;
 

@@ -16,7 +16,7 @@ LogicProcessorResult OptionsChoosingLogic::Step(string input)
         // Objects
         case 0:
         {
-            log(avaliableObjectsText);
+            log(availableObjectsText);
             vector<string> displayVector(objects->begin(), objects->end());
             displayList(displayVector);
             ret = LogicProcessorResult::OPTIONS_CHOOSING_CHOOSING;

@@ -79,6 +79,8 @@ private:
 	OptionsChoosingLogic* optionsChoosing = nullptr;
 };
 
+// Processes a gameplay text (localization and variable replacement handling)
+void ProcessGameplayText(string& text);
 // Logs a text after processing it as a gameplay one
 void LogGameplayText(string text);
 // Displays the options the user can choose from

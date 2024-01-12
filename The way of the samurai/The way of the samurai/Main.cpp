@@ -41,7 +41,7 @@ void main()
 			break;
 	}
 
-	app->log("Application terminated \n");
+	app->Log("Application terminated \n");
 
 	// Clear app
 	delete app;

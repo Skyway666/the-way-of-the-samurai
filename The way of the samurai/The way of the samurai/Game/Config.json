@@ -3,7 +3,8 @@
     "gridRowLength": 10,
     "initialPosition": 1,
 
-    // Engine localization
+    // Engine texts
+    // Output
     "initialText": "INITIAL_TEXT",
     "defaultSubEventRejectionText": "DEFAULT_SUB_EVENT_REJECTION",
     "displayOptionsText": "DISPLAY_OPTIONS",
@@ -12,7 +13,14 @@
     "invalidCharacterText": "INVALID_CHARACTER",
     "languageSelectedText": "LANGUAGE_SELECTED",
     "optionsMenuIntroductionText": "OPTIONS_MENU_INTRODUCTION",
-    "avaliableObjectsText": "AVALIABLE_OBJECTS",
+    "availableObjectsText": "AVAILABLE_OBJECTS",
     "currentConditionsText": "CURRENT_CONDITIONS",
-    "exitGameText": "EXIT_GAME"
+    "exitGameText": "EXIT_GAME",
+
+    // Inputs
+    "dichotomousAnswerTexts":
+    [
+        "YES",
+        "NO"
+    ]
 }

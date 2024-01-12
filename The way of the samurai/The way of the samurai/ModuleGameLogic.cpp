@@ -30,6 +30,7 @@ bool ModuleGameLogic::Start()
 
 	// Intialize variable saving logic
 	variableSaving = new VariableSavingLogic();
+	variableSaving->dichotomousAnswerTexts = app->gameImporter->config->dichotomousAnswerTexts;
 
 	// Initialize languge choosing logic
 	languageChoosing = new LanguageChoosingLogic();
@@ -47,7 +48,7 @@ bool ModuleGameLogic::Start()
 	optionsChoosing->options.push_back("exit");
 
 	optionsChoosing->optionsMenuIntroductionText = app->gameImporter->config->optionsMenuIntroductionText;
-	optionsChoosing->avaliableObjectsText = app->gameImporter->config->avaliableObjectsText;
+	optionsChoosing->availableObjectsText = app->gameImporter->config->availableObjectsText;
 	optionsChoosing->currentConditionsText = app->gameImporter->config->currentConditionsText;
 
 	// Initialize commun logic processor parameters
@@ -81,6 +82,8 @@ bool ModuleGameLogic::Start()
 		languageChoosing->displayOptions = DisplayOptions;
 
 	optionsChoosing->displayList = DisplayList;
+
+	variableSaving->processGameplayText = ProcessGameplayText;
 
 	// Initialize position with initial position
 	gameState.currentGridPosition = app->gameImporter->config->initialPosition;
@@ -131,7 +134,7 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 		case LogicProcessorResult::MAP_EVENT_INVALID:
 		{
 			// Fatal error
-			app->logFatalError("The grid position didn't had a matching map event");
+			app->LogFatalError("The grid position didn't had a matching map event");
 			ret = false;
 			break;
 		}
@@ -303,7 +306,7 @@ void ModuleGameLogic::ReplaceVariables(string& text) const
 		// Error handling
 		if (closingAdd == string::npos)
 		{
-			app->logFatalError("Variable without closing '@'");
+			app->LogFatalError("Variable without closing '@'");
 			break;
 		}
 
@@ -314,7 +317,7 @@ void ModuleGameLogic::ReplaceVariables(string& text) const
 		if (gameState.savedVariables.find(variableKey) == gameState.savedVariables.end())
 		{
 			// Inform the user of the variable that wasn't found
-			app->logFatalError(("Variable key: '" + variableKey + "' not found in variables dictionary").c_str());
+			app->LogFatalError(("Variable key: '" + variableKey + "' not found in variables dictionary").c_str());
 			break;
 		}
 
@@ -323,16 +326,22 @@ void ModuleGameLogic::ReplaceVariables(string& text) const
 	}
 }
 
-void LogGameplayText(string text)
+void ProcessGameplayText(string& text) 
 {
 	// Handle localization
 	app->localization->HandleLocalization(text);
 
 	// Add gameplay variables
 	app->gameLogic->ReplaceVariables(text);
+}
+
+void LogGameplayText(string text)
+{
+	// Handle localization
+	ProcessGameplayText(text);
 
 	// Display final text to the user
-	app->log(text.c_str());
+	app->Log(text.c_str());
 }
 
 void DisplayOptions(const vector<string>& options)
@@ -345,6 +354,9 @@ void DisplayOptions(const vector<string>& options)
 
 void DisplayList(const vector<string>& list)
 {
-	for (string element : list)
-		app->log(("    -" + element).c_str());
+	for (string element : list) 
+	{
+		ProcessGameplayText(element);
+		app->Log(("    - " + element).c_str());
+	}
 }

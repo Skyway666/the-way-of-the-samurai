@@ -3,8 +3,8 @@
 #include <list>
 #include <vector>
 
-class MapEvent;
-class Event;
+struct MapEvent;
+struct Event;
 
 enum class HandlingEventState 
 {

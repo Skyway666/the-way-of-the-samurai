@@ -79,7 +79,7 @@ bool ModuleLocalization::LoadLocalizationData()
 	// Error handling
 	if (localization == nullptr)
 	{
-		app->logFatalError("No root object in the localization file");
+		app->LogFatalError("No root object in the localization file");
 		return false;
 	}
 
@@ -88,7 +88,7 @@ bool ModuleLocalization::LoadLocalizationData()
 	// Error handling
 	if (s_languages == nullptr)
 	{
-		app->logFatalError("No languages array in the localization file");
+		app->LogFatalError("No languages array in the localization file");
 		return false;
 	}
 
@@ -100,7 +100,7 @@ bool ModuleLocalization::LoadLocalizationData()
 		// Error handling
 		if (language == nullptr)
 		{
-			app->logFatalError("Language array in localization file contains non 'string' type");
+			app->LogFatalError("Language array in localization file contains non 'string' type");
 			return false;
 		}
 		else
@@ -112,7 +112,7 @@ bool ModuleLocalization::LoadLocalizationData()
 	// Error handling
 	if (entries_s == nullptr)
 	{
-		app->logFatalError("No entries array in the localization file");
+		app->LogFatalError("No entries array in the localization file");
 		return false;
 	}
 
@@ -123,7 +123,7 @@ bool ModuleLocalization::LoadLocalizationData()
 
 		if (entry == nullptr)
 		{
-			app->logFatalError("A value assigned to the entries array was not an object");
+			app->LogFatalError("A value assigned to the entries array was not an object");
 			return false;
 		}
 
@@ -131,7 +131,7 @@ bool ModuleLocalization::LoadLocalizationData()
 
 		if (key == nullptr)
 		{
-			app->logFatalError("The key of an entry in the localization file was not of type 'string'");
+			app->LogFatalError("The key of an entry in the localization file was not of type 'string'");
 			return false;
 		}
 
@@ -142,7 +142,7 @@ bool ModuleLocalization::LoadLocalizationData()
 
 			if (value == nullptr)
 			{
-				app->logFatalError(("No 'string' type value for the '" + language + "' in the '" + key + "' entry").c_str());
+				app->LogFatalError(("No 'string' type value for the '" + language + "' in the '" + key + "' entry").c_str());
 				return false;
 			}
 
@@ -168,7 +168,7 @@ bool ModuleLocalization::LoadLanguage()
 
 		if (char_language == nullptr)
 		{
-			app->logFatalError(("Root value of 'Language.json' wasn't a string'"));
+			app->LogFatalError(("Root value of 'Language.json' wasn't a string'"));
 			return false;
 		}
 

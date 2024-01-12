@@ -79,7 +79,7 @@ void Application::CleanUp()
 	{
 		// If a module fails to clean up a log is printed. 
 		if (!mdl->CleanUp())
-			log(("Module " + mdl->name + " failed to clean up").c_str());
+			Log(("Module " + mdl->name + " failed to clean up").c_str());
 
 		// Completelly erase the module
 		delete mdl;
@@ -94,7 +94,7 @@ Application::State Application::GetState() const
 	return state;
 }
 
-void Application::log(const char* message) const
+void Application::Log(const char* message) const
 {
 	printf(message);
 
@@ -102,7 +102,7 @@ void Application::log(const char* message) const
 	printf("\n");
 }
 
-void Application::logFatalError(const char* message) const
+void Application::LogFatalError(const char* message) const
 {
 	// Notify the user about the fatal error
 	printf("----FATAL ERROR----");
