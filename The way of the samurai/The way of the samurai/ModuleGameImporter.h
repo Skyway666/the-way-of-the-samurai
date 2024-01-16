@@ -91,7 +91,14 @@ public:
 	string availableObjectsText;
 	string currentConditionsText;
 	string exitGameText;
-	string dichotomousAnswerTexts[2];
+	string yesInputText;
+	string noInputText;
+	string northInputText;
+	string southInputText;
+	string eastInputText;
+	string westInputText;
+	string optionsInputText;
+	string reenterInputText;
 
 	// Mandatory fields when loading the object
 	static vector<string> mandatoryFields;

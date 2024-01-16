@@ -23,6 +23,12 @@ bool ModuleGameLogic::Start()
 	// Initialize map navigation logic
 	mapNavigation = new MapNavigationLogic();
 	mapNavigation->gridRowLength = app->gameImporter->config->gridRowLength;
+	mapNavigation->northInputText = app->gameImporter->config->northInputText;
+	mapNavigation->southInputText = app->gameImporter->config->southInputText;
+	mapNavigation->eastInputText = app->gameImporter->config->eastInputText;
+	mapNavigation->westInputText = app->gameImporter->config->westInputText;
+	mapNavigation->optionsInputText = app->gameImporter->config->optionsInputText;
+	mapNavigation->reenterInputText = app->gameImporter->config->reenterInputText;
 
 	// Intialize map events logic
 	mapEvents = new MapEventsLogic();
@@ -30,7 +36,8 @@ bool ModuleGameLogic::Start()
 
 	// Intialize variable saving logic
 	variableSaving = new VariableSavingLogic();
-	variableSaving->dichotomousAnswerTexts = app->gameImporter->config->dichotomousAnswerTexts;
+	variableSaving->yesInputText = app->gameImporter->config->yesInputText;
+	variableSaving->noInputText = app->gameImporter->config->noInputText;
 
 	// Initialize languge choosing logic
 	languageChoosing = new LanguageChoosingLogic();
@@ -83,7 +90,8 @@ bool ModuleGameLogic::Start()
 
 	optionsChoosing->displayList = DisplayList;
 
-	variableSaving->processGameplayText = ProcessGameplayText;
+	mapNavigation->processGameplayText = 
+		variableSaving->processGameplayText = ProcessGameplayText;
 
 	// Initialize position with initial position
 	gameState.currentGridPosition = app->gameImporter->config->initialPosition;

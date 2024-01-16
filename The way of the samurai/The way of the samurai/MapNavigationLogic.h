@@ -11,10 +11,17 @@ private:
 
 	// References
 	int* currentGridPosition = nullptr;
+	void (*processGameplayText)(string&);
 
 	// Parameters
 	int gridRowLength = 0;
 	string invalidOptionText;
+	string northInputText;
+	string southInputText;
+	string eastInputText;
+	string westInputText;
+	string optionsInputText;
+	string reenterInputText;
 
 	// Variables
 	int previousGridPosition = 0;

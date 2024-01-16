@@ -181,7 +181,14 @@ void ModuleGameImporter::InitMandatoryFields()
 	Config::mandatoryFields.push_back("availableObjectsText");
 	Config::mandatoryFields.push_back("currentConditionsText");
 	Config::mandatoryFields.push_back("exitGameText");
-	Config::mandatoryFields.push_back("dichotomousAnswerTexts");
+	Config::mandatoryFields.push_back("yesInputText");
+	Config::mandatoryFields.push_back("noInputText");
+	Config::mandatoryFields.push_back("northInputText");
+	Config::mandatoryFields.push_back("southInputText");
+	Config::mandatoryFields.push_back("eastInputText");
+	Config::mandatoryFields.push_back("westInputText");
+	Config::mandatoryFields.push_back("optionsInputText");
+	Config::mandatoryFields.push_back("reenterInputText");
 
 	// Event
 	Event::mandatoryFields.push_back("text");
@@ -330,14 +337,29 @@ Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 	// Read exitGameText
 	exitGameText = json_object_get_string(s_config, "exitGameText");
 
-	// Read dichotomousAnswerTexts
-	JSON_Array* s_dichotomousAnswerTexts = json_object_get_array(s_config, "dichotomousAnswerTexts");
+	// Read yesInputText
+	yesInputText = json_object_get_string(s_config, "yesInputText");
 
-	// Read dichotomousAnswerTexts[0]
-	dichotomousAnswerTexts[0] = json_array_get_string(s_dichotomousAnswerTexts, 0);
+	// Read noInputText
+	noInputText = json_object_get_string(s_config, "noInputText");
 
-	// Read dichotomousAnswerTexts[]
-	dichotomousAnswerTexts[1] = json_array_get_string(s_dichotomousAnswerTexts, 1);
+	// Read northInputText
+	northInputText = json_object_get_string(s_config, "northInputText");
+
+	// Read southInputText
+	southInputText = json_object_get_string(s_config, "southInputText");
+
+	// Read eastInputText
+	eastInputText = json_object_get_string(s_config, "eastInputText");
+
+	// Read westInputText
+	westInputText = json_object_get_string(s_config, "westInputText");
+
+	// Read reenterInputText
+	optionsInputText = json_object_get_string(s_config, "optionsInputText");
+
+	// Read reenterInputText
+	reenterInputText = json_object_get_string(s_config, "reenterInputText");
 }
 
 Event::Event(JSON_Object*& s_event) : Linkable(s_event, "event")

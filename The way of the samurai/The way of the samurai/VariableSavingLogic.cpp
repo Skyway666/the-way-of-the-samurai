@@ -38,7 +38,7 @@ LogicProcessorResult VariableSavingLogic::SaveInputedVariable(string input)
 	log(savingVariableEvent->savedVariable->confirmationText);
 
 	// Display options
-	displayOptions({ dichotomousAnswerTexts[0],  dichotomousAnswerTexts[1] });
+	displayOptions({ yesInputText,  noInputText });
 
 	// After saving the variable we need confirmation
 	savingVariableState = SavingVariableState::CONFIRMING;
@@ -50,8 +50,8 @@ LogicProcessorResult VariableSavingLogic::ConfirmSavedVariable(string input)
 	LogicProcessorResult ret = LogicProcessorResult::NONE;
 
 	// Process options
-	string yes = dichotomousAnswerTexts[0];
-	string no = dichotomousAnswerTexts[1];
+	string yes = yesInputText;
+	string no = noInputText;
 	processGameplayText(yes);
 	processGameplayText(no);
 

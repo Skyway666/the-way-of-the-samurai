@@ -18,9 +18,12 @@
     "exitGameText": "EXIT_GAME",
 
     // Inputs
-    "dichotomousAnswerTexts":
-    [
-        "YES",
-        "NO"
-    ]
+    "yesInputText": "YES",
+    "noInputText": "NO",
+    "northInputText": "NORTH",
+    "southInputText": "SOUTH",
+    "eastInputText": "EAST",
+    "westInputText": "WEST",
+    "optionsInputText": "OPTIONS",
+    "reenterInputText": "REENTER"
 }

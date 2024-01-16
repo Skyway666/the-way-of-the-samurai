@@ -28,7 +28,6 @@ private:
 
 	// References
 	map<string, string>* savedVariables;
-	string* dichotomousAnswerTexts;
 	void (*displayOptions)(const vector<string>&);
 	void (*processGameplayText)(string&);
 
@@ -36,6 +35,8 @@ private:
 	// Variable being saved when stepping
 	Event* savingVariableEvent;
 	string invalidOptionText;
+	string yesInputText;
+	string noInputText;
 
 	// Variables
 	SavingVariableState savingVariableState;

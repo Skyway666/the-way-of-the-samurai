@@ -7,6 +7,7 @@
     "entries":
     [
         // Engine
+        // Output
         {
             "key": "INITIAL_TEXT",
             "en": "Welcome to the way of the samurai! For the moment this is just a test, but please be pacient",
@@ -62,6 +63,7 @@
             "en": "Thank you for playing!",
             "es": "Gracias por jugar!"
         },
+        // Input
         {
             "key": "YES",
             "en": "yes",
@@ -72,7 +74,36 @@
             "en": "no",
             "es": "no"
         },
-
+        {
+            "key": "NORTH",
+            "en": "north",
+            "es": "norte"
+        },
+        {
+            "key": "SOUTH",
+            "en": "south",
+            "es": "sur"
+        },
+        {
+            "key": "EAST",
+            "en": "east",
+            "es": "este"
+        },
+        {
+            "key": "WEST",
+            "en": "west",
+            "es": "oeste"
+        },
+        {
+            "key": "OPTIONS",
+            "en": "options",
+            "es": "opciones"
+        },
+        {
+            "key": "REENTER",
+            "en": "reenter",
+            "es": "reentrar"
+        },
 
         // Game
         {
