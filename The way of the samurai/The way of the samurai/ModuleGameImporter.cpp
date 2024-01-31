@@ -27,7 +27,7 @@ bool ModuleGameImporter::Init()
 	// Error handling for missing file
 	if (rawFile == nullptr) 
 	{
-		app->LogFatalError("Couldn't load game file: 'The way of the samurai.json'");
+		app->LogFatalError("Couldn't load game file: 'Game.json'");
 		return false;
 	}
 
@@ -189,6 +189,13 @@ void ModuleGameImporter::InitMandatoryFields()
 	Config::mandatoryFields.push_back("westInputText");
 	Config::mandatoryFields.push_back("optionsInputText");
 	Config::mandatoryFields.push_back("reenterInputText");
+	Config::mandatoryFields.push_back("objectsInputText");
+	Config::mandatoryFields.push_back("conditionsInputText");
+	Config::mandatoryFields.push_back("helpInputText");
+	Config::mandatoryFields.push_back("languageInputText");
+	Config::mandatoryFields.push_back("tutorialInputText");
+	Config::mandatoryFields.push_back("resumeInputText");
+	Config::mandatoryFields.push_back("exitInputText");
 
 	// Event
 	Event::mandatoryFields.push_back("text");
@@ -360,6 +367,27 @@ Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 
 	// Read reenterInputText
 	reenterInputText = json_object_get_string(s_config, "reenterInputText");
+
+	// Read objectsInputText
+	objectsInputText = json_object_get_string(s_config, "objectsInputText");
+
+	// Read conditionsInputText
+	conditionsInputText = json_object_get_string(s_config, "conditionsInputText");
+
+	// Read helpInputText
+	helpInputText = json_object_get_string(s_config, "helpInputText");
+
+	// Read languageInputText
+	languageInputText = json_object_get_string(s_config, "languageInputText");
+
+	// Read tutorialInputText
+	tutorialInputText = json_object_get_string(s_config, "tutorialInputText");
+
+	// Read resumeInputText
+	resumeInputText = json_object_get_string(s_config, "resumeInputText");
+
+	// Read exitInputText
+	exitInputText = json_object_get_string(s_config, "exitInputText");
 }
 
 Event::Event(JSON_Object*& s_event) : Linkable(s_event, "event")
