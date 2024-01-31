@@ -25,5 +25,12 @@
     "eastInputText": "EAST",
     "westInputText": "WEST",
     "optionsInputText": "OPTIONS",
-    "reenterInputText": "REENTER"
+    "reenterInputText": "REENTER",
+    "objectsInputText": "OBJECTS",
+    "conditionsInputText": "CONDITIONS",
+    "helpInputText": "HELP",
+    "languageInputText": "LANGUAGE",
+    "tutorialInputText": "TUTORIAL",
+    "resumeInputText": "RESUME",
+    "exitInputText": "EXIT"
 }

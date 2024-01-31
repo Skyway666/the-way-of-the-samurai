@@ -104,6 +104,41 @@
             "en": "reenter",
             "es": "reentrar"
         },
+        {
+            "key": "OBJECTS",
+            "en": "objects",
+            "es": "objetos"
+        },
+        {
+            "key": "CONDITIONS",
+            "en": "conditions",
+            "es": "condiciones"
+        },
+        {
+            "key": "HELP",
+            "en": "help",
+            "es": "ayuda"
+        },
+        {
+            "key": "LANGUAGE",
+            "en": "language",
+            "es": "idioma"
+        },
+        {
+            "key": "TUTORIAL",
+            "en": "tutorial",
+            "es": "tutorial"
+        },
+        {
+            "key": "RESUME",
+            "en": "resume",
+            "es": "reanudar"
+        },
+        {
+            "key": "EXIT",
+            "en": "exit",
+            "es": "salir"
+        },
 
         // Game
         {

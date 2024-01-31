@@ -11,6 +11,7 @@ private:
 
     // References:
     void (*displayList)(const vector<string>&) = nullptr;
+    void (*processGameplayText)(string&) = nullptr;
     list<string>* conditions = nullptr;
     list<string>* objects = nullptr;
 
@@ -23,4 +24,3 @@ private:
 
     friend class ModuleGameLogic;
 };
-

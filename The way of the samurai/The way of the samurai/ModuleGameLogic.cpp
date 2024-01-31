@@ -44,15 +44,14 @@ bool ModuleGameLogic::Start()
 	languageChoosing->languages = app->localization->GetLanguages();
 
 	// Initialize option choosing logic
-	// TODO: Localize
 	optionsChoosing = new OptionsChoosingLogic();
-	optionsChoosing->options.push_back("objects");
-	optionsChoosing->options.push_back("conditions");
-	optionsChoosing->options.push_back("help");
-	optionsChoosing->options.push_back("language");
-	optionsChoosing->options.push_back("tutorial");
-	optionsChoosing->options.push_back("resume");
-	optionsChoosing->options.push_back("exit");
+	optionsChoosing->options.push_back(app->gameImporter->config->objectsInputText);
+	optionsChoosing->options.push_back(app->gameImporter->config->conditionsInputText);
+	optionsChoosing->options.push_back(app->gameImporter->config->helpInputText);
+	optionsChoosing->options.push_back(app->gameImporter->config->languageInputText);
+	optionsChoosing->options.push_back(app->gameImporter->config->tutorialInputText);
+	optionsChoosing->options.push_back(app->gameImporter->config->helpInputText);
+	optionsChoosing->options.push_back(app->gameImporter->config->exitInputText);
 
 	optionsChoosing->optionsMenuIntroductionText = app->gameImporter->config->optionsMenuIntroductionText;
 	optionsChoosing->availableObjectsText = app->gameImporter->config->availableObjectsText;
@@ -91,7 +90,8 @@ bool ModuleGameLogic::Start()
 	optionsChoosing->displayList = DisplayList;
 
 	mapNavigation->processGameplayText = 
-		variableSaving->processGameplayText = ProcessGameplayText;
+		variableSaving->processGameplayText = 
+		optionsChoosing->processGameplayText = ProcessGameplayText;
 
 	// Initialize position with initial position
 	gameState.currentGridPosition = app->gameImporter->config->initialPosition;

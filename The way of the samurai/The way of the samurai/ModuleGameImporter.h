@@ -80,6 +80,8 @@ public:
 public:
 	int gridRowLength = 0;
 	int initialPosition = 0;
+
+	// Output
 	string initialText;
 	string defaultSubEventRejectionText;
 	string displayOptionsText;
@@ -91,6 +93,8 @@ public:
 	string availableObjectsText;
 	string currentConditionsText;
 	string exitGameText;
+
+	// Input
 	string yesInputText;
 	string noInputText;
 	string northInputText;
@@ -99,6 +103,13 @@ public:
 	string westInputText;
 	string optionsInputText;
 	string reenterInputText;
+	string objectsInputText;
+	string conditionsInputText;
+	string helpInputText;
+	string languageInputText;
+	string tutorialInputText;
+	string resumeInputText;
+	string exitInputText;
 
 	// Mandatory fields when loading the object
 	static vector<string> mandatoryFields;

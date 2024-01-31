@@ -4,11 +4,21 @@ LogicProcessorResult OptionsChoosingLogic::Step(string input)
 {
     LogicProcessorResult ret = LogicProcessorResult::NONE;
 
+    // Process input and options
+    processGameplayText(input);
+    vector<string> processedOptions;
+    for (int i = 0; i < options.size(); i++)
+    {
+        string option = options[i];
+        processGameplayText(option);
+        processedOptions.push_back(option);
+    }
+
     // Compute option index of the input
-    vector<string>::iterator selectedOptionIt = std::find(options.begin(), options.end(), input);
+    vector<string>::iterator selectedOptionIt = std::find(processedOptions.begin(), processedOptions.end(), input);
     int optionIndex = -1;
-    if (selectedOptionIt != options.end())
-        optionIndex = selectedOptionIt - options.begin();
+    if (selectedOptionIt != processedOptions.end())
+        optionIndex = selectedOptionIt - processedOptions.begin();
 
     // Execute seleted option
     switch (optionIndex)
