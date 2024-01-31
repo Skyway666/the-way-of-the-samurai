@@ -93,6 +93,7 @@ public:
 	string availableObjectsText;
 	string currentConditionsText;
 	string exitGameText;
+	string helpText;
 
 	// Input
 	string yesInputText;
@@ -107,7 +108,6 @@ public:
 	string conditionsInputText;
 	string helpInputText;
 	string languageInputText;
-	string tutorialInputText;
 	string resumeInputText;
 	string exitInputText;
 

@@ -63,6 +63,11 @@
             "en": "Thank you for playing!",
             "es": "Gracias por jugar!"
         },
+        {
+            "key": "HELP_MESSAGE",
+            "en": "This are the available commands while navigating the map:\n    - north: Go north\n    - east: Go east\n    - south: Go south\n    - west: Go west\n    - options: Open the options menu\n    - reenter: Explore the current zone",
+            "es": "Este es el texto de ayuda \n No me gusta y a ti tampoco!"
+        },
         // Input
         {
             "key": "YES",
@@ -123,11 +128,6 @@
             "key": "LANGUAGE",
             "en": "language",
             "es": "idioma"
-        },
-        {
-            "key": "TUTORIAL",
-            "en": "tutorial",
-            "es": "tutorial"
         },
         {
             "key": "RESUME",

@@ -44,8 +44,7 @@ LogicProcessorResult OptionsChoosingLogic::Step(string input)
         // Help
         case 2:
         {
-            // TODO: Develop help message
-            log("Help message still not avaliable");
+            log(helpText);
             ret = LogicProcessorResult::OPTIONS_CHOOSING_CHOOSING;
             break;
         }
@@ -55,22 +54,14 @@ LogicProcessorResult OptionsChoosingLogic::Step(string input)
             ret = LogicProcessorResult::OPTIONS_CHOOSING_CHOOSE_LANGUAGE;
             break;
         }
-        // Tutorial
-        case 4:
-        {
-            // TODO: Develop tutorial
-            log("Tutorial still not avaliable");
-            ret = LogicProcessorResult::OPTIONS_CHOOSING_CHOOSING;
-            break;
-        }
         // Resume
-        case 5:
+        case 4:
         {
             ret = LogicProcessorResult::OPTIONS_CHOOSING_RESUME;
             break;
         }
         // Exit
-        case 6:
+        case 5:
         {
             ret = LogicProcessorResult::OPTIONS_CHOOSING_EXIT;
             break;

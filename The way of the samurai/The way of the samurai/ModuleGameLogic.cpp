@@ -49,13 +49,13 @@ bool ModuleGameLogic::Start()
 	optionsChoosing->options.push_back(app->gameImporter->config->conditionsInputText);
 	optionsChoosing->options.push_back(app->gameImporter->config->helpInputText);
 	optionsChoosing->options.push_back(app->gameImporter->config->languageInputText);
-	optionsChoosing->options.push_back(app->gameImporter->config->tutorialInputText);
-	optionsChoosing->options.push_back(app->gameImporter->config->helpInputText);
+	optionsChoosing->options.push_back(app->gameImporter->config->resumeInputText);
 	optionsChoosing->options.push_back(app->gameImporter->config->exitInputText);
 
 	optionsChoosing->optionsMenuIntroductionText = app->gameImporter->config->optionsMenuIntroductionText;
 	optionsChoosing->availableObjectsText = app->gameImporter->config->availableObjectsText;
 	optionsChoosing->currentConditionsText = app->gameImporter->config->currentConditionsText;
+	optionsChoosing->helpText = app->gameImporter->config->helpText;
 
 	// Initialize commun logic processor parameters
 	mapNavigation->invalidOptionText = 
@@ -182,9 +182,7 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 
 			// If it is a map event, artificially step it
 			if (currentLogicProcessor == mapEvents)
-			{
 				HandleLogicProcessorResult(mapEvents->Step(""));
-			}
 			break;
 		}
 		#pragma endregion

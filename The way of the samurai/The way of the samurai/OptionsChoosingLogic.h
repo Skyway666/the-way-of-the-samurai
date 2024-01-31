@@ -21,6 +21,7 @@ private:
     string availableObjectsText;
     string currentConditionsText;
     string invalidOptionText;
+    string helpText;
 
     friend class ModuleGameLogic;
 };

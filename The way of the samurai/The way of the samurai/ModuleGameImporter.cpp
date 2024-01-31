@@ -181,6 +181,7 @@ void ModuleGameImporter::InitMandatoryFields()
 	Config::mandatoryFields.push_back("availableObjectsText");
 	Config::mandatoryFields.push_back("currentConditionsText");
 	Config::mandatoryFields.push_back("exitGameText");
+	Config::mandatoryFields.push_back("helpText");
 	Config::mandatoryFields.push_back("yesInputText");
 	Config::mandatoryFields.push_back("noInputText");
 	Config::mandatoryFields.push_back("northInputText");
@@ -193,7 +194,6 @@ void ModuleGameImporter::InitMandatoryFields()
 	Config::mandatoryFields.push_back("conditionsInputText");
 	Config::mandatoryFields.push_back("helpInputText");
 	Config::mandatoryFields.push_back("languageInputText");
-	Config::mandatoryFields.push_back("tutorialInputText");
 	Config::mandatoryFields.push_back("resumeInputText");
 	Config::mandatoryFields.push_back("exitInputText");
 
@@ -344,6 +344,9 @@ Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 	// Read exitGameText
 	exitGameText = json_object_get_string(s_config, "exitGameText");
 
+	// Read helpText
+	helpText = json_object_get_string(s_config, "helpText");
+
 	// Read yesInputText
 	yesInputText = json_object_get_string(s_config, "yesInputText");
 
@@ -379,9 +382,6 @@ Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 
 	// Read languageInputText
 	languageInputText = json_object_get_string(s_config, "languageInputText");
-
-	// Read tutorialInputText
-	tutorialInputText = json_object_get_string(s_config, "tutorialInputText");
 
 	// Read resumeInputText
 	resumeInputText = json_object_get_string(s_config, "resumeInputText");

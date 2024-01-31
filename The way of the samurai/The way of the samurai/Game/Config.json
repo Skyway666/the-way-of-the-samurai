@@ -16,6 +16,7 @@
     "availableObjectsText": "AVAILABLE_OBJECTS",
     "currentConditionsText": "CURRENT_CONDITIONS",
     "exitGameText": "EXIT_GAME",
+    "helpText": "HELP_MESSAGE",
 
     // Inputs
     "yesInputText": "YES",
@@ -30,7 +31,6 @@
     "conditionsInputText": "CONDITIONS",
     "helpInputText": "HELP",
     "languageInputText": "LANGUAGE",
-    "tutorialInputText": "TUTORIAL",
     "resumeInputText": "RESUME",
     "exitInputText": "EXIT"
 }
