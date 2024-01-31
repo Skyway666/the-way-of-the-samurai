@@ -66,7 +66,12 @@
         {
             "key": "HELP_MESSAGE",
             "en": "This are the available commands while navigating the map:\n    - north: Go north\n    - east: Go east\n    - south: Go south\n    - west: Go west\n    - options: Open the options menu\n    - reenter: Explore the current zone",
-            "es": "Este es el texto de ayuda \n No me gusta y a ti tampoco!"
+            "es": "Estos son los comandos disponibles durante la navegación del mapa:\n    - norte: Ir al norte\n    - este: Ir al este\n    - sur: Ir al sur\n    - oeste: Ir al oeste\n    - opciones: Abrir el menu de opciones\n    - reentrar: Explorar la zona actual"
+        },
+        {
+            "key": "LANGUAGE_CHOOSING_QUESTION",
+            "en": "What language do you wish to play in? These are the avaliable ones:",
+            "es": "En que idioma te gustaria jugar? Estos son los disponibles:"
         },
         // Input
         {

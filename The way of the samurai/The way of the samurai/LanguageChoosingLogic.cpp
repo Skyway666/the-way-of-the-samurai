@@ -26,8 +26,7 @@ LogicProcessorResult LanguageChoosingLogic::Step(string input)
 
 void LanguageChoosingLogic::StartLanguageChoosing()
 {
-	// TODO: Check system language to ask this question in the appropiate language
-	log("What language do you wish to play in? These are the avaliable languages:");
+	log(languageChoosingQuestionText);
 
 	// Display avaliable languages
 	displayOptions(languages);

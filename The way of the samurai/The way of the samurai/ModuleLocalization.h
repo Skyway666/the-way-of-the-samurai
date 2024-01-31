@@ -19,6 +19,8 @@ public:
 	string GetLocalizatedText(string key);
 	// If 'text' is a localization key, substitutes its value depending on the configured language
 	void HandleLocalization(string& text);
+	// Tries to set the system's default language and if it fails assigns the first available language
+	void SetUserDefaultUILanguage();
 	// Sets language
 	void SetLanguage(string newLanguage);
 	// Gets language

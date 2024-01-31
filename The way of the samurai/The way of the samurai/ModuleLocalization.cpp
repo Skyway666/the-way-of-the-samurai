@@ -3,6 +3,7 @@
 #include "Third Party/parson.h"
 #include <iostream>
 #include <fstream>
+#include <Windows.h>
 
 bool ModuleLocalization::Init()
 {
@@ -43,6 +44,23 @@ void ModuleLocalization::HandleLocalization(string& text)
 		// Overrwrite 'text' with localization value
 		text = GetLocalizatedText(text);
 	}
+}
+
+void ModuleLocalization::SetUserDefaultUILanguage()
+{
+	// Retrieve system code (Windows code)
+	char isoCodeCharArr[3];
+	GetLocaleInfoA(GetUserDefaultUILanguage(), LOCALE_SISO639LANGNAME, isoCodeCharArr, sizeof(isoCodeCharArr));
+	string isoCode = isoCodeCharArr;
+
+	// Compute defaultLanguageIndex within the avaliable languages
+	vector<string>::iterator defaultLanguageIt = std::find(languages.begin(), languages.end(), isoCode);
+	int defaultLanguageIndex = 0;
+	if (defaultLanguageIt != languages.end())
+		defaultLanguageIndex = defaultLanguageIt - languages.begin();
+	
+	// Set defaultLanguage
+	SetLanguage(languages[defaultLanguageIndex]);
 }
 
 void ModuleLocalization::SetLanguage(string newLanguage)

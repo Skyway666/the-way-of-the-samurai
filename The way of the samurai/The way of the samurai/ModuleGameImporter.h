@@ -94,6 +94,7 @@ public:
 	string currentConditionsText;
 	string exitGameText;
 	string helpText;
+	string languageChoosingQuestionText;
 
 	// Input
 	string yesInputText;

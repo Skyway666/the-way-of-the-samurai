@@ -42,6 +42,7 @@ bool ModuleGameLogic::Start()
 	// Initialize languge choosing logic
 	languageChoosing = new LanguageChoosingLogic();
 	languageChoosing->languages = app->localization->GetLanguages();
+	languageChoosing->languageChoosingQuestionText = app->gameImporter->config->languageChoosingQuestionText;
 
 	// Initialize option choosing logic
 	optionsChoosing = new OptionsChoosingLogic();
@@ -99,6 +100,7 @@ bool ModuleGameLogic::Start()
 	// There is no language set
 	if (app->localization->GetLanguage() == "none")
 	{
+		app->localization->SetUserDefaultUILanguage();
 		SetLogicProcessor(languageChoosing);
 		languageChoosing->StartLanguageChoosing();
 	}

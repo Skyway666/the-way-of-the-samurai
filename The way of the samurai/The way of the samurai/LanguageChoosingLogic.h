@@ -19,6 +19,7 @@ private:
 	// Parameters
 	vector<string> languages;
 	string invalidOptionText;
+	string languageChoosingQuestionText;
 
 	friend class ModuleGameLogic;
 };

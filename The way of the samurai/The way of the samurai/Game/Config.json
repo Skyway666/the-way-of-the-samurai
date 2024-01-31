@@ -17,6 +17,7 @@
     "currentConditionsText": "CURRENT_CONDITIONS",
     "exitGameText": "EXIT_GAME",
     "helpText": "HELP_MESSAGE",
+    "languageChoosingQuestionText": "LANGUAGE_CHOOSING_QUESTION",
 
     // Inputs
     "yesInputText": "YES",

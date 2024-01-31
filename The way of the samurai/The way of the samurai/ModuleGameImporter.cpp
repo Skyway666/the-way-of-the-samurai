@@ -347,6 +347,9 @@ Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 	// Read helpText
 	helpText = json_object_get_string(s_config, "helpText");
 
+	// Read languageChoosingQuestionText
+	languageChoosingQuestionText = json_object_get_string(s_config, "languageChoosingQuestionText");
+
 	// Read yesInputText
 	yesInputText = json_object_get_string(s_config, "yesInputText");
 
