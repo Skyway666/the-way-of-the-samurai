@@ -64,7 +64,7 @@ void MapEventsLogic::SetHandlingEvent(Event* newHandlingEvent)
 	for (AlternativeEvent& currAlternativeEvent : newHandlingEvent->alternativeEvents)
 	{
 		// Check if the conditions are met
-		if (ContainerUtils::stringVectorAContainsB(gameConditionsVector, currAlternativeEvent.conditions))
+		if (ContainerUtils::StringVectorAContainsB(gameConditionsVector, currAlternativeEvent.conditions))
 		{
 			alternativeEvent = currAlternativeEvent.alternative;
 			break;
@@ -154,7 +154,7 @@ LogicProcessorResult MapEventsLogic::HandleCurrentEventBranching(string input)
 		// Convert list of condition to a vector
 		vector<string> gameConditionsVector = vector<string>(conditions->begin(), conditions->end());
 		// Check if the conditions for the sub event are met
-		bool conditionsMet = ContainerUtils::stringVectorAContainsB(gameConditionsVector, choosenOption->conditions);
+		bool conditionsMet = ContainerUtils::StringVectorAContainsB(gameConditionsVector, choosenOption->conditions);
 
 		// If the conditions have been met
 		if (conditionsMet)
@@ -172,7 +172,7 @@ LogicProcessorResult MapEventsLogic::HandleCurrentEventBranching(string input)
 			for (RejectionText& currRejectionText : choosenOption->rejectionTexts)
 			{
 				// If the conditions for the rejection text are met
-				if (ContainerUtils::stringVectorAContainsB(gameConditionsVector, currRejectionText.conditions))
+				if (ContainerUtils::StringVectorAContainsB(gameConditionsVector, currRejectionText.conditions))
 				{
 					// Save the rejection text
 					rejectionText = &currRejectionText;

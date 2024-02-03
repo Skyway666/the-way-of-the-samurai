@@ -26,7 +26,7 @@ void ModuleGameImporter::Init()
 	// Error handling for missing file
 	if (rawFile == nullptr) 
 	{
-		app->Terminate("Couldn't load game file: 'Game.json'");
+		TerminateApplication("Couldn't load game file: 'Game.json'");
 		return;
 	}
 
@@ -35,7 +35,7 @@ void ModuleGameImporter::Init()
 	// Error handling for missing root object in file
 	if (game == nullptr) 
 	{
-		app->Terminate("No root object in the game file");
+		TerminateApplication("No root object in the game file");
 		return;
 	}
 
@@ -44,7 +44,7 @@ void ModuleGameImporter::Init()
 	// Error handling for map events
 	if (s_mapEvents == nullptr) 
 	{
-		app->Terminate("No 'mapEvents' array in root object");
+		TerminateApplication("No 'mapEvents' array in root object");
 		return;
 	}
 	// Parse each map event
@@ -56,7 +56,7 @@ void ModuleGameImporter::Init()
 	// Error handling for config file
 	if(s_config == nullptr)
 	{
-		app->Terminate("Couldn't load config file, terminating aplication");
+		TerminateApplication("Couldn't load config file, terminating aplication");
 		return;
 	}
 	// Parse config file
@@ -139,7 +139,7 @@ bool ModuleGameImporter::HandleMandatoryFields(JSON_Object* jsonObject, const ch
 	{
 		// Inform the user about the missing mandatory field
 		string errorLog = ("Object of type '" + string(objectType) + "' is missing the mandatory field '" + missingField + "'");
-		app->Terminate(errorLog.c_str());
+		app->Terminate(errorLog.c_str(), app->gameImporter);
 	}
 
 	return ret;
@@ -240,7 +240,8 @@ JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Object* object, const char
 		if (rawArrayFile == nullptr) 
 		{
 			// Inform the user about the error
-			app->Terminate(("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' could not be found").c_str());
+			string errorLog = ("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' could not be found");
+			app->Terminate(errorLog.c_str(), app->gameImporter);
 			return nullptr;
 		}
 		// Add loaded files for later cleaning
@@ -252,7 +253,8 @@ JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Object* object, const char
 		if (ret == nullptr) 
 		{
 			// Inform the user about the error
-			app->Terminate(("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' didn't contain an array as root value").c_str());
+			string errorLog = ("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' didn't contain an array as root value");
+			app->Terminate(errorLog.c_str(), app->gameImporter);
 		}
 	}
 
@@ -271,7 +273,8 @@ Linkable::Linkable(JSON_Object*& s_linkable, const char* objectName)
 		if (rawObjectFile == nullptr) 
 		{
 			// Inform the user about the error
-			app->Terminate(("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' could not be found").c_str());
+			string errorLog = ("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' could not be found");
+			app->Terminate(errorLog.c_str(), app->gameImporter);
 			return;
 		}
 		// Add loaded files for later cleaning
@@ -282,7 +285,8 @@ Linkable::Linkable(JSON_Object*& s_linkable, const char* objectName)
 		if (linkedObject == nullptr) 
 		{
 			// Inform the user about the error
-			app->Terminate(("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' didn't contain an object as root value").c_str());
+			string errorLog = ("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' didn't contain an object as root value");
+			app->Terminate(errorLog.c_str(), app->gameImporter);
 			return;
 		}
 

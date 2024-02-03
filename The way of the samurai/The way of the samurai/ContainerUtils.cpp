@@ -1,6 +1,6 @@
 #include "ContainerUtils.h"
 
-bool ContainerUtils::stringVectorAContainsB(vector<string>& a, vector<string>& b)
+bool ContainerUtils::StringVectorAContainsB(vector<string>& a, vector<string>& b)
 {
 	bool ret = true;
 	for (string& str : b)

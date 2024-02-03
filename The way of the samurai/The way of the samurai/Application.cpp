@@ -86,20 +86,37 @@ void Application::Log(const char* message) const
 	printf("\n");
 }
 
-void Application::Terminate(const char* message)
+void Application::Terminate(const char* message, const Module* module)
 {
 	// Notify the user about the fatal error
-	printf("----FATAL ERROR----\n");
+	Log("----FATAL ERROR----");
 
 
 	// TODO: Print module that failed and state application
+	Log((module->name + " failed during " + State2String(state)).c_str());
 
 	// Update application state
 	state = State::QUITTING;
 
 	// Print desired message
-	printf(message);
+	Log(message);
+}
 
-	// Logs are allways separated by a newline for clarity
-	printf("\n");
+string Application::State2String(State state) const
+{
+	switch (state) 
+	{
+		case State::CREATING: 
+			return "CREATING";
+			break;
+		case State::STARTING:
+			return "STARTING";
+			break;
+		case State::UPDATING:
+			return "UPDATING";
+			break;
+		case State::QUITTING:
+			return "QUITTING";
+			break;
+	}
 }

@@ -24,7 +24,7 @@ public:
 		QUITTING
 	};
 
-// Public Methods
+// Public methods
 public:
 	// Initialization of the application
 	void Init();
@@ -41,9 +41,9 @@ public:
 	// Log messages to the console
 	void Log(const char* message) const;
 	// Log fatal error
-	void Terminate(const char* message);
+	void Terminate(const char* message, const Module* module);
 
-// Public attributes
+// Public variables
 public:
 
 	// Pointers to modules for global access
@@ -52,7 +52,11 @@ public:
 	ModuleGameImporter* gameImporter = nullptr;
 	ModuleLocalization* localization = nullptr;
 
-// Private attributes
+// Private methods
+private:
+	string State2String(State state) const;
+
+// Private variables
 private:
 	// State of the app
 	State state = State::CREATING;

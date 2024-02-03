@@ -139,7 +139,7 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 		case LogicProcessorResult::MAP_EVENT_INVALID:
 		{
 			// Fatal error
-			app->Terminate("The grid position didn't had a matching map event");
+			TerminateApplication("The grid position didn't had a matching map event");
 			ret = false;
 			break;
 		}
@@ -307,7 +307,7 @@ void ModuleGameLogic::ReplaceVariables(string& text) const
 		// Error handling
 		if (closingAdd == string::npos)
 		{
-			app->Terminate("Variable without closing '@'");
+			TerminateApplication("Variable without closing '@'");
 			break;
 		}
 
@@ -318,7 +318,7 @@ void ModuleGameLogic::ReplaceVariables(string& text) const
 		if (gameState.savedVariables.find(variableKey) == gameState.savedVariables.end())
 		{
 			// Inform the user of the variable that wasn't found
-			app->Terminate(("Variable key: '" + variableKey + "' not found in variables dictionary").c_str());
+			TerminateApplication(("Variable key: '" + variableKey + "' not found in variables dictionary").c_str());
 			break;
 		}
 

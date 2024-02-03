@@ -13,6 +13,8 @@ public:
 	virtual void Update() { }
 	virtual void CleanUp() { }
 
+	void TerminateApplication(const char* message) const;
+
 public:
 	string name = "Module";
 };

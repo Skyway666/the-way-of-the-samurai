@@ -8,6 +8,6 @@ using namespace std;
 class ContainerUtils
 {
 public:
-	static bool stringVectorAContainsB(vector<string>& a, vector<string>& b);
+	static bool StringVectorAContainsB(vector<string>& a, vector<string>& b);
 };
 
