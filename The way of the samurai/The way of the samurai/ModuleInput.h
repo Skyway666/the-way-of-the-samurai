@@ -9,7 +9,7 @@ class ModuleInput : public Module
 // Public methods
 public:
 	// Module inherited method
-	bool Update() override;
+	void Update() override;
 
 // Public variables
 public:

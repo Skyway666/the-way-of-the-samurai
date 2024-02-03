@@ -5,7 +5,7 @@
 #include <iostream>
 
 
-bool ModuleInput::Update()
+void ModuleInput::Update()
 {
 	bool validInputProvided = false;
 	while (!validInputProvided)
@@ -37,7 +37,4 @@ bool ModuleInput::Update()
 			}
 		}
 	}
-
-	// I don't know what could go wrong receiving input
-	return true;
 }

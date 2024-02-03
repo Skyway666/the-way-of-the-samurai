@@ -41,7 +41,7 @@ public:
 	// Log messages to the console
 	void Log(const char* message) const;
 	// Log fatal error
-	void LogFatalError(const char* message) const;
+	void Terminate(const char* message);
 
 // Public attributes
 public:

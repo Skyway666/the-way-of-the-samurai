@@ -8,10 +8,10 @@ class Module
 {
 public:
 	// Virtual methods
-	virtual bool Init() { return true; }
-	virtual bool Start() { return true; }
-	virtual bool Update() { return true; }
-	virtual bool CleanUp() { return true; }
+	virtual void Init() { }
+	virtual void Start() {  }
+	virtual void Update() { }
+	virtual void CleanUp() { }
 
 public:
 	string name = "Module";

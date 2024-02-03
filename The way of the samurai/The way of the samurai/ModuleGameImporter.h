@@ -22,8 +22,8 @@ class ModuleGameImporter: public Module
 // Public methods
 public:
 	// Module inherited methods
-	bool Init() override;
-	bool CleanUp() override;
+	void Init() override;
+	void CleanUp() override;
 
 	// Returns "true" if the object has all the mandatory fields and "false" otherwise. Additionally, handles the absence of mandatory
 	// fields as an error
@@ -52,11 +52,6 @@ private:
 
 	// Gets an array from an object accounting for linkability
 	JSON_Array* GetLinkableArray(JSON_Object* object, const char* arrayName);
-
-// Private attributes
-private:
-	// If set to "false" at any time during loading it will terminate the application
-	static bool correctLoading;
 };
 
 // Abstrct structure for all linkable objects to inherit from

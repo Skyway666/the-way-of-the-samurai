@@ -9,8 +9,8 @@
 void Application::Init()
 {
 	// Create modules
-	gameLogic = new ModuleGameLogic();
 	input = new ModuleInput();
+	gameLogic = new ModuleGameLogic();
 	gameImporter = new ModuleGameImporter();
 	localization = new ModuleLocalization();
 
@@ -25,11 +25,9 @@ void Application::Init()
 	// Initialize
 	for (Module* mdl : modules)
 	{
-		if (!mdl->Init())
-		{
-			state = State::QUITTING;
+		mdl->Init();
+		if (state == State::QUITTING)
 			return;
-		}
 	}
 
 	// Everything went right, next step
@@ -42,12 +40,9 @@ void Application::Start()
 	// Module iteration
 	for (Module* mdl : modules)
 	{
-		// If a module fails the application quits
-		if (!mdl->Start())
-		{
-			state = State::QUITTING;
+		mdl->Start();
+		if (state == State::QUITTING)
 			return;
-		}
 	}
 
 	// Everything went right, next step
@@ -59,16 +54,7 @@ void Application::Update()
 {
 	// Module iteration
 	for (Module* mdl : modules)
-	{
-		// If a module fails the application quits
-		if (!mdl->Update())
-		{
-			state = State::QUITTING;
-			return;
-		}
-	}
-
-	// Everything went right, keep updating;
+		mdl->Update();
 }
 
 // Clean up all the modules (free the memory for the most part)
@@ -77,11 +63,9 @@ void Application::CleanUp()
 	// Module iteration
 	for (Module* mdl : modules)
 	{
-		// If a module fails to clean up a log is printed. 
-		if (!mdl->CleanUp())
-			Log(("Module " + mdl->name + " failed to clean up").c_str());
+		mdl->CleanUp();
 
-		// Completelly erase the module
+		// Destroy module
 		delete mdl;
 	}
 
@@ -102,10 +86,16 @@ void Application::Log(const char* message) const
 	printf("\n");
 }
 
-void Application::LogFatalError(const char* message) const
+void Application::Terminate(const char* message)
 {
 	// Notify the user about the fatal error
-	printf("----FATAL ERROR----");
+	printf("----FATAL ERROR----\n");
+
+
+	// TODO: Print module that failed and state application
+
+	// Update application state
+	state = State::QUITTING;
 
 	// Print desired message
 	printf(message);

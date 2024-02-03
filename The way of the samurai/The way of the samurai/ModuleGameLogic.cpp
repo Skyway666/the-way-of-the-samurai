@@ -11,14 +11,12 @@
 
 #include <iostream>
 
-bool ModuleGameLogic::Init()
+void ModuleGameLogic::Init()
 {
 	name = "Game Logic";
-	
-	return true;
 }
 
-bool ModuleGameLogic::Start()
+void ModuleGameLogic::Start()
 {
 	// Initialize map navigation logic
 	mapNavigation = new MapNavigationLogic();
@@ -97,14 +95,14 @@ bool ModuleGameLogic::Start()
 	// Initialize position with initial position
 	gameState.currentGridPosition = app->gameImporter->config->initialPosition;
 
-	// There is no language set
-	if (app->localization->GetLanguage() == "none")
+	// Ask for language if the game is localized and there is no language set already
+	if (app->localization->GetLanguages().size() != 0 && app->localization->GetLanguage() == "none")
 	{
 		app->localization->SetUserDefaultUILanguage();
 		SetLogicProcessor(languageChoosing);
 		languageChoosing->StartLanguageChoosing();
 	}
-	// A language is set, start the game
+	// A language is set or the game is non localized, start
 	else
 	{
 		// Log initial text
@@ -114,9 +112,6 @@ bool ModuleGameLogic::Start()
 		SetLogicProcessor(mapEvents);
 		HandleLogicProcessorResult(mapEvents->LoadMapEvent(GetCurrentMapEvent()));
 	}
-
-
-	return true;
 }
 
 void ModuleGameLogic::SetLogicProcessor(LogicProcessor* newLogicProcessor)
@@ -144,7 +139,7 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 		case LogicProcessorResult::MAP_EVENT_INVALID:
 		{
 			// Fatal error
-			app->LogFatalError("The grid position didn't had a matching map event");
+			app->Terminate("The grid position didn't had a matching map event");
 			ret = false;
 			break;
 		}
@@ -280,23 +275,21 @@ void ModuleGameLogic::BackToLastLogicalState()
 	currentLogicProcessor = lastLogicProcessor;
 }
 
-bool ModuleGameLogic::Update()
+void ModuleGameLogic::Update()
 {
 	// Let logic processor handle user input
 	LogicProcessorResult result = currentLogicProcessor->Step(app->input->currentLoopInput);
 
 	// React to the logic processor result
-	return HandleLogicProcessorResult(result);
+	HandleLogicProcessorResult(result);
 }
 
-bool ModuleGameLogic::CleanUp()
+void ModuleGameLogic::CleanUp()
 {
 	delete mapNavigation, mapEvents, variableSaving;
 	mapNavigation =  nullptr;
 	mapEvents = nullptr;
 	variableSaving = nullptr;
-
-	return true;
 }
 
 void ModuleGameLogic::ReplaceVariables(string& text) const
@@ -314,7 +307,7 @@ void ModuleGameLogic::ReplaceVariables(string& text) const
 		// Error handling
 		if (closingAdd == string::npos)
 		{
-			app->LogFatalError("Variable without closing '@'");
+			app->Terminate("Variable without closing '@'");
 			break;
 		}
 
@@ -325,7 +318,7 @@ void ModuleGameLogic::ReplaceVariables(string& text) const
 		if (gameState.savedVariables.find(variableKey) == gameState.savedVariables.end())
 		{
 			// Inform the user of the variable that wasn't found
-			app->LogFatalError(("Variable key: '" + variableKey + "' not found in variables dictionary").c_str());
+			app->Terminate(("Variable key: '" + variableKey + "' not found in variables dictionary").c_str());
 			break;
 		}
 

@@ -9,7 +9,8 @@ void main()
 	app = new Application();
 
 	// Main loop
-	while (true) 
+	bool running = true;
+	while (running)
 	{
 		bool quit = false;
 		// Perform app actions depending on the state
@@ -33,15 +34,10 @@ void main()
 			case Application::State::QUITTING:
 			{
 				app->CleanUp();
-				quit = true;
+				running = false;
 			}
 		}
-
-		if (quit)
-			break;
 	}
-
-	app->Log("Application terminated \n");
 
 	// Clear app
 	delete app;

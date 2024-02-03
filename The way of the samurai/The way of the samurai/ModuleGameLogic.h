@@ -41,10 +41,10 @@ public:
 	// Public methods
 public:
 	// Module inherited methods
-	bool Init() override;
-	bool Start() override;
-	bool Update() override;
-	bool CleanUp() override;
+	void Init() override;
+	void Start() override;
+	void Update() override;
+	void CleanUp() override;
 
 	// Replaces keys between '@' with gameplay variables
 	void ReplaceVariables(string& text) const;

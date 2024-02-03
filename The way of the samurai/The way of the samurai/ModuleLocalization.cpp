@@ -5,19 +5,15 @@
 #include <fstream>
 #include <Windows.h>
 
-bool ModuleLocalization::Init()
+void ModuleLocalization::Init()
 {
 	name = "Localization";
 
-	bool ret = true;
-
 	// Load localization data
-	ret = LoadLocalizationData();
+	LoadLocalizationData();
 
 	// Load configured language for the games
-	ret = ret && LoadLanguage();
-	
-	return ret;
+	LoadLanguage();
 }
 
 bool ModuleLocalization::Exists(string key) const
@@ -84,21 +80,21 @@ vector<string> ModuleLocalization::GetLanguages() const
 	return languages;
 }
 
-bool ModuleLocalization::LoadLocalizationData()
+void ModuleLocalization::LoadLocalizationData()
 {
 	// Load localization file
 	JSON_Value* rawFile = json_parse_file_with_comments("Localization.json");
 	// File was not found
 	if (rawFile == nullptr)
-		return true;
+		return;
 
 	// Get root localization object
 	JSON_Object* localization = json_value_get_object(rawFile);
 	// Error handling
 	if (localization == nullptr)
 	{
-		app->LogFatalError("No root object in the localization file");
-		return false;
+		app->Terminate("No root object in the localization file");
+		return;
 	}
 
 	// Get languages array
@@ -106,8 +102,8 @@ bool ModuleLocalization::LoadLocalizationData()
 	// Error handling
 	if (s_languages == nullptr)
 	{
-		app->LogFatalError("No languages array in the localization file");
-		return false;
+		app->Terminate("No languages array in the localization file");
+		return;
 	}
 
 	// Load languages array
@@ -118,8 +114,8 @@ bool ModuleLocalization::LoadLocalizationData()
 		// Error handling
 		if (language == nullptr)
 		{
-			app->LogFatalError("Language array in localization file contains non 'string' type");
-			return false;
+			app->Terminate("Language array in localization file contains non 'string' type");
+			return;
 		}
 		else
 			languages.push_back(language);
@@ -130,8 +126,8 @@ bool ModuleLocalization::LoadLocalizationData()
 	// Error handling
 	if (entries_s == nullptr)
 	{
-		app->LogFatalError("No entries array in the localization file");
-		return false;
+		app->Terminate("No entries array in the localization file");
+		return;
 	}
 
 	// Load entries array
@@ -141,16 +137,16 @@ bool ModuleLocalization::LoadLocalizationData()
 
 		if (entry == nullptr)
 		{
-			app->LogFatalError("A value assigned to the entries array was not an object");
-			return false;
+			app->Terminate("A value assigned to the entries array was not an object");
+			return;
 		}
 
 		const char* key = json_object_get_string(entry, "key");
 
 		if (key == nullptr)
 		{
-			app->LogFatalError("The key of an entry in the localization file was not of type 'string'");
-			return false;
+			app->Terminate("The key of an entry in the localization file was not of type 'string'");
+			return;
 		}
 
 		// Access each language value
@@ -160,8 +156,8 @@ bool ModuleLocalization::LoadLocalizationData()
 
 			if (value == nullptr)
 			{
-				app->LogFatalError(("No 'string' type value for the '" + language + "' in the '" + key + "' entry").c_str());
-				return false;
+				app->Terminate(("No 'string' type value for the '" + language + "' in the '" + key + "' entry").c_str());
+				return;
 			}
 
 			entries[key][language] = value;
@@ -171,10 +167,9 @@ bool ModuleLocalization::LoadLocalizationData()
 	// TODO: Make sure memory is freed even if the function needs to return false
 	// Use exception (try/catch/throw)
 	json_value_free(rawFile);
-	return true;
 }
 
-bool ModuleLocalization::LoadLanguage()
+void ModuleLocalization::LoadLanguage()
 {
 	JSON_Value* rawFile = json_parse_file_with_comments("Language.json");
 
@@ -186,8 +181,8 @@ bool ModuleLocalization::LoadLanguage()
 
 		if (char_language == nullptr)
 		{
-			app->LogFatalError(("Root value of 'Language.json' wasn't a string'"));
-			return false;
+			app->Terminate(("Root value of 'Language.json' wasn't a string'"));
+			return;
 		}
 
 		// Assign language
@@ -197,6 +192,4 @@ bool ModuleLocalization::LoadLanguage()
 	}
 	else
 		language = "none";
-
-	return true;
 }

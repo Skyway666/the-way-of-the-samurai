@@ -9,7 +9,7 @@ class ModuleLocalization : public Module
 {
 	// Public methods
 public:
-	bool Init() override;
+	void Init() override;
 
 	// Public methods
 public:
@@ -42,8 +42,8 @@ private:
 private:
 	// ----------LOGIC ENCAPSULATORS (only for readibility, this functions shouldn't be used more than once)
 	// Loads "Localization.json"
-	bool LoadLocalizationData();
+	void LoadLocalizationData();
 	// Loads language stored in "Language.json"
-	bool LoadLanguage();
+	void LoadLanguage();
 };
 
