@@ -51,17 +51,11 @@ void ModuleGameImporter::Init()
 	for (int i = 0; i < json_array_get_count(s_mapEvents); i++) 
 	{
 		// Get object from array
-		JSON_Object* s_mapEvent = GetLinkableObject(json_array_get_value(s_mapEvents, i), "mapEvents[x]");
-
-		// Error handling
-		if (s_mapEvent == nullptr) 
-		{
-			TerminateApplication(("No object in mapEvents[" + to_string(i) + "]").c_str());
-			return;
-		}
+		JSON_Object* s_mapEvent = GetLinkeableObjectFromArray(s_mapEvents, i, "mapEvents");
 
 		// Load map event
-		mapEvents.push_back(MapEvent(s_mapEvent));
+		if(s_mapEvent)
+			mapEvents.push_back(MapEvent(s_mapEvent));
 	}
 
 	// Read config
@@ -267,6 +261,19 @@ JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Value* linkeableValue, con
 	return ret;
 }
 
+JSON_Object* ModuleGameImporter::GetLinkeableObjectFromArray(JSON_Array* s_array, int index, const char* arrayName)
+{
+	// Get object from array
+	string objectFromArrayName = string(arrayName) + "[" + to_string(index) + "]";
+	JSON_Object* s_objectFromArray = GetLinkableObject(json_array_get_value(s_array, index), objectFromArrayName.c_str());
+
+	// Error handling
+	if (s_objectFromArray == nullptr)
+		TerminateApplication(("No object in " + objectFromArrayName).c_str());
+
+	return s_objectFromArray;
+}
+
 void ModuleGameImporter::ProcessLinkableValue(JSON_Value*& linkeableValue, const char* valueName, JSON_Value_Type valueType)
 {
 	// The "linkeableValue" contains a link to the file that contains the value
@@ -421,18 +428,12 @@ Event::Event(JSON_Object*& s_event)
 		json_object_get_value(s_event, "subEvents"), "subEvents");
 	for (int i = 0; i < json_array_get_count(s_subEvents); i++) 
 	{
-		// Handle linkeability
-		JSON_Object* s_subEvent = app->gameImporter->GetLinkableObject(json_array_get_value(s_subEvents, i), "subEvents[x]");
+		// Get object from array
+		JSON_Object* s_subEvent = app->gameImporter->GetLinkeableObjectFromArray(s_subEvents, i, "subEvents");
 
-		// Error handling
-		if (s_subEvent == nullptr) 
-		{
-			app->gameImporter->TerminateApplication(("No object in subEvents[" + to_string(i) + "]").c_str());
-			return;
-		}
-
-		// Load SubEvent
-		subEvents.push_back(SubEvent(s_subEvent));
+		// Load map event
+		if (s_subEvent)
+			subEvents.push_back(SubEvent(s_subEvent));
 	}
 
 
@@ -441,19 +442,12 @@ Event::Event(JSON_Object*& s_event)
 		json_object_get_value(s_event, "alternativeEvents"), "alternativeEvents");
 	for (int i = 0; i < json_array_get_count(s_alternativeEvents); i++) 
 	{
-		// Handle linkeability
-		JSON_Object* s_alternativeEvent = app->gameImporter->GetLinkableObject(
-			json_array_get_value(s_alternativeEvents, i), "alternativeEvents[x]");
+		// Get object from array
+		JSON_Object* s_alternativeEvent = app->gameImporter->GetLinkeableObjectFromArray(s_alternativeEvents, i, "alternativeEvents");
 
-		// Error handling
-		if (s_alternativeEvent == nullptr)
-		{
-			app->gameImporter->TerminateApplication(("No object in alternativeEvents[" + to_string(i) + "]").c_str());
-			return;
-		}
-
-		// Load SubEvent
-		alternativeEvents.push_back(AlternativeEvent(s_alternativeEvent));
+		// Load map event
+		if (s_alternativeEvent)
+			alternativeEvents.push_back(AlternativeEvent(s_alternativeEvent));
 	}
 
 	// Read saved variable
@@ -513,19 +507,12 @@ SubEvent::SubEvent(JSON_Object* s_subEvent): Event(s_subEvent)
 		json_object_get_value(s_subEvent, "rejectionTexts"), "rejectionTexts");
 	for (int i = 0; i < json_array_get_count(s_rejectionTexts); i++) 
 	{
-		// Handle linkeability
-		JSON_Object* s_rejectionText = app->gameImporter->GetLinkableObject(
-			json_array_get_value(s_rejectionTexts, i), "s_rejectionTexts[x]");
+		// Get object from array
+		JSON_Object* s_rejectionText = app->gameImporter->GetLinkeableObjectFromArray(s_rejectionTexts, i, "rejectionTexts");
 
-		// Error handling
-		if (s_rejectionText == nullptr)
-		{
-			app->gameImporter->TerminateApplication(("No object in s_rejectionTexts[" + to_string(i) + "]").c_str());
-			return;
-		}
-
-		// Load SubEvent
-		rejectionTexts.push_back(RejectionText(s_rejectionText));
+		// Load map event
+		if (s_rejectionText)
+			rejectionTexts.push_back(RejectionText(s_rejectionText));
 	}
 }
 

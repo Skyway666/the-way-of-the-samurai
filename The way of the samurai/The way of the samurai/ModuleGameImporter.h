@@ -36,6 +36,8 @@ public:
 	JSON_Object* GetLinkableObject(JSON_Value* linkeableValue, const char* objectName);
 	// Get a JSON_Array* from a linkeable value
 	JSON_Array* GetLinkableArray(JSON_Value* linkeableValue, const char* arrayName);
+	// Get a JSON_Object* from an array accounting for linkeability
+	JSON_Object* GetLinkeableObjectFromArray(JSON_Array* s_array, int index, const char* arrayName);
 
 // Public attributes
 public:
