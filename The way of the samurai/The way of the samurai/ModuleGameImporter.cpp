@@ -40,7 +40,7 @@ void ModuleGameImporter::Init()
 	}
 
 	// Read all map events
-	JSON_Array* s_mapEvents = GetLinkableArray(game, "mapEvents");
+	JSON_Array* s_mapEvents = GetLinkableArray(json_object_get_value(game, "mapEvents"), "mapEvents");
 	// Error handling for map events
 	if (s_mapEvents == nullptr) 
 	{
@@ -49,10 +49,23 @@ void ModuleGameImporter::Init()
 	}
 	// Parse each map event
 	for (int i = 0; i < json_array_get_count(s_mapEvents); i++) 
-		mapEvents.push_back(MapEvent(json_array_get_object(s_mapEvents, i)));
+	{
+		// Get object from array
+		JSON_Object* s_mapEvent = GetLinkableObject(json_array_get_value(s_mapEvents, i), "mapEvents[x]");
+
+		// Error handling
+		if (s_mapEvent == nullptr) 
+		{
+			TerminateApplication(("No object in mapEvents[" + to_string(i) + "]").c_str());
+			return;
+		}
+
+		// Load map event
+		mapEvents.push_back(MapEvent(s_mapEvent));
+	}
 
 	// Read config
-	JSON_Object* s_config = json_object_get_object(game, "config");
+	JSON_Object* s_config = GetLinkableObject(json_object_get_value(game, "config"), "config");
 	// Error handling for config file
 	if(s_config == nullptr)
 	{
@@ -218,47 +231,62 @@ void ModuleGameImporter::CleanUpMandatoryFields()
 	SavedVariable::mandatoryFields.clear();
 }
 
-JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Object* object, const char* arrayName)
+JSON_Object* ModuleGameImporter::GetLinkableObject(JSON_Value* linkeableValue, const char* objectName)
 {
-	JSON_Value* rootArrayValue = json_object_get_value(object, arrayName);
+	// Process
+	JSON_Value* previousValue = linkeableValue;
+	ProcessLinkableValue(linkeableValue, objectName, json_value_type::JSONObject);
 
-	// The object did not contain the value
-	if (rootArrayValue == nullptr)
-		return nullptr;
-
-	JSON_Array* ret = nullptr;
-	// The root object already contains the array
-	if (json_value_get_type(rootArrayValue) == json_value_type::JSONArray)
-		ret = json_value_get_array(rootArrayValue);
-	// The root object contains a link to the file that contains the array
-	else if (json_value_get_type(rootArrayValue) == json_value_type::JSONString) 
+	// Error handling
+	JSON_Object* ret = json_value_get_object(linkeableValue);
+	if (ret == nullptr && previousValue != linkeableValue)
 	{
-		// Load linked file
-		const char* linkedArrayPath = json_value_get_string(rootArrayValue);
-		JSON_Value* rawArrayFile = json_parse_file_with_comments(linkedArrayPath);
-		// Error handling
-		if (rawArrayFile == nullptr) 
-		{
-			// Inform the user about the error
-			string errorLog = ("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' could not be found");
-			app->Terminate(errorLog.c_str(), app->gameImporter);
-			return nullptr;
-		}
-		// Add loaded files for later cleaning
-		ModuleGameImporter::linkedFiles.push_back(rawArrayFile);
-
-		// Load array from file
-		ret = json_value_get_array(rawArrayFile);
-		// Error handling
-		if (ret == nullptr) 
-		{
-			// Inform the user about the error
-			string errorLog = ("File for linked array '" + string(arrayName) + "' with path '" + linkedArrayPath + "' didn't contain an array as root value");
-			app->Terminate(errorLog.c_str(), app->gameImporter);
-		}
+		// Inform the user about the error
+		string errorLog = ("File for linked array '" + string(objectName) + "' didn't contain an object as root value");
+		app->Terminate(errorLog.c_str(), app->gameImporter);
 	}
 
 	return ret;
+}
+
+JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Value* linkeableValue, const char* arrayName)
+{
+	// Process
+	JSON_Value* previousValue = linkeableValue;
+	ProcessLinkableValue(linkeableValue, arrayName, json_value_type::JSONArray);
+
+	// Error handling
+	JSON_Array* ret = json_value_get_array(linkeableValue);
+	if (ret == nullptr && previousValue != linkeableValue)
+	{
+		// Inform the user about the error
+		string errorLog = ("File for linked array '" + string(arrayName) + "' didn't contain an object as root value");
+		app->Terminate(errorLog.c_str(), app->gameImporter);
+	}
+
+	return ret;
+}
+
+void ModuleGameImporter::ProcessLinkableValue(JSON_Value*& linkeableValue, const char* valueName, JSON_Value_Type valueType)
+{
+	// The "linkeableValue" contains a link to the file that contains the value
+	if (json_value_get_type(linkeableValue) == json_value_type::JSONString)
+	{
+		// Load linked file
+		const char* linkedArrayPath = json_value_get_string(linkeableValue);
+		JSON_Value* rawValueFile = json_parse_file_with_comments(linkedArrayPath);
+		linkeableValue = rawValueFile;
+		// Error handling
+		if (linkeableValue == nullptr)
+		{
+			// Inform the user about the error
+			string errorLog = ("File for linked value '" + string(valueName) + "' with path '" + linkedArrayPath + "' could not be loaded");
+			app->Terminate(errorLog.c_str(), app->gameImporter);
+			return;
+		}
+		// Add loaded files for later cleaning
+		ModuleGameImporter::linkedFiles.push_back(rawValueFile);
+	}
 }
 
 JSONFieldData::JSONFieldData(string name, JSON_Value_Type type)
@@ -267,41 +295,7 @@ JSONFieldData::JSONFieldData(string name, JSON_Value_Type type)
 	this->type = type;
 }
 
-JSONGameObject::JSONGameObject(JSON_Object*& s_linkable, const char* objectName)
-{
-	// Check if the object has a link
-	if (json_object_has_value(s_linkable, "link") == 1) 
-	{
-		// Load linked file
-		const char* linkedObjectPath = json_object_get_string(s_linkable, "link");
-		JSON_Value* rawObjectFile = json_parse_file_with_comments(linkedObjectPath);
-		// Error handling
-		if (rawObjectFile == nullptr) 
-		{
-			// Inform the user about the error
-			string errorLog = ("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' could not be found");
-			app->Terminate(errorLog.c_str(), app->gameImporter);
-			return;
-		}
-		// Add loaded files for later cleaning
-		ModuleGameImporter::linkedFiles.push_back(rawObjectFile);
-
-		// Load object from file
-		JSON_Object* linkedObject = json_value_get_object(rawObjectFile);
-		if (linkedObject == nullptr) 
-		{
-			// Inform the user about the error
-			string errorLog = ("File for linked object '" + string(objectName) + "' with path '" + linkedObjectPath + "' didn't contain an object as root value");
-			app->Terminate(errorLog.c_str(), app->gameImporter);
-			return;
-		}
-
-		// Replace serialized object for further parsing
-		s_linkable = linkedObject;
-	}
-}
-
-Config::Config(JSON_Object* s_config): JSONGameObject(s_config, "config")
+Config::Config(JSON_Object* s_config)
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_config, "Config"))
@@ -395,7 +389,7 @@ Config::Config(JSON_Object* s_config): JSONGameObject(s_config, "config")
 	exitInputText = json_object_get_string(s_config, "exitInputText");
 }
 
-Event::Event(JSON_Object*& s_event) : JSONGameObject(s_event, "event")
+Event::Event(JSON_Object*& s_event)
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_event, "Event"))
@@ -405,29 +399,62 @@ Event::Event(JSON_Object*& s_event) : JSONGameObject(s_event, "event")
 	text = json_object_get_string(s_event, "text");
 
 	// Read obtained conditions
-	JSON_Array* s_obtainedConditions = json_object_get_array(s_event, "obtainedConditions");
+	JSON_Array* s_obtainedConditions = app->gameImporter->GetLinkableArray(
+		json_object_get_value(s_event, "obtainedConditions"), "obtainedConditions");
 	for (int i = 0; i < json_array_get_count(s_obtainedConditions); i++)
 		obtainedConditions.push_back(json_array_get_string(s_obtainedConditions, i));
 
 	// Read removed conditions
-	JSON_Array* s_removedConditions = json_object_get_array(s_event, "removedConditions");
+	JSON_Array* s_removedConditions = app->gameImporter->GetLinkableArray(
+		json_object_get_value(s_event, "removedConditions"), "removedConditions");
 	for (int i = 0; i < json_array_get_count(s_removedConditions); i++)
 		removedConditions.push_back(json_array_get_string(s_removedConditions, i));
 
 	// Read obtained objects
-	JSON_Array* s_obtainedObjects = json_object_get_array(s_event, "obtainedObjects");
+	JSON_Array* s_obtainedObjects = app->gameImporter->GetLinkableArray(
+		json_object_get_value(s_event, "obtainedObjects"), "obtainedObjects");
 	for (int i = 0; i < json_array_get_count(s_obtainedObjects); i++)
 		obtainedObjects.push_back(json_array_get_string(s_obtainedObjects, i));
 
 	// Read sub events
-	JSON_Array* s_subEvents = json_object_get_array(s_event, "subEvents");
-	for (int i = 0; i < json_array_get_count(s_subEvents); i++)
-		subEvents.push_back(SubEvent(json_array_get_object(s_subEvents, i)));
+	JSON_Array* s_subEvents = app->gameImporter->GetLinkableArray(
+		json_object_get_value(s_event, "subEvents"), "subEvents");
+	for (int i = 0; i < json_array_get_count(s_subEvents); i++) 
+	{
+		// Handle linkeability
+		JSON_Object* s_subEvent = app->gameImporter->GetLinkableObject(json_array_get_value(s_subEvents, i), "subEvents[x]");
+
+		// Error handling
+		if (s_subEvent == nullptr) 
+		{
+			app->gameImporter->TerminateApplication(("No object in subEvents[" + to_string(i) + "]").c_str());
+			return;
+		}
+
+		// Load SubEvent
+		subEvents.push_back(SubEvent(s_subEvent));
+	}
+
 
 	// Read alternative events
-	JSON_Array* s_alternativeEvents = json_object_get_array(s_event, "alternativeEvents");
-	for (int i = 0; i < json_array_get_count(s_alternativeEvents); i++)
-		alternativeEvents.push_back(AlternativeEvent(json_array_get_object(s_alternativeEvents, i)));
+	JSON_Array* s_alternativeEvents = app->gameImporter->GetLinkableArray(
+		json_object_get_value(s_event, "alternativeEvents"), "alternativeEvents");
+	for (int i = 0; i < json_array_get_count(s_alternativeEvents); i++) 
+	{
+		// Handle linkeability
+		JSON_Object* s_alternativeEvent = app->gameImporter->GetLinkableObject(
+			json_array_get_value(s_alternativeEvents, i), "alternativeEvents[x]");
+
+		// Error handling
+		if (s_alternativeEvent == nullptr)
+		{
+			app->gameImporter->TerminateApplication(("No object in alternativeEvents[" + to_string(i) + "]").c_str());
+			return;
+		}
+
+		// Load SubEvent
+		alternativeEvents.push_back(AlternativeEvent(s_alternativeEvent));
+	}
 
 	// Read saved variable
 	savedVariable = SavedVariable::LoadSavedVariable(s_event, "savedVariable");
@@ -482,12 +509,27 @@ SubEvent::SubEvent(JSON_Object* s_subEvent): Event(s_subEvent)
 		conditions.push_back(json_array_get_string(s_conditions, i));
 
 	// Read rejection texts
-	JSON_Array* s_rejectionTexts = json_object_get_array(s_subEvent, "rejectionTexts");
-	for (int i = 0; i < json_array_get_count(s_rejectionTexts); i++)
-		rejectionTexts.push_back(RejectionText(json_array_get_object(s_rejectionTexts, i)));
+	JSON_Array* s_rejectionTexts = app->gameImporter->GetLinkableArray(
+		json_object_get_value(s_subEvent, "rejectionTexts"), "rejectionTexts");
+	for (int i = 0; i < json_array_get_count(s_rejectionTexts); i++) 
+	{
+		// Handle linkeability
+		JSON_Object* s_rejectionText = app->gameImporter->GetLinkableObject(
+			json_array_get_value(s_rejectionTexts, i), "s_rejectionTexts[x]");
+
+		// Error handling
+		if (s_rejectionText == nullptr)
+		{
+			app->gameImporter->TerminateApplication(("No object in s_rejectionTexts[" + to_string(i) + "]").c_str());
+			return;
+		}
+
+		// Load SubEvent
+		rejectionTexts.push_back(RejectionText(s_rejectionText));
+	}
 }
 
-RejectionText::RejectionText(JSON_Object* s_rejectionText): JSONGameObject(s_rejectionText, "rejectionText")
+RejectionText::RejectionText(JSON_Object* s_rejectionText)
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_rejectionText, "RejectionText"))
@@ -502,7 +544,7 @@ RejectionText::RejectionText(JSON_Object* s_rejectionText): JSONGameObject(s_rej
 	text = json_object_get_string(s_rejectionText, "text");
 }
 
-AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent): JSONGameObject(s_alternativeEvent, "alternativeEvent")
+AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent)
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_alternativeEvent, "AlternativeEvent"))
@@ -517,7 +559,7 @@ AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent): JSONGameObj
 	alternative = MapEvent::LoadMapEvent(s_alternativeEvent, "alternative");
 }
 
-SavedVariable::SavedVariable(JSON_Object* s_savedVariable): JSONGameObject(s_savedVariable, "savedVariable")
+SavedVariable::SavedVariable(JSON_Object* s_savedVariable)
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_savedVariable, "SavedVariable"))

@@ -1,6 +1,4 @@
 {
-  "config": {
-    "link": "Config.json"
-  },
-  "mapEvents": "MapEvents.json"
+    "config": "Config.json",
+    "mapEvents": "MapEvents.json"
 }

@@ -32,6 +32,10 @@ public:
 	static bool HandleMandatoryFields(JSON_Object* jsonObject, const char* objectType);
 	// Returns en empty JSONFieldData if the object has all the mandatory fields and the missing mandatory field otherwise
 	static JSONFieldData HasFields(JSON_Object* jsonObject, vector<JSONFieldData>& mandatoryFields);
+	// Get a JSON_Object* from a linkeable value
+	JSON_Object* GetLinkableObject(JSON_Value* linkeableValue, const char* objectName);
+	// Get a JSON_Array* from a linkeable value
+	JSON_Array* GetLinkableArray(JSON_Value* linkeableValue, const char* arrayName);
 
 // Public attributes
 public:
@@ -50,10 +54,9 @@ private:
 	void InitMandatoryFields();
 	// Cleans up memory for static mandatory fields in all the objects
 	void CleanUpMandatoryFields();
-	
 
-	// Gets an array from an object accounting for linkability
-	JSON_Array* GetLinkableArray(JSON_Object* object, const char* arrayName);
+	// Checks if a JSON_Value* is a string and substitutes it for the value in the string's path file if possible
+	void ProcessLinkableValue(JSON_Value*& linkeableValue, const char* valueName, JSON_Value_Type valueType);
 };
 
 struct JSONFieldData 
@@ -65,16 +68,8 @@ struct JSONFieldData
 	JSONFieldData(string name, JSON_Value_Type type);
 };
 
-// Abstrct structure for all linkable objects to inherit from
-struct JSONGameObject 
-{
-	// C++ pesao
-	JSONGameObject() {};
-	JSONGameObject(JSON_Object*& s_linkable, const char* objectName);
-};
-
 // Game parameters
-struct Config : public JSONGameObject
+struct Config
 {
 	// Public methods
 public:
@@ -123,7 +118,7 @@ public:
 };
 
 // Event base class
-struct Event : public JSONGameObject
+struct Event
 {
 // Public methods
 public:
@@ -183,7 +178,7 @@ public:
 };
 
 // Alternative event that happens when certain conditions are met
-struct AlternativeEvent: public JSONGameObject
+struct AlternativeEvent
 {
 // Public methods
 public:
@@ -199,7 +194,7 @@ public:
 };
 
 // Rejection text to show depending on the conditions that are met by the player
-struct RejectionText: public JSONGameObject
+struct RejectionText
 {
 // Public methods
 public:
@@ -215,7 +210,7 @@ public:
 };
 
 // Data needed to save 
-struct SavedVariable: public JSONGameObject
+struct SavedVariable
 {
 // Public methods
 public:
