@@ -2,18 +2,15 @@
     "conditions": [
         "nameSaved",
         "Sword",
-        "Kung fu",
-        "righteous"
+        "Kung fu"
     ],
     "objects": [
-        "Mana potion",
-        "Apple",
         "Mana potion",
         "Apple"
     ],
     "savedVariables": {
-        "language": "en",
+        "language": "es",
         "playerName": "lucas"
     },
-    "currentGridPosition": 13
+    "currentGridPosition": 4
 }

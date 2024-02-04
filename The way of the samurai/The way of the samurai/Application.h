@@ -54,6 +54,9 @@ public:
 	ModuleGameImporter* gameImporter = nullptr;
 	ModuleLocalization* localization = nullptr;
 
+	// Application folders
+	const char* userFilesFolderPath = "UserFiles/";
+
 // Private methods
 private:
 	string State2String(State state) const;

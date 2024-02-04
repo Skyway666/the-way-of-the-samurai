@@ -172,7 +172,7 @@ void ModuleGameLogic::Start()
 	optionsChoosing->saveGameState = SaveGameLogicGameState;
 
 	// Load game state
-	gameState.Load(gameStatePath);
+	gameState.Load((string(app->userFilesFolderPath) + "GameState.json").c_str());
 
 	// Set initial position if no game was loaded
 	if(!gameState.loaded)
@@ -403,7 +403,7 @@ void ModuleGameLogic::ReplaceVariables(string& text) const
 
 void ModuleGameLogic::SaveGameState()
 {
-	gameState.Save(gameStatePath);
+	gameState.Save((string(app->userFilesFolderPath) + "GameState.json").c_str());
 }
 
 void ProcessGameplayText(string& text) 

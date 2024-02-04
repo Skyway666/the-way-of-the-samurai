@@ -72,7 +72,6 @@ private:
 	// Private variables
 private:
 	// ----------GAME STATE VARIABLES
-	const char* gameStatePath = "GameState.json";
 	GameState gameState;
 
 	// ---------- LOGIC PROCESSORS VARIABLES

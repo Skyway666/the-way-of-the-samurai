@@ -65,7 +65,7 @@ void ModuleLocalization::SetLanguage(string newLanguage)
 	language = newLanguage;
 
 	// Save in language file
-	ofstream language_json(languagePath);
+	ofstream language_json(string(app->userFilesFolderPath) + "Language.json");
 	language_json << "\"" << language << "\"";
 	language_json.close();
 }
@@ -171,7 +171,7 @@ void ModuleLocalization::LoadLocalizationData()
 
 void ModuleLocalization::LoadLanguage()
 {
-	JSON_Value* rawFile = json_parse_file_with_comments(languagePath);
+	JSON_Value* rawFile = json_parse_file_with_comments((string(app->userFilesFolderPath) + "Language.json").c_str());
 
 	// A language was stored
 	if (rawFile != nullptr)

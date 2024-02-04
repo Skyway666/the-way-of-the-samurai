@@ -3,11 +3,15 @@
 #include "ModuleInput.h"
 #include "ModuleGameImporter.h"
 #include "ModuleLocalization.h"
+#include <direct.h>
 #include <stdio.h>
 
 // Initializes app by creating the Modules and calling "Init" on them
 void Application::Init()
 {
+	// Create needed folders
+	_mkdir(userFilesFolderPath);
+
 	// Create modules
 	input = new ModuleInput();
 	gameLogic = new ModuleGameLogic();
