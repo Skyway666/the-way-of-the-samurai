@@ -8,7 +8,6 @@ vector<JSONFieldData> Event::mandatoryFields;
 vector<JSONFieldData> MapEvent::mandatoryFields;
 vector<JSONFieldData> SubEvent::mandatoryFields;
 vector<JSONFieldData> AlternativeEvent::mandatoryFields;
-vector<JSONFieldData> RejectionText::mandatoryFields;
 vector<JSONFieldData> SavedVariable::mandatoryFields;
 vector<JSON_Value*> ModuleGameImporter::linkedFiles;
 
@@ -98,14 +97,6 @@ void ModuleGameImporter::CleanUp()
 			delete mapEvent.savedVariable;
 		}
 
-		// Clean alternative events
-		for (AlternativeEvent& alternativeEvent : mapEvent.alternativeEvents)
-		{
-			// Clean alternative in alternativeEvents
-			if (alternativeEvent.alternative != nullptr)
-				delete alternativeEvent.alternative;
-		}
-
 		mapEvent.alternativeEvents.clear();
 	}
 
@@ -128,8 +119,6 @@ bool ModuleGameImporter::HandleMandatoryFields(JSON_Object* jsonObject, const ch
 		mandatoryFields = &SubEvent::mandatoryFields;
 	else if (objectType == "AlternativeEvent")
 		mandatoryFields = &AlternativeEvent::mandatoryFields;
-	else if (objectType == "RejectionText")
-		mandatoryFields = &RejectionText::mandatoryFields;
 	else if (objectType == "SavedVariable")
 		mandatoryFields = &SavedVariable::mandatoryFields;
 
@@ -202,12 +191,8 @@ void ModuleGameImporter::InitMandatoryFields()
 	// SubEvent
 	SubEvent::mandatoryFields.push_back({ "option", JSONString });
 
-	// Rejection text
-	RejectionText::mandatoryFields.push_back({ "text", JSONString });
-
 	// Alternative event
 	AlternativeEvent::mandatoryFields.push_back({ "conditions", JSONArray });
-	AlternativeEvent::mandatoryFields.push_back({ "alternative", JSONObject });
 
 	// Saved variable
 	SavedVariable::mandatoryFields.push_back({ "key", JSONString });
@@ -220,7 +205,6 @@ void ModuleGameImporter::CleanUpMandatoryFields()
 	Config::mandatoryFields.clear();
 	Event::mandatoryFields.clear();
 	SubEvent::mandatoryFields.clear();
-	RejectionText::mandatoryFields.clear();
 	AlternativeEvent::mandatoryFields.clear();
 	SavedVariable::mandatoryFields.clear();
 }
@@ -344,6 +328,9 @@ Config::Config(JSON_Object* s_config)
 	// Read currentConditionsText
 	currentConditionsText = json_object_get_string(s_config, "currentConditionsText");
 
+	// Read savedText
+	savedText = json_object_get_string(s_config, "savedText");
+
 	// Read exitGameText
 	exitGameText = json_object_get_string(s_config, "exitGameText");
 
@@ -382,6 +369,9 @@ Config::Config(JSON_Object* s_config)
 
 	// Read conditionsInputText
 	conditionsInputText = json_object_get_string(s_config, "conditionsInputText");
+
+	// Read saveInputText
+	saveInputText = json_object_get_string(s_config, "saveInputText");
 
 	// Read helpInputText
 	helpInputText = json_object_get_string(s_config, "helpInputText");
@@ -496,42 +486,9 @@ SubEvent::SubEvent(JSON_Object* s_subEvent): Event(s_subEvent)
 
 	// Read option
 	option = json_object_get_string(s_subEvent, "option");
-
-	// Read conditions
-	JSON_Array* s_conditions = json_object_get_array(s_subEvent, "conditions");
-	for (int i = 0; i < json_array_get_count(s_conditions); i++)
-		conditions.push_back(json_array_get_string(s_conditions, i));
-
-	// Read rejection texts
-	JSON_Array* s_rejectionTexts = app->gameImporter->GetLinkableArray(
-		json_object_get_value(s_subEvent, "rejectionTexts"), "rejectionTexts");
-	for (int i = 0; i < json_array_get_count(s_rejectionTexts); i++) 
-	{
-		// Get object from array
-		JSON_Object* s_rejectionText = app->gameImporter->GetLinkeableObjectFromArray(s_rejectionTexts, i, "rejectionTexts");
-
-		// Load map event
-		if (s_rejectionText)
-			rejectionTexts.push_back(RejectionText(s_rejectionText));
-	}
 }
 
-RejectionText::RejectionText(JSON_Object* s_rejectionText)
-{
-	// Check for mandatory fields
-	if (!ModuleGameImporter::HandleMandatoryFields(s_rejectionText, "RejectionText"))
-		return;
-
-	// Read conditions
-	JSON_Array* s_conditions = json_object_get_array(s_rejectionText, "conditions");
-	for (int i = 0; i < json_array_get_count(s_conditions); i++)
-		conditions.push_back(json_array_get_string(s_conditions, i));
-
-	// Read text
-	text = json_object_get_string(s_rejectionText, "text");
-}
-
-AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent)
+AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent) : MapEvent(s_alternativeEvent)
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_alternativeEvent, "AlternativeEvent"))
@@ -541,9 +498,6 @@ AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent)
 	JSON_Array* s_conditions = json_object_get_array(s_alternativeEvent, "conditions");
 	for (int i = 0; i < json_array_get_count(s_conditions); i++)
 		conditions.push_back(json_array_get_string(s_conditions, i));
-
-	// Read alternative event
-	alternative = MapEvent::LoadMapEvent(s_alternativeEvent, "alternative");
 }
 
 SavedVariable::SavedVariable(JSON_Object* s_savedVariable)

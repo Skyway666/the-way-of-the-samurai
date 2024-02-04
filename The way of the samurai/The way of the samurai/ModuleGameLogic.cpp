@@ -8,8 +8,83 @@
 #include "VariableSavingLogic.h"
 #include "LanguageChoosingLogic.h"
 #include "OptionsChoosingLogic.h"
+#include "Third Party/parson.h"
 
 #include <iostream>
+
+void ModuleGameLogic::GameState::Save(const char* path)
+{
+	// Initialize json object
+	JSON_Value* rawGameData = json_value_init_object();
+	JSON_Object* s_gameState = json_value_get_object(rawGameData);
+
+	// Save conditions array
+	JSON_Value* rawConditionsArray = json_value_init_array();
+	json_object_set_value(s_gameState, "conditions", rawConditionsArray);
+	for (string condition : conditions)
+		json_array_append_string(json_value_get_array(rawConditionsArray), condition.c_str());
+
+	// Save objects array
+	JSON_Value* rawObjectsArray = json_value_init_array();
+	json_object_set_value(s_gameState, "objects", rawObjectsArray);
+	for (string object : objects)
+		json_array_append_string(json_value_get_array(rawObjectsArray), object.c_str());
+
+	// Save saved variables
+	JSON_Value* rawSavedVariablesObject = json_value_init_object();
+	json_object_set_value(s_gameState, "savedVariables", rawSavedVariablesObject);
+	for (pair<string, string> savedVariable : savedVariables)
+		json_object_set_string(json_value_get_object(rawSavedVariablesObject), 
+			savedVariable.first.c_str(), savedVariable.second.c_str());
+
+	// Save current grid position
+	json_object_set_number(s_gameState, "currentGridPosition", currentGridPosition);
+
+	// Save json object
+	json_serialize_to_file_pretty(rawGameData, path);
+	json_value_free(rawGameData);
+}
+
+void ModuleGameLogic::GameState::Load(const char* path)
+{
+	// Try to load file
+	JSON_Value* rawGameData = json_parse_file(path);
+	
+	// Handle file not existing
+	if (rawGameData == nullptr)
+		return;
+
+	// Retreive object
+	JSON_Object* s_gameState = json_value_get_object(rawGameData);
+
+	// Load conditions
+	JSON_Array* s_conditions = json_object_get_array(s_gameState, "conditions");
+	for (int i = 0; i < json_array_get_count(s_conditions); i++)
+		conditions.push_back(json_array_get_string(s_conditions, i));
+
+	// Load objects
+	JSON_Array* s_objects = json_object_get_array(s_gameState, "objects");
+	for (int i = 0; i < json_array_get_count(s_objects); i++)
+		objects.push_back(json_array_get_string(s_objects, i));
+
+	// Load savedVariables
+	JSON_Object* s_savedVariables = json_object_get_object(s_gameState, "savedVariables");
+	for (int i = 0; i < json_object_get_count(s_savedVariables); i++) 
+	{
+		// Load key and value
+		const char* savedVariableKey = json_object_get_name(s_savedVariables, i);
+		const char* savedVariableValue = json_object_get_string(s_savedVariables, savedVariableKey);
+
+		// Save to map
+		savedVariables[savedVariableKey] = savedVariableValue;
+	}
+
+	// Load grid position
+	currentGridPosition = json_object_get_number(s_gameState, "currentGridPosition");
+
+	json_value_free(rawGameData);
+	loaded = true;
+}
 
 void ModuleGameLogic::Init()
 {
@@ -46,6 +121,7 @@ void ModuleGameLogic::Start()
 	optionsChoosing = new OptionsChoosingLogic();
 	optionsChoosing->options.push_back(app->gameImporter->config->objectsInputText);
 	optionsChoosing->options.push_back(app->gameImporter->config->conditionsInputText);
+	optionsChoosing->options.push_back(app->gameImporter->config->saveInputText);
 	optionsChoosing->options.push_back(app->gameImporter->config->helpInputText);
 	optionsChoosing->options.push_back(app->gameImporter->config->languageInputText);
 	optionsChoosing->options.push_back(app->gameImporter->config->resumeInputText);
@@ -54,6 +130,7 @@ void ModuleGameLogic::Start()
 	optionsChoosing->optionsMenuIntroductionText = app->gameImporter->config->optionsMenuIntroductionText;
 	optionsChoosing->availableObjectsText = app->gameImporter->config->availableObjectsText;
 	optionsChoosing->currentConditionsText = app->gameImporter->config->currentConditionsText;
+	optionsChoosing->savedText = app->gameImporter->config->savedText;
 	optionsChoosing->helpText = app->gameImporter->config->helpText;
 
 	// Initialize commun logic processor parameters
@@ -92,8 +169,14 @@ void ModuleGameLogic::Start()
 		variableSaving->processGameplayText = 
 		optionsChoosing->processGameplayText = ProcessGameplayText;
 
-	// Initialize position with initial position
-	gameState.currentGridPosition = app->gameImporter->config->initialPosition;
+	optionsChoosing->saveGameState = SaveGameLogicGameState;
+
+	// Load game state
+	gameState.Load(gameStatePath);
+
+	// Set initial position if no game was loaded
+	if(!gameState.loaded)
+		gameState.currentGridPosition = app->gameImporter->config->initialPosition;
 
 	// Ask for language if the game is localized and there is no language set already
 	if (app->localization->GetLanguages().size() != 0 && app->localization->GetLanguage() == "none")
@@ -104,14 +187,18 @@ void ModuleGameLogic::Start()
 	}
 	// A language is set or the game is non localized, start
 	else
-	{
-		// Log initial text
+		StartPlaying();
+}
+
+void ModuleGameLogic::StartPlaying()
+{
+	// Log initial text if no game was loaded
+	if(!gameState.loaded)
 		LogGameplayText(app->gameImporter->config->initialText);
 
-		// Load current map event
-		SetLogicProcessor(mapEvents);
-		HandleLogicProcessorResult(mapEvents->LoadMapEvent(GetCurrentMapEvent()));
-	}
+	// Load current map event
+	SetLogicProcessor(mapEvents);
+	HandleLogicProcessorResult(mapEvents->LoadMapEvent(GetCurrentMapEvent()));
 }
 
 void ModuleGameLogic::SetLogicProcessor(LogicProcessor* newLogicProcessor)
@@ -120,9 +207,8 @@ void ModuleGameLogic::SetLogicProcessor(LogicProcessor* newLogicProcessor)
 	currentLogicProcessor = newLogicProcessor;
 }
 
-bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
+void ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 {
-	bool ret = true;
 	switch (result)
 	{
 		#pragma region MAP_NAVIGATION
@@ -131,7 +217,7 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 		case LogicProcessorResult::MAP_NAVIGATION_SUCCESSFUL:
 		{
 			// Load event and handle the result recursively
-			ret = HandleLogicProcessorResult(mapEvents->LoadMapEvent(GetCurrentMapEvent()));
+			HandleLogicProcessorResult(mapEvents->LoadMapEvent(GetCurrentMapEvent()));
 			break;
 		}
 		#pragma endregion
@@ -140,7 +226,6 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 		{
 			// Fatal error
 			TerminateApplication("The grid position didn't had a matching map event");
-			ret = false;
 			break;
 		}
 		case LogicProcessorResult::MAP_EVENT_NOT_NAVIGABLE:
@@ -197,22 +282,13 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 			// Go back to the last logical state
 			BackToLastLogicalState();
 
-			// If there was no previous logical state
+			// Start playing if there was no previous logical state
 			if (currentLogicProcessor == nullptr)
-			{
-				// Log initial text
-				LogGameplayText(app->gameImporter->config->initialText);
-
-				// Load current map event
-				SetLogicProcessor(mapEvents);
-				HandleLogicProcessorResult(mapEvents->LoadMapEvent(GetCurrentMapEvent()));
-			}
+				StartPlaying();
 
 			// If the previous logical state was options choosing, artificially start it
 			if (currentLogicProcessor == optionsChoosing)
-			{
 				optionsChoosing->StartOptionChoosing();
-			}
 			break;
 		}
 		#pragma endregion
@@ -241,13 +317,11 @@ bool ModuleGameLogic::HandleLogicProcessorResult(LogicProcessorResult result)
 		}
 		case LogicProcessorResult::OPTIONS_CHOOSING_EXIT:
 		{
-			ret = false;
 			LogGameplayText(app->gameImporter->config->exitGameText);
+			app->Exit();
 		}
 		#pragma endregion
 	}
-
-	return ret;
 }
 
 MapEvent* ModuleGameLogic::GetCurrentMapEvent() const
@@ -327,6 +401,11 @@ void ModuleGameLogic::ReplaceVariables(string& text) const
 	}
 }
 
+void ModuleGameLogic::SaveGameState()
+{
+	gameState.Save(gameStatePath);
+}
+
 void ProcessGameplayText(string& text) 
 {
 	// Handle localization
@@ -360,4 +439,9 @@ void DisplayList(const vector<string>& list)
 		ProcessGameplayText(element);
 		app->Log(("    - " + element).c_str());
 	}
+}
+
+void SaveGameLogicGameState()
+{
+	app->gameLogic->SaveGameState();
 }

@@ -59,6 +59,11 @@
             "es": "Estas son tus condiciones actuales:"
         },
         {
+            "key": "SAVED",
+            "en": "Game saved",
+            "es": "Partida guardada"
+        },
+        {
             "key": "EXIT_GAME",
             "en": "Thank you for playing!",
             "es": "Gracias por jugar!"
@@ -123,6 +128,11 @@
             "key": "CONDITIONS",
             "en": "conditions",
             "es": "condiciones"
+        },
+        {
+            "key": "SAVE",
+            "en": "save",
+            "es": "guardar"
         },
         {
             "key": "HELP",

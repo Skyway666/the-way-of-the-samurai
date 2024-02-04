@@ -12,6 +12,7 @@ private:
     // References:
     void (*displayList)(const vector<string>&) = nullptr;
     void (*processGameplayText)(string&) = nullptr;
+    void (*saveGameState)() = nullptr;
     list<string>* conditions = nullptr;
     list<string>* objects = nullptr;
 
@@ -20,6 +21,7 @@ private:
     string optionsMenuIntroductionText;
     string availableObjectsText;
     string currentConditionsText;
+    string savedText;
     string invalidOptionText;
     string helpText;
 

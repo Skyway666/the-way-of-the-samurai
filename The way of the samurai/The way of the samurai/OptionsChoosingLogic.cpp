@@ -41,27 +41,35 @@ LogicProcessorResult OptionsChoosingLogic::Step(string input)
             ret = LogicProcessorResult::OPTIONS_CHOOSING_CHOOSING;
             break;
         }
-        // Help
+        // Save
         case 2:
+        {
+            saveGameState();
+            log(savedText);
+            ret = LogicProcessorResult::OPTIONS_CHOOSING_CHOOSING;
+            break;
+        }
+        // Help
+        case 3:
         {
             log(helpText);
             ret = LogicProcessorResult::OPTIONS_CHOOSING_CHOOSING;
             break;
         }
         // Language
-        case 3:
+        case 4:
         {
             ret = LogicProcessorResult::OPTIONS_CHOOSING_CHOOSE_LANGUAGE;
             break;
         }
         // Resume
-        case 4:
+        case 5:
         {
             ret = LogicProcessorResult::OPTIONS_CHOOSING_RESUME;
             break;
         }
         // Exit
-        case 5:
+        case 6:
         {
             ret = LogicProcessorResult::OPTIONS_CHOOSING_EXIT;
             break;

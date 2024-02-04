@@ -158,8 +158,5 @@
     <None Include="Game\Localization.json">
       <Filter>Resources</Filter>
     </None>
-    <None Include="Game\Language.json">
-      <Filter>Resources</Filter>
-    </None>
   </ItemGroup>
 </Project>

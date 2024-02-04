@@ -40,6 +40,8 @@ public:
 	State GetState() const;
 	// Log messages to the console
 	void Log(const char* message) const;
+	// Quit application
+	void Exit();
 	// Log fatal error
 	void Terminate(const char* message, const Module* module);
 

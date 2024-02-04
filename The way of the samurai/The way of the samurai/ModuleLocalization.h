@@ -30,6 +30,8 @@ public:
 
 	// Private variables
 private:
+	// Language file path
+	const char* languagePath = "Language.json";
 	// Current configured language. It has the value "none" if no language is configured
 	string language;
 	// Languages supported by the game

@@ -41,20 +41,14 @@
                 [
                     "righteous"
                 ],
-                "alternative":
-                {
-                    "text": "You have already become righteous, go do some good!"
-                }
+                "text": "You have already become righteous, go do some good!"
             },
             {
                 "conditions":
                 [
                     "sinister"
                 ],
-                "alternative":
-                {
-                    "text": "You have already become sinister, you can now torment the world"
-                }
+                "text": "You have already become sinister, you can now torment the world"
             }
         ]
     },
@@ -66,49 +60,43 @@
         [
             {
                 "option": "righteous",
-                "conditions":
-                [
-                    "righteous"
-                ],
-                "text": "Yeah, you are!",
-                "rejectionTexts":
-                [
-                    {
-                        "conditions":
-                        [
-                            "sinister"
-                        ],
-                        "text": "Back out sinister soul"
-                    },
-                    {
-                        "conditions":
-                        [
-                        ],
-                        "text": "You are nothing, come back when you are worthy"
-                    }
-                ]
-            },
-            {
-                "option": "sinister",
-                "conditions":
-                [
-                    "sinister"
-                ],
-                "text": "Yeah, you are!",
-                "rejectionTexts":
+                "text": "You are nothing, come back when you are worthy",
+                "alternativeEvents":
                 [
                     {
                         "conditions":
                         [
                             "righteous"
                         ],
-                        "text": "You are too righteous for this path"
+                        "text": "Yeah, you are!"
                     },
                     {
                         "conditions":
                         [
+                            "sinister"
                         ],
-                        "text": "You are nothing, get ready to be consumed!"
+                        "text": "Back out sinister soul"
+                    }
+                ]
+            },
+            {
+                "option": "sinister",
+                "text": "You are nothing, get ready to be consumed!",
+                "alternativeEvents":
+                [
+                    {
+                        "conditions":
+                        [
+                            "sinister"
+                        ],
+                        "text": "Yeah, you are!"
+                    },
+                    {
+                        "conditions":
+                        [
+                            "righteous"
+                        ],
+                        "text": "You are too righteous for this path"
                     }
                 ]
             }
@@ -117,7 +105,7 @@
     {
         "gridPosition": 4,
         "navigable": true,
-        "text": "You are now freed from the chains of your decisions",
+        "text": "You are now freed from the chains of your decisions, @playerName@",
         "removedConditions":
         [
             "righteous",
@@ -135,10 +123,7 @@
                 [
                     "righteous"
                 ],
-                "alternative":
-                {
-                    "text": "You might walk this path since you are righteous"
-                }
+                "text": "You might walk this path since you are righteous"
             }
         ]
     }

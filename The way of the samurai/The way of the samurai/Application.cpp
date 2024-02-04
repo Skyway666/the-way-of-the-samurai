@@ -86,6 +86,11 @@ void Application::Log(const char* message) const
 	printf("\n");
 }
 
+void Application::Exit()
+{
+	state = State::QUITTING;
+}
+
 void Application::Terminate(const char* message, const Module* module)
 {
 	// Notify the user about the fatal error
@@ -95,8 +100,8 @@ void Application::Terminate(const char* message, const Module* module)
 	// TODO: Print module that failed and state application
 	Log((module->name + " failed during " + State2String(state)).c_str());
 
-	// Update application state
-	state = State::QUITTING;
+	// Exit application
+	Exit();
 
 	// Print desired message
 	Log(message);

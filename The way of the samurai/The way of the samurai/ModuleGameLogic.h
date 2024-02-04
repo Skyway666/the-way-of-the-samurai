@@ -23,7 +23,7 @@ class ModuleGameLogic : public Module
 {
 	// Public definitions
 public:
-	struct GameData
+	struct GameState
 	{
 		// Key variables that define the state of the game
 		list<string> conditions;
@@ -34,8 +34,10 @@ public:
 		// Position of the player in the map
 		int currentGridPosition = 0;
 
+		void Save(const char* path);
+		void Load(const char* path);
 
-		void Save(JSON_Object* s_GameData);
+		bool loaded = false;
 	};
 
 	// Public methods
@@ -48,13 +50,18 @@ public:
 
 	// Replaces keys between '@' with gameplay variables
 	void ReplaceVariables(string& text) const;
+	// Saves game state
+	void SaveGameState();
+
 	// Private methods
 private:
 
+	// Start playing
+	void StartPlaying();
 	// Sets a new logic processor while updating "lastLogicProcessor"
 	void SetLogicProcessor(LogicProcessor* newLogicProcessor);
 	// Modify logic state depending on the logic processor result
-	bool HandleLogicProcessorResult(LogicProcessorResult result);
+	void HandleLogicProcessorResult(LogicProcessorResult result);
 	// Returns current map event depending in the gameState.currentGridPosition
 	MapEvent* GetCurrentMapEvent() const;
 	// Switches the logic processor to "mapNavigation" and notifies the player
@@ -62,10 +69,11 @@ private:
 	// Goes back to the previous logic processor
 	void BackToLastLogicalState();
 
-	// Private attributes
+	// Private variables
 private:
 	// ----------GAME STATE VARIABLES
-	GameData gameState;
+	const char* gameStatePath = "GameState.json";
+	GameState gameState;
 
 	// ---------- LOGIC PROCESSORS VARIABLES
 	LogicProcessor* currentLogicProcessor = nullptr;
@@ -87,3 +95,5 @@ void LogGameplayText(string text);
 void DisplayOptions(const vector<string>& options);
 // Display a list of elements
 void DisplayList(const vector<string>& options);
+// Saves gameState in the gameLogic module
+void SaveGameLogicGameState();

@@ -66,7 +66,7 @@ void MapEventsLogic::SetHandlingEvent(Event* newHandlingEvent)
 		// Check if the conditions are met
 		if (ContainerUtils::StringVectorAContainsB(gameConditionsVector, currAlternativeEvent.conditions))
 		{
-			alternativeEvent = currAlternativeEvent.alternative;
+			alternativeEvent = &currAlternativeEvent;
 			break;
 		}
 	}
@@ -151,50 +151,9 @@ LogicProcessorResult MapEventsLogic::HandleCurrentEventBranching(string input)
 	// An option was choosen
 	if (choosenOption != nullptr)
 	{
-		// Convert list of condition to a vector
-		vector<string> gameConditionsVector = vector<string>(conditions->begin(), conditions->end());
-		// Check if the conditions for the sub event are met
-		bool conditionsMet = ContainerUtils::StringVectorAContainsB(gameConditionsVector, choosenOption->conditions);
-
-		// If the conditions have been met
-		if (conditionsMet)
-		{
-			// Load the sub event
-			SetHandlingEvent(choosenOption);
-			// Handle sub event and save result
-			ret = HandleCurrentEvent();
-		}
-		// The conditions have not been met
-		else
-		{
-			// Load the rejection text based on the missing conditions
-			RejectionText* rejectionText = nullptr;
-			for (RejectionText& currRejectionText : choosenOption->rejectionTexts)
-			{
-				// If the conditions for the rejection text are met
-				if (ContainerUtils::StringVectorAContainsB(gameConditionsVector, currRejectionText.conditions))
-				{
-					// Save the rejection text
-					rejectionText = &currRejectionText;
-					break;
-				}
-			}
-
-			// The rejection text was found
-			if (rejectionText != nullptr)
-			{
-				// Display the rejection text
-				log(rejectionText->text);
-			}
-			// The rejection text was not found
-			else
-			{
-				// Display default rejection text
-				log(defaultSubEventRejectionText);
-			}
-
-			ret = LogicProcessorResult::MAP_EVENT_ENDED;
-		}
+		SetHandlingEvent(choosenOption);
+		// Handle sub event and save result
+		ret = HandleCurrentEvent();
 	}
 	// The choosen option was not avaliable
 	else

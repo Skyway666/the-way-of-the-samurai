@@ -16,7 +16,6 @@ struct Event;
 struct MapEvent;
 struct SubEvent;
 struct AlternativeEvent;
-struct RejectionText;
 struct SavedVariable;
 
 class ModuleGameImporter: public Module
@@ -95,6 +94,7 @@ public:
 	string optionsMenuIntroductionText;
 	string availableObjectsText;
 	string currentConditionsText;
+	string savedText;
 	string exitGameText;
 	string helpText;
 	string languageChoosingQuestionText;
@@ -110,6 +110,7 @@ public:
 	string reenterInputText;
 	string objectsInputText;
 	string conditionsInputText;
+	string saveInputText;
 	string helpInputText;
 	string languageInputText;
 	string resumeInputText;
@@ -172,15 +173,13 @@ public:
 // Public attributes
 public:
 	string option;
-	vector<string> conditions;
-	vector<RejectionText> rejectionTexts;
 
 	// Mandatory fields when loading the object
 	static vector<JSONFieldData> mandatoryFields;
 };
 
 // Alternative event that happens when certain conditions are met
-struct AlternativeEvent
+struct AlternativeEvent : MapEvent
 {
 // Public methods
 public:
@@ -189,23 +188,6 @@ public:
 // Public attributes
 public:
 	vector<string> conditions;
-	MapEvent* alternative = nullptr;
-
-	// Mandatory fields when loading the object
-	static vector<JSONFieldData> mandatoryFields;
-};
-
-// Rejection text to show depending on the conditions that are met by the player
-struct RejectionText
-{
-// Public methods
-public:
-	RejectionText(JSON_Object* s_subEvent);
-
-// Public attributes
-public:
-	vector<string> conditions;
-	string text;
 
 	// Mandatory fields when loading the object
 	static vector<JSONFieldData> mandatoryFields;
