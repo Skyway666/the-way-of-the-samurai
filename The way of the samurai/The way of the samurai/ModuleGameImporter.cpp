@@ -3,13 +3,13 @@
 #include "Third Party/parson.h"
 
 // Static variables declaration
-vector<string> Config::mandatoryFields;
-vector<string> Event::mandatoryFields;
-vector<string> MapEvent::mandatoryFields;
-vector<string> SubEvent::mandatoryFields;
-vector<string> AlternativeEvent::mandatoryFields;
-vector<string> RejectionText::mandatoryFields;
-vector<string> SavedVariable::mandatoryFields;
+vector<JSONFieldData> Config::mandatoryFields;
+vector<JSONFieldData> Event::mandatoryFields;
+vector<JSONFieldData> MapEvent::mandatoryFields;
+vector<JSONFieldData> SubEvent::mandatoryFields;
+vector<JSONFieldData> AlternativeEvent::mandatoryFields;
+vector<JSONFieldData> RejectionText::mandatoryFields;
+vector<JSONFieldData> SavedVariable::mandatoryFields;
 vector<JSON_Value*> ModuleGameImporter::linkedFiles;
 
 void ModuleGameImporter::Init()
@@ -109,7 +109,7 @@ void ModuleGameImporter::CleanUp()
 bool ModuleGameImporter::HandleMandatoryFields(JSON_Object* jsonObject, const char* objectType)
 {
 	// Get referece to the mandatory fields depending on the object type
-	vector<string>* mandatoryFields = nullptr;
+	vector<JSONFieldData>* mandatoryFields = nullptr;
 
 	if (objectType == "Config")
 		mandatoryFields = &Config::mandatoryFields;
@@ -126,86 +126,86 @@ bool ModuleGameImporter::HandleMandatoryFields(JSON_Object* jsonObject, const ch
 	else if (objectType == "SavedVariable")
 		mandatoryFields = &SavedVariable::mandatoryFields;
 
-	// Check if the jsonObject has all the mandatory 
-	string missingField("");
+	// Check if the jsonObject has all the mandatory fields
+	JSONFieldData missingField;
 	if(mandatoryFields)
 	 missingField = HasFields(jsonObject, *mandatoryFields);
 
 	// Return true if no missing field was found and false otherwise
-	bool ret = missingField.empty();
+	bool ret = missingField.type == JSONNull;
 
 	// If the object is missing a field
 	if (!ret) 
 	{
 		// Inform the user about the missing mandatory field
-		string errorLog = ("Object of type '" + string(objectType) + "' is missing the mandatory field '" + missingField + "'");
+		string errorLog = ("Object of type '" + string(objectType) + "' is missing the mandatory field '" + missingField.name + "'");
 		app->Terminate(errorLog.c_str(), app->gameImporter);
 	}
 
 	return ret;
 }
 
-string ModuleGameImporter::HasFields(JSON_Object* jsonObject, vector<string>& fields)
+JSONFieldData ModuleGameImporter::HasFields(JSON_Object* jsonObject, vector<JSONFieldData>& fields)
 {
 	// Iterate mandatory fields
-	for (string& field : fields) 
-		// Check if the object has the mandatory value
-		if (json_object_has_value(jsonObject, field.c_str()) == 0)
+	for (JSONFieldData& field : fields)
+		// If the field doesn't exist or doesn't have the correct type
+		if (json_object_has_value_of_type(jsonObject, field.name.c_str(), field.type) == 0)
 			// Return the missing mandatory field
 			return field;
 
 	// No mandatory field was missing
-	return string();
+	return {};
 }
 
 void ModuleGameImporter::InitMandatoryFields()
 {
 	// Config
-	Config::mandatoryFields.push_back("gridRowLength");
-	Config::mandatoryFields.push_back("initialPosition");
-	Config::mandatoryFields.push_back("initialText");
-	Config::mandatoryFields.push_back("defaultSubEventRejectionText");
-	Config::mandatoryFields.push_back("displayOptionsText");
-	Config::mandatoryFields.push_back("backToMapText");
-	Config::mandatoryFields.push_back("invalidOptionText");
-	Config::mandatoryFields.push_back("languageSelectedText");
-	Config::mandatoryFields.push_back("optionsMenuIntroductionText");
-	Config::mandatoryFields.push_back("availableObjectsText");
-	Config::mandatoryFields.push_back("currentConditionsText");
-	Config::mandatoryFields.push_back("exitGameText");
-	Config::mandatoryFields.push_back("helpText");
-	Config::mandatoryFields.push_back("yesInputText");
-	Config::mandatoryFields.push_back("noInputText");
-	Config::mandatoryFields.push_back("northInputText");
-	Config::mandatoryFields.push_back("southInputText");
-	Config::mandatoryFields.push_back("eastInputText");
-	Config::mandatoryFields.push_back("westInputText");
-	Config::mandatoryFields.push_back("optionsInputText");
-	Config::mandatoryFields.push_back("reenterInputText");
-	Config::mandatoryFields.push_back("objectsInputText");
-	Config::mandatoryFields.push_back("conditionsInputText");
-	Config::mandatoryFields.push_back("helpInputText");
-	Config::mandatoryFields.push_back("languageInputText");
-	Config::mandatoryFields.push_back("resumeInputText");
-	Config::mandatoryFields.push_back("exitInputText");
+	Config::mandatoryFields.push_back({ "gridRowLength", JSONNumber });
+	Config::mandatoryFields.push_back({ "initialPosition", JSONNumber });
+	Config::mandatoryFields.push_back({ "initialText", JSONString});
+	Config::mandatoryFields.push_back({ "defaultSubEventRejectionText", JSONString });
+	Config::mandatoryFields.push_back({ "displayOptionsText", JSONString });
+	Config::mandatoryFields.push_back({ "backToMapText", JSONString });
+	Config::mandatoryFields.push_back({ "invalidOptionText", JSONString });
+	Config::mandatoryFields.push_back({ "languageSelectedText", JSONString });
+	Config::mandatoryFields.push_back({ "optionsMenuIntroductionText", JSONString });
+	Config::mandatoryFields.push_back({ "availableObjectsText", JSONString });
+	Config::mandatoryFields.push_back({ "currentConditionsText", JSONString });
+	Config::mandatoryFields.push_back({ "exitGameText", JSONString });
+	Config::mandatoryFields.push_back({ "helpText", JSONString });
+	Config::mandatoryFields.push_back({ "yesInputText", JSONString });
+	Config::mandatoryFields.push_back({ "noInputText", JSONString });
+	Config::mandatoryFields.push_back({ "northInputText", JSONString });
+	Config::mandatoryFields.push_back({ "southInputText", JSONString });
+	Config::mandatoryFields.push_back({ "eastInputText", JSONString });
+	Config::mandatoryFields.push_back({ "westInputText", JSONString });
+	Config::mandatoryFields.push_back({ "optionsInputText", JSONString });
+	Config::mandatoryFields.push_back({ "reenterInputText", JSONString });
+	Config::mandatoryFields.push_back({ "objectsInputText", JSONString });
+	Config::mandatoryFields.push_back({ "conditionsInputText", JSONString });
+	Config::mandatoryFields.push_back({ "helpInputText", JSONString });
+	Config::mandatoryFields.push_back({ "languageInputText", JSONString });
+	Config::mandatoryFields.push_back({ "resumeInputText", JSONString });
+	Config::mandatoryFields.push_back({ "exitInputText", JSONString });
 
 	// Event
-	Event::mandatoryFields.push_back("text");
+	Event::mandatoryFields.push_back({ "text" , JSONString});
 
 	// SubEvent
-	SubEvent::mandatoryFields.push_back("option");
+	SubEvent::mandatoryFields.push_back({ "option", JSONString });
 
 	// Rejection text
-	RejectionText::mandatoryFields.push_back("text");
+	RejectionText::mandatoryFields.push_back({ "text", JSONString });
 
 	// Alternative event
-	AlternativeEvent::mandatoryFields.push_back("conditions");
-	AlternativeEvent::mandatoryFields.push_back("alternative");
+	AlternativeEvent::mandatoryFields.push_back({ "conditions", JSONArray });
+	AlternativeEvent::mandatoryFields.push_back({ "alternative", JSONObject });
 
 	// Saved variable
-	SavedVariable::mandatoryFields.push_back("key");
-	SavedVariable::mandatoryFields.push_back("confirmationText");
-	SavedVariable::mandatoryFields.push_back("successText");
+	SavedVariable::mandatoryFields.push_back({ "key", JSONString });
+	SavedVariable::mandatoryFields.push_back({ "confirmationText", JSONString });
+	SavedVariable::mandatoryFields.push_back({ "successText", JSONString });
 }
 
 void ModuleGameImporter::CleanUpMandatoryFields()
@@ -261,7 +261,13 @@ JSON_Array* ModuleGameImporter::GetLinkableArray(JSON_Object* object, const char
 	return ret;
 }
 
-Linkable::Linkable(JSON_Object*& s_linkable, const char* objectName)
+JSONFieldData::JSONFieldData(string name, JSON_Value_Type type)
+{
+	this->name = name;
+	this->type = type;
+}
+
+JSONGameObject::JSONGameObject(JSON_Object*& s_linkable, const char* objectName)
 {
 	// Check if the object has a link
 	if (json_object_has_value(s_linkable, "link") == 1) 
@@ -295,7 +301,7 @@ Linkable::Linkable(JSON_Object*& s_linkable, const char* objectName)
 	}
 }
 
-Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
+Config::Config(JSON_Object* s_config): JSONGameObject(s_config, "config")
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_config, "Config"))
@@ -389,7 +395,7 @@ Config::Config(JSON_Object* s_config): Linkable(s_config, "config")
 	exitInputText = json_object_get_string(s_config, "exitInputText");
 }
 
-Event::Event(JSON_Object*& s_event) : Linkable(s_event, "event")
+Event::Event(JSON_Object*& s_event) : JSONGameObject(s_event, "event")
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_event, "Event"))
@@ -481,7 +487,7 @@ SubEvent::SubEvent(JSON_Object* s_subEvent): Event(s_subEvent)
 		rejectionTexts.push_back(RejectionText(json_array_get_object(s_rejectionTexts, i)));
 }
 
-RejectionText::RejectionText(JSON_Object* s_rejectionText): Linkable(s_rejectionText, "rejectionText")
+RejectionText::RejectionText(JSON_Object* s_rejectionText): JSONGameObject(s_rejectionText, "rejectionText")
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_rejectionText, "RejectionText"))
@@ -496,7 +502,7 @@ RejectionText::RejectionText(JSON_Object* s_rejectionText): Linkable(s_rejection
 	text = json_object_get_string(s_rejectionText, "text");
 }
 
-AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent): Linkable(s_alternativeEvent, "alternativeEvent")
+AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent): JSONGameObject(s_alternativeEvent, "alternativeEvent")
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_alternativeEvent, "AlternativeEvent"))
@@ -511,7 +517,7 @@ AlternativeEvent::AlternativeEvent(JSON_Object* s_alternativeEvent): Linkable(s_
 	alternative = MapEvent::LoadMapEvent(s_alternativeEvent, "alternative");
 }
 
-SavedVariable::SavedVariable(JSON_Object* s_savedVariable): Linkable(s_savedVariable, "savedVariable")
+SavedVariable::SavedVariable(JSON_Object* s_savedVariable): JSONGameObject(s_savedVariable, "savedVariable")
 {
 	// Check for mandatory fields
 	if (!ModuleGameImporter::HandleMandatoryFields(s_savedVariable, "SavedVariable"))

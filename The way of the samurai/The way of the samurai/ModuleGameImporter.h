@@ -8,7 +8,9 @@ using namespace std;
 typedef struct json_object_t JSON_Object;
 typedef struct json_array_t  JSON_Array;
 typedef struct json_value_t  JSON_Value;
+typedef int JSON_Value_Type;
 
+struct JSONFieldData;
 struct Config;
 struct Event;
 struct MapEvent;
@@ -28,8 +30,8 @@ public:
 	// Returns "true" if the object has all the mandatory fields and "false" otherwise. Additionally, handles the absence of mandatory
 	// fields as an error
 	static bool HandleMandatoryFields(JSON_Object* jsonObject, const char* objectType);
-	// Returns en empty string if the object has all the mandatory fields and the missing mandatory field otherwise
-	static string HasFields(JSON_Object* jsonObject, vector<string>& mandatoryFields);
+	// Returns en empty JSONFieldData if the object has all the mandatory fields and the missing mandatory field otherwise
+	static JSONFieldData HasFields(JSON_Object* jsonObject, vector<JSONFieldData>& mandatoryFields);
 
 // Public attributes
 public:
@@ -54,16 +56,25 @@ private:
 	JSON_Array* GetLinkableArray(JSON_Object* object, const char* arrayName);
 };
 
+struct JSONFieldData 
+{
+	string name = "";
+	JSON_Value_Type type = 1;
+
+	JSONFieldData() {};
+	JSONFieldData(string name, JSON_Value_Type type);
+};
+
 // Abstrct structure for all linkable objects to inherit from
-struct Linkable 
+struct JSONGameObject 
 {
 	// C++ pesao
-	Linkable() {};
-	Linkable(JSON_Object*& s_linkable, const char* objectName);
+	JSONGameObject() {};
+	JSONGameObject(JSON_Object*& s_linkable, const char* objectName);
 };
 
 // Game parameters
-struct Config : public Linkable
+struct Config : public JSONGameObject
 {
 	// Public methods
 public:
@@ -108,11 +119,11 @@ public:
 	string exitInputText;
 
 	// Mandatory fields when loading the object
-	static vector<string> mandatoryFields;
+	static vector<JSONFieldData> mandatoryFields;
 };
 
 // Event base class
-struct Event : public Linkable
+struct Event : public JSONGameObject
 {
 // Public methods
 public:
@@ -133,7 +144,7 @@ public:
 	SavedVariable* savedVariable = nullptr;
 
 	// Mandatory fields when loading the object
-	static vector<string> mandatoryFields;
+	static vector<JSONFieldData> mandatoryFields;
 };
 
 // Event that can happen due to a map displacement
@@ -151,7 +162,7 @@ public:
 	bool navigable = false;
 
 	// Mandatory fields when loading the object
-	static vector<string> mandatoryFields;
+	static vector<JSONFieldData> mandatoryFields;
 };
 
 // Event that can happen within an event
@@ -168,11 +179,11 @@ public:
 	vector<RejectionText> rejectionTexts;
 
 	// Mandatory fields when loading the object
-	static vector<string> mandatoryFields;
+	static vector<JSONFieldData> mandatoryFields;
 };
 
 // Alternative event that happens when certain conditions are met
-struct AlternativeEvent: public Linkable
+struct AlternativeEvent: public JSONGameObject
 {
 // Public methods
 public:
@@ -184,11 +195,11 @@ public:
 	MapEvent* alternative = nullptr;
 
 	// Mandatory fields when loading the object
-	static vector<string> mandatoryFields;
+	static vector<JSONFieldData> mandatoryFields;
 };
 
 // Rejection text to show depending on the conditions that are met by the player
-struct RejectionText: public Linkable
+struct RejectionText: public JSONGameObject
 {
 // Public methods
 public:
@@ -200,11 +211,11 @@ public:
 	string text;
 
 	// Mandatory fields when loading the object
-	static vector<string> mandatoryFields;
+	static vector<JSONFieldData> mandatoryFields;
 };
 
 // Data needed to save 
-struct SavedVariable: public Linkable
+struct SavedVariable: public JSONGameObject
 {
 // Public methods
 public:
@@ -221,5 +232,5 @@ public:
 	Event* nextEvent = nullptr;
 
 	// Mandatory fields when loading the object
-	static vector<string> mandatoryFields;
+	static vector<JSONFieldData> mandatoryFields;
 };
