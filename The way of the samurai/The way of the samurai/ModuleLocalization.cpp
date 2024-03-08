@@ -121,47 +121,80 @@ void ModuleLocalization::LoadLocalizationData()
 			languages.push_back(language);
 	}
 
-	// Get entries array
-	JSON_Array* entries_s = json_object_get_array(localization, "entries");
+	// Get the tables array
+	JSON_Array* tables = json_object_get_array(localization, "tables");
 	// Error handling
-	if (entries_s == nullptr)
+	if (tables == nullptr) 
 	{
-		TerminateApplication("No entries array in the localization file");
+		TerminateApplication("No tables array in the localization file");
 		return;
 	}
 
-	// Load entries array
-	for (int i = 0; i < json_array_get_count(entries_s); i++)
+	// Load tables
+	for (int i = 0; i < json_array_get_count(tables); i++) 
 	{
-		JSON_Object* entry = json_array_get_object(entries_s, i);
-
-		if (entry == nullptr)
+		// Get file name
+		const char* tableFileName = json_array_get_string(tables, i);
+		// Error handling
+		if (tableFileName == nullptr) 
 		{
-			TerminateApplication("A value assigned to the entries array was not an object");
+			TerminateApplication("Tables array contains non 'string' type");
 			return;
 		}
 
-		const char* key = json_object_get_string(entry, "key");
-
-		if (key == nullptr)
+		// Load table file
+		JSON_Value* tableRawFile = json_parse_file_with_comments(tableFileName);
+		// Error handling
+		if (tableRawFile == nullptr) 
 		{
-			TerminateApplication("The key of an entry in the localization file was not of type 'string'");
+			TerminateApplication(("Couldn't load '" + string(tableFileName) + "' as localization table").c_str());
 			return;
 		}
 
-		// Access each language value
-		for (string language : languages)
+		// Get table array
+		JSON_Array* table = json_value_get_array(tableRawFile);
+		// Error handling
+		if (table == nullptr) 
 		{
-			const char* value = json_object_get_string(entry, language.c_str());
+			TerminateApplication((string(tableFileName) + " didn't contain an array as root value").c_str());
+			return;
+		}
 
-			if (value == nullptr)
+		// Load table entries array
+		for (int i = 0; i < json_array_get_count(table); i++)
+		{
+			JSON_Object* entry = json_array_get_object(table, i);
+
+			if (entry == nullptr)
 			{
-				TerminateApplication(("No 'string' type value for the '" + language + "' in the '" + key + "' entry").c_str());
+				TerminateApplication("A value assigned to the entries array was not an object");
 				return;
 			}
 
-			entries[key][language] = value;
+			const char* key = json_object_get_string(entry, "key");
+
+			if (key == nullptr)
+			{
+				TerminateApplication("The key of an entry in the localization file was not of type 'string'");
+				return;
+			}
+
+			// Access each language value
+			for (string language : languages)
+			{
+				const char* value = json_object_get_string(entry, language.c_str());
+
+				if (value == nullptr)
+				{
+					TerminateApplication(("No 'string' type value for the '" + language + "' in the '" + key + "' entry").c_str());
+					return;
+				}
+
+				entries[key][language] = value;
+			}
 		}
+
+		json_value_free(tableRawFile);
 	}
 
 	// TODO: Make sure memory is freed even if the function needs to return false

@@ -53,6 +53,12 @@
     <Filter Include="Resources\UserFiles">
       <UniqueIdentifier>{f53d210a-dacd-4d51-9fa7-8ba24290d3ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Application\Helpers\ContainerUtils">
+      <UniqueIdentifier>{93ea8b3e-b202-4917-ae6e-5fd5eab42ff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\LocalizationTables">
+      <UniqueIdentifier>{e6ddc427-f71f-42ba-b73c-d3efce1764f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -72,9 +78,6 @@
     </ClCompile>
     <ClCompile Include="ModuleInput.cpp">
       <Filter>Code\Application\Modules\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="ContainerUtils.cpp">
-      <Filter>Code\Application\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="ModuleLocalization.cpp">
       <Filter>Code\Application\Modules\Localization</Filter>
@@ -100,6 +103,9 @@
     <ClCompile Include="OptionsChoosingLogic.cpp">
       <Filter>Code\Application\Modules\GameLogic\LogicProcessors\Options</Filter>
     </ClCompile>
+    <ClCompile Include="ContainerUtils.cpp">
+      <Filter>Code\Application\Helpers\ContainerUtils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Third Party\parson.h">
@@ -116,9 +122,6 @@
     </ClInclude>
     <ClInclude Include="ModuleInput.h">
       <Filter>Code\Application\Modules\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="ContainerUtils.h">
-      <Filter>Code\Application\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="ModuleLocalization.h">
       <Filter>Code\Application\Modules\Localization</Filter>
@@ -144,6 +147,9 @@
     <ClInclude Include="OptionsChoosingLogic.h">
       <Filter>Code\Application\Modules\GameLogic\LogicProcessors\Options</Filter>
     </ClInclude>
+    <ClInclude Include="ContainerUtils.h">
+      <Filter>Code\Application\Helpers\ContainerUtils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\Game.json">
@@ -166,6 +172,12 @@
     </None>
     <None Include="Game\UserFiles\Language.json">
       <Filter>Resources\UserFiles</Filter>
+    </None>
+    <None Include="Game\LocalizationTables\Engine.json">
+      <Filter>Resources\LocalizationTables</Filter>
+    </None>
+    <None Include="Game\LocalizationTables\Game.json">
+      <Filter>Resources\LocalizationTables</Filter>
     </None>
   </ItemGroup>
 </Project>

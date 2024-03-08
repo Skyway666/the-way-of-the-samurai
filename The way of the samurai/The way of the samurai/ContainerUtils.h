@@ -3,7 +3,7 @@
 #include <string>
 using namespace std;
 
-// Class with methods to compare containers 
+// Methods to compare containers 
 // (this is probably already supported by some standard library, but I don't find it and it's pretty simple)
 class ContainerUtils
 {

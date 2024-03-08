@@ -177,6 +177,8 @@
     <None Include="Game\Game.json" />
     <None Include="Game\InitialEvent.json" />
     <None Include="Game\Localization.json" />
+    <None Include="Game\LocalizationTables\Engine.json" />
+    <None Include="Game\LocalizationTables\Game.json" />
     <None Include="Game\MapEvents.json" />
     <None Include="Game\UserFiles\GameState.json" />
     <None Include="Game\UserFiles\Language.json" />
