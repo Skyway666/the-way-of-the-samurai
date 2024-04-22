@@ -59,6 +59,9 @@
     <Filter Include="Resources\LocalizationTables">
       <UniqueIdentifier>{e6ddc427-f71f-42ba-b73c-d3efce1764f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources\Map">
+      <UniqueIdentifier>{e328f218-bd55-40a4-a93e-7c1433e2e432}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -150,18 +153,15 @@
     <ClInclude Include="ContainerUtils.h">
       <Filter>Code\Application\Helpers\ContainerUtils</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\Game.json">
       <Filter>Resources</Filter>
     </None>
-    <None Include="Game\MapEvents.json">
-      <Filter>Resources</Filter>
-    </None>
     <None Include="Game\Config.json">
-      <Filter>Resources</Filter>
-    </None>
-    <None Include="Game\InitialEvent.json">
       <Filter>Resources</Filter>
     </None>
     <None Include="Game\Localization.json">
@@ -178,6 +178,9 @@
     </None>
     <None Include="Game\LocalizationTables\Game.json">
       <Filter>Resources\LocalizationTables</Filter>
+    </None>
+    <None Include="Game\Map\Map.json">
+      <Filter>Resources\Map</Filter>
     </None>
   </ItemGroup>
 </Project>

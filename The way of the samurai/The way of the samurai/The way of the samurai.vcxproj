@@ -169,17 +169,17 @@
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleLocalization.h" />
     <ClInclude Include="OptionsChoosingLogic.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Third Party\parson.h" />
     <ClInclude Include="VariableSavingLogic.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\Config.json" />
     <None Include="Game\Game.json" />
-    <None Include="Game\InitialEvent.json" />
     <None Include="Game\Localization.json" />
     <None Include="Game\LocalizationTables\Engine.json" />
     <None Include="Game\LocalizationTables\Game.json" />
-    <None Include="Game\MapEvents.json" />
+    <None Include="Game\Map\Map.json" />
     <None Include="Game\UserFiles\GameState.json" />
     <None Include="Game\UserFiles\Language.json" />
   </ItemGroup>

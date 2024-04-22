@@ -1,4 +1,4 @@
 {
     "config": "Config.json",
-    "mapEvents": "MapEvents.json"
+    "mapEvents": "Map/Map.json"
 }
